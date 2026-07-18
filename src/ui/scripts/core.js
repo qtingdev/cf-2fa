@@ -264,12 +264,6 @@ export function getCoreCode() {
       const accountTitle = escapeAttribute(displayAccount);
 
       return '<div class="secret-card" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="点击卡片复制验证码">' +
-        // TOTP 显示进度条，HOTP 不显示
-        (isHOTP ? '' :
-          '<div class="progress-top">' +
-            '<div class="progress-top-fill" id="progress-' + secret.id + '"></div>' +
-          '</div>'
-        ) +
         '<div class="card-header">' +
           '<div class="secret-info">' +
             '<div class="service-icon">' +
@@ -298,7 +292,10 @@ export function getCoreCode() {
         '<div class="otp-preview">' +
           '<div class="otp-main">' +
             '<div class="otp-code-container">' +
-              '<div class="otp-code" id="otp-' + secret.id + '" onclick="event.stopPropagation(); copyOTP(&quot;' + secret.id + '&quot;)" title="点击复制验证码">------</div>' +
+              '<div class="otp-code-row">' +
+                '<div class="otp-code" id="otp-' + secret.id + '" onclick="event.stopPropagation(); copyOTP(&quot;' + secret.id + '&quot;)" title="点击复制验证码">------</div>' +
+                (isHOTP ? '' : '<div class="otp-countdown-ring" id="progress-' + secret.id + '" title="验证码剩余时间" aria-hidden="true"><span class="otp-countdown-ring-inner"></span></div>') +
+              '</div>' +
             '</div>' +
             // HOTP 不显示"下一个"验证码（因为不是时间基准）
             (isHOTP ? '' :

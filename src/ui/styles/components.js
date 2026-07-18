@@ -287,6 +287,14 @@ export function getComponentStyles() {
       -webkit-box-flex: 1;
     }
 
+    .otp-code-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      width: 100%;
+    }
+
     .otp-code {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', 'SF Pro Display', monospace;
       font-size: 42px;
@@ -302,8 +310,32 @@ export function getComponentStyles() {
       background: none;
       border: none;
       display: block;
-      width: 100%;
+      flex: 0 1 auto;
+      min-width: 0;
+      width: auto;
       text-align: left;
+    }
+
+    .otp-countdown-ring {
+      --progress-deg: 360deg;
+      --progress-color: var(--success);
+      position: relative;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      border-radius: 50%;
+      background: conic-gradient(var(--progress-color) var(--progress-deg), var(--border-primary) 0deg);
+      box-shadow: inset 0 0 0 1px var(--border-primary);
+      transition: background 1s linear;
+      pointer-events: none;
+    }
+
+    .otp-countdown-ring-inner {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      box-shadow: 0 0 0 1px var(--border-secondary);
     }
 
     .otp-code:hover {
@@ -365,30 +397,6 @@ export function getComponentStyles() {
       background: #8B5CF6;
       border-radius: 2px;
       transition: width 1s ease-in-out;
-    }
-
-    .progress-top {
-      width: auto;
-      max-width: 100%;
-      height: 1px;
-      background: var(--bg-primary);
-      border-radius: var(--radius-surface) var(--radius-surface) 0 0;
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      left: var(--radius-surface);
-      right: var(--radius-surface);
-      box-sizing: border-box;
-      pointer-events: none;
-    }
-
-    .progress-top-fill {
-      height: 100%;
-      max-width: 100%;
-      background: var(--progress-fill);
-      border-radius: 0;
-      transition: width 1s linear, background-color 0.5s ease;
-      width: 0%;
     }
 
     /* ========== 同步目标卡片 ========== */

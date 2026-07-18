@@ -465,6 +465,20 @@ export function getResponsiveStyles() {
         letter-spacing: 0 !important;
         margin: 6px 0 !important;
       }
+
+      .otp-code-row {
+        gap: 8px !important;
+      }
+
+      .otp-countdown-ring {
+        width: 26px;
+        height: 26px;
+        flex-basis: 26px;
+      }
+
+      .otp-countdown-ring-inner {
+        inset: 4px;
+      }
       
       .otp-main {
         gap: 12px !important;
@@ -494,14 +508,6 @@ export function getResponsiveStyles() {
       .progress-mini {
         width: 60px;
         height: 5px;
-      }
-
-      .progress-top {
-        border-radius: var(--radius-surface) var(--radius-surface) 0 0;
-      }
-
-      .progress-top-fill {
-        border-radius: 0;
       }
 
       .modal {
@@ -865,17 +871,15 @@ export function getResponsiveStyles() {
         margin-top: 14px;
       }
 
+      .otp-countdown-ring {
+        width: 32px;
+        height: 32px;
+        flex-basis: 32px;
+      }
+
       .progress-mini {
         width: 120px;
         height: 8px;
-      }
-
-      .progress-top {
-        border-radius: var(--radius-surface) var(--radius-surface) 0 0;
-      }
-
-      .progress-top-fill {
-        border-radius: 0;
       }
 
       /* 确保备份表格在大屏幕端正确显示 */

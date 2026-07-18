@@ -427,7 +427,6 @@ export function getOTPCode() {
       if (progressElement) {
         const ratio = timeStep > 0 ? Math.max(0, Math.min(1, remaining / timeStep)) : 0;
         const progress = ratio * 100;
-        progressElement.style.width = progress + '%';
 
         let color;
         if (ratio > 0.6) {
@@ -437,7 +436,10 @@ export function getOTPCode() {
         } else {
           color = '#F44336';
         }
-        progressElement.style.backgroundColor = color;
+
+        progressElement.style.setProperty('--progress-deg', (progress * 3.6) + 'deg');
+        progressElement.style.setProperty('--progress-color', color);
+        progressElement.title = '验证码剩余 ' + remaining + ' 秒';
       }
 
       // 🔄 防御性检查：如果验证码显示为默认值，立即刷新
