@@ -425,10 +425,10 @@ export function getOTPCode() {
 
       const progressElement = document.getElementById('progress-' + secretId);
       if (progressElement) {
-        const progress = (remaining / timeStep) * 100;
+        const ratio = timeStep > 0 ? Math.max(0, Math.min(1, remaining / timeStep)) : 0;
+        const progress = ratio * 100;
         progressElement.style.width = progress + '%';
 
-        const ratio = remaining / timeStep;
         let color;
         if (ratio > 0.6) {
           color = '#4CAF50';

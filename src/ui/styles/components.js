@@ -368,19 +368,23 @@ export function getComponentStyles() {
     }
 
     .progress-top {
-      width: 100%;
+      width: auto;
+      max-width: 100%;
       height: 1px;
       background: var(--bg-primary);
-      border-radius: 0;
+      border-radius: var(--radius-surface) var(--radius-surface) 0 0;
       overflow: hidden;
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
+      left: var(--radius-surface);
+      right: var(--radius-surface);
+      box-sizing: border-box;
+      pointer-events: none;
     }
 
     .progress-top-fill {
       height: 100%;
+      max-width: 100%;
       background: var(--progress-fill);
       border-radius: 0;
       transition: width 1s linear, background-color 0.5s ease;

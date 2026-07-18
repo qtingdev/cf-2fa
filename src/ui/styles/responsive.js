@@ -497,7 +497,7 @@ export function getResponsiveStyles() {
       }
 
       .progress-top {
-        border-radius: 0;
+        border-radius: var(--radius-surface) var(--radius-surface) 0 0;
       }
 
       .progress-top-fill {
@@ -871,7 +871,7 @@ export function getResponsiveStyles() {
       }
 
       .progress-top {
-        border-radius: 0;
+        border-radius: var(--radius-surface) var(--radius-surface) 0 0;
       }
 
       .progress-top-fill {
