@@ -348,6 +348,8 @@ self.addEventListener('fetch', event => {
               operationType = 'ADD';
             } else if (method === 'POST' && url.pathname === '/api/secrets/batch') {
               operationType = 'BATCH_ADD';
+            } else if (method === 'POST' && url.pathname === '/api/secrets/reorder') {
+              operationType = 'REORDER';
             } else if (method === 'PUT' && url.pathname.startsWith('/api/secrets/')) {
               operationType = 'UPDATE';
             } else if (method === 'DELETE' && url.pathname.startsWith('/api/secrets/')) {

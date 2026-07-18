@@ -117,6 +117,9 @@ function getHTMLBody() {
 
           <!-- 搜索框和操作按钮的水平布局 -->
           <div class="search-action-row">
+          <button type="button" class="search-scan-button" onclick="showQRScanner()" aria-label="扫描二维码" title="扫描二维码">
+            ${icon('qrCode', 'ui-icon')}
+          </button>
           <div class="search-input-wrapper">
             <span class="search-icon">${icon('search', 'ui-icon')}</span>
             <input type="search"
@@ -150,6 +153,7 @@ function getHTMLBody() {
                 <span class="sort-trigger-label">排序</span>
               </summary>
               <div class="sort-menu" role="menu">
+                <button type="button" role="menuitemradio" aria-checked="false" class="sort-option" data-sort="manual-order" onclick="selectSort('manual-order')">手动排序</button>
                 <button type="button" role="menuitemradio" aria-checked="true" class="sort-option active" data-sort="oldest-first" onclick="selectSort('oldest-first')">最早添加</button>
                 <button type="button" role="menuitemradio" aria-checked="false" class="sort-option" data-sort="newest-first" onclick="selectSort('newest-first')">最晚添加</button>
                 <button type="button" role="menuitemradio" aria-checked="false" class="sort-option" data-sort="name-asc" onclick="selectSort('name-asc')">服务名称 A-Z</button>
@@ -159,6 +163,7 @@ function getHTMLBody() {
               </div>
             </details>
             <select id="sortSelect" class="sort-select-hidden" onchange="applySorting()" aria-hidden="true" tabindex="-1">
+              <option value="manual-order">手动排序</option>
               <option value="oldest-first">最早添加</option>
               <option value="newest-first">最晚添加</option>
               <option value="name-asc">服务名称 A-Z</option>

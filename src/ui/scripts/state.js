@@ -21,6 +21,8 @@ export function getStateCode() {
     let currentSearchQuery = '';
     let filteredSecrets = [];
     let saveQueue = Promise.resolve(); // 保存操作队列，确保串行执行避免并发覆盖
+    let draggingSecretId = null;
+    let pointerDragState = null;
     // authToken 已移除 - 现在使用 HttpOnly Cookie
 
 `;

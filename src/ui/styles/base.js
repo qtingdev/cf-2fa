@@ -68,7 +68,13 @@ export function getBaseStyles() {
 
     /* 搜索功能样式 */
     .search-section {
-      margin-bottom: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      margin: 0 -18px 20px;
+      padding: calc(12px + env(safe-area-inset-top, 0px)) 18px 12px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-primary);
     }
 
     .search-container {
@@ -89,6 +95,37 @@ export function getBaseStyles() {
     }
 
     .search-input-wrapper:focus-within {
+      border-color: var(--search-border-focus);
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .search-scan-button {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
+      background: var(--input-bg-focus);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .search-scan-button:hover {
+      border-color: var(--border-focus);
+      background: var(--bg-hover);
+      color: var(--primary, currentColor);
+    }
+
+    .search-scan-button:focus-visible {
+      outline: none;
       border-color: var(--search-border-focus);
       box-shadow: 0 0 0 3px var(--ring);
     }
@@ -503,6 +540,19 @@ export function getBaseStyles() {
     }
 
     @media (max-width: 480px) {
+      .search-section {
+        margin-right: -18px;
+        margin-left: -18px;
+        padding: calc(10px + env(safe-area-inset-top, 0px)) 18px 10px;
+      }
+
+      .search-scan-button {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+        border-radius: var(--radius-sm);
+      }
+
       .search-input-wrapper {
         border-radius: var(--radius-sm);
       }
@@ -574,6 +624,12 @@ export function getBaseStyles() {
     }
 
     @media (max-width: 360px) {
+      .search-scan-button {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+      }
+
       .search-icon {
         padding: 8px 10px;
         font-size: 14px;

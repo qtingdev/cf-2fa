@@ -35,6 +35,25 @@ export function getComponentStyles() {
       transform: translateY(-1px);
     }
 
+    .secret-card-draggable {
+      cursor: grab;
+    }
+
+    .secret-card-draggable:active {
+      cursor: grabbing;
+    }
+
+    .secret-card.dragging {
+      opacity: 0.55;
+      border-color: var(--border-focus);
+      transform: scale(0.98);
+    }
+
+    .secret-card.drag-over {
+      border-color: var(--primary);
+      background: var(--bg-hover);
+    }
+
     .secret-header {
       display: flex;
       justify-content: space-between;
@@ -55,6 +74,14 @@ export function getComponentStyles() {
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 8px;
+    }
+
+    .card-header-actions {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: 8px;
     }
 
     .secret-info {
@@ -110,6 +137,36 @@ export function getComponentStyles() {
       background: var(--bg-hover);
     }
 
+    .drag-handle {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      background: var(--bg-secondary);
+      color: var(--text-tertiary);
+      cursor: grab;
+      touch-action: none;
+      transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease;
+    }
+
+    .drag-handle:hover,
+    .drag-handle:focus-visible {
+      border-color: var(--border-focus);
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
     /* P1.6 手机端保证 ≥44px 触控面积（iOS HIG） */
     @media (max-width: 768px) {
       .card-menu {
@@ -118,6 +175,11 @@ export function getComponentStyles() {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+      }
+
+      .drag-handle {
+        min-width: 44px;
+        min-height: 44px;
       }
     }
 

@@ -351,3 +351,78 @@ export async function handleDeleteSecret(request, env, ctx) {
 		return createErrorResponse('删除密钥失败', `删除密钥操作时发生内部错误`, 500);
 	}
 }
+
+/**
+ * 手动调整密钥排序.
+ *
+ * @param {Request} request - HTTP 请求对象
+ * @param {Object} env - Cloudflare Workers 环境对象
+ * @param {Object} [ctx] - Cloudflare Workers 执行上下文
+ * @returns {Response} 排序保存结果响应
+ */
+export async function handleReorderSecrets(request, env, ctx) {
+	const logger = getLogger(env);
+
+	try {
+		let body;
+		try {
+			body = await request.json();
+		} catch {
+			return createErrorResponse('请求格式错误', '无效的JSON格式', 400, request);
+		}
+
+		const ids = body && Array.isArray(body.ids) ? body.ids : null;
+		if (!ids || ids.length === 0 || !ids.every((id) => typeof id === 'string' && id.trim())) {
+			return createErrorResponse('请求验证失败', '请提供有效的密钥 ID 顺序', 400, request);
+		}
+
+		const existingSecrets = await getAllSecrets(env);
+		if (ids.length !== existingSecrets.length) {
+			return createErrorResponse('请求验证失败', '排序 ID 数量与现有密钥数量不一致', 400, request);
+		}
+
+		const secretById = new Map(existingSecrets.map((secret) => [secret.id, secret]));
+		const seenIds = new Set();
+
+		for (const id of ids) {
+			if (seenIds.has(id)) {
+				return createErrorResponse('请求验证失败', '排序 ID 不能重复', 400, request);
+			}
+
+			if (!secretById.has(id)) {
+				return createErrorResponse('请求验证失败', `密钥 ID 不存在: ${id}`, 400, request);
+			}
+
+			seenIds.add(id);
+		}
+
+		const reorderedSecrets = ids.map((id) => secretById.get(id));
+		const changed = reorderedSecrets.some((secret, index) => existingSecrets[index].id !== secret.id);
+
+		if (changed) {
+			await saveSecretsToKV(env, reorderedSecrets, 'secret-reordered', {}, ctx);
+		}
+
+		logger.info('密钥排序保存成功', {
+			operation: 'handleReorderSecrets',
+			count: reorderedSecrets.length,
+			changed,
+		});
+
+		return createSuccessResponse({ secrets: reorderedSecrets, changed }, changed ? '排序已保存' : '排序未变化', request);
+	} catch (error) {
+		if (error instanceof StorageError || error instanceof CryptoError || error instanceof ConfigurationError) {
+			logError(error, logger, { operation: 'handleReorderSecrets' });
+			if (monitoring && monitoring.getErrorMonitor) {
+				monitoring.getErrorMonitor().captureError(error, { operation: 'handleReorderSecrets' }, ErrorSeverity.WARNING);
+			}
+			return errorToResponse(error, request);
+		}
+
+		logger.error('保存密钥排序失败', { operation: 'handleReorderSecrets', errorMessage: error.message }, error);
+		if (monitoring && monitoring.getErrorMonitor) {
+			monitoring.getErrorMonitor().captureError(error, { operation: 'handleReorderSecrets' }, ErrorSeverity.ERROR);
+		}
+		return createErrorResponse('保存密钥排序失败', '保存手动排序时发生内部错误', 500, request);
+	}
+}

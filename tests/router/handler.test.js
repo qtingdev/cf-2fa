@@ -14,6 +14,7 @@ vi.mock('../../src/api/secrets/index.js', () => ({
   handleAddSecret: vi.fn(async (request, env) => new Response(JSON.stringify({ success: true }), { status: 201 })),
   handleUpdateSecret: vi.fn(async (request, env) => new Response(JSON.stringify({ success: true }), { status: 200 })),
   handleDeleteSecret: vi.fn(async (request, env) => new Response(JSON.stringify({ success: true }), { status: 200 })),
+  handleReorderSecrets: vi.fn(async (request, env) => new Response(JSON.stringify({ success: true }), { status: 200 })),
   handleGenerateOTP: vi.fn(async (secret, request) => new Response(JSON.stringify({ token: '123456' }), { status: 200 })),
   handleBatchAddSecrets: vi.fn(async (request, env) => new Response(JSON.stringify({ success: true }), { status: 200 })),
   handleExportSecrets: vi.fn(async (request, env) => new Response(JSON.stringify({ success: true }), { status: 200 })),
@@ -503,6 +504,34 @@ describe('Router Handler', () => {
       const request = createMockRequest({
         method: 'GET',
         pathname: '/api/secrets/batch'
+      });
+      const env = createMockEnv();
+
+      const response = await handleRequest(request, env);
+
+      expect(response.status).toBe(405);
+    });
+
+    it('应该处理 POST /api/secrets/reorder', async () => {
+      const { handleReorderSecrets } = await import('../../src/api/secrets/index.js');
+
+      const request = createMockRequest({
+        method: 'POST',
+        pathname: '/api/secrets/reorder',
+        body: { ids: ['second-id', 'first-id'] }
+      });
+      const env = createMockEnv();
+
+      const response = await handleRequest(request, env);
+
+      expect(handleReorderSecrets).toHaveBeenCalledWith(request, env, undefined);
+      expect(response.status).toBe(200);
+    });
+
+    it('应该拒绝 /api/secrets/reorder 的不支持方法', async () => {
+      const request = createMockRequest({
+        method: 'GET',
+        pathname: '/api/secrets/reorder'
       });
       const env = createMockEnv();
 

@@ -262,8 +262,14 @@ export function getCoreCode() {
       const safeServiceName = escapeHTML(secret.name || '');
       const safeAccount = escapeHTML(displayAccount);
       const accountTitle = escapeAttribute(displayAccount);
+      const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
+      const cardClass = 'secret-card' + (isManualSort ? ' secret-card-draggable' : '');
+      const cardTitle = isManualSort ? '拖拽调整排序，点击卡片复制验证码' : '点击卡片复制验证码';
+      const dragHandle = isManualSort
+        ? '<button type="button" class="drag-handle" draggable="true" onpointerdown="handleSecretPointerDown(event, &quot;' + secret.id + '&quot;)" ondragstart="handleSecretDragStart(event, &quot;' + secret.id + '&quot;)" onclick="event.stopPropagation()" aria-label="拖拽排序" title="拖拽排序">' + renderIcon('gripVertical', 'ui-icon') + '</button>'
+        : '';
 
-      return '<div class="secret-card" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="点击卡片复制验证码">' +
+      return '<div class="' + cardClass + '" data-secret-id="' + secret.id + '" ondragover="handleSecretDragOver(event, &quot;' + secret.id + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secret.id + '&quot;)" ondragend="handleSecretDragEnd(event)" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="' + cardTitle + '">' +
         '<div class="card-header">' +
           '<div class="secret-info">' +
             '<div class="service-icon">' +
@@ -279,13 +285,16 @@ export function getCoreCode() {
             (isHOTP ? '<p style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">计数器: ' + (secret.counter || 0) + '</p>' : '') +
             '</div>' +
           '</div>' +
-          '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)">' +
-            '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
-            '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
-              '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
-              '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
-              '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
-              '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
+          '<div class="card-header-actions">' +
+            dragHandle +
+            '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)">' +
+              '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
+              '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
+                '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
+                '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
+                '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
+                '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
+              '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -344,6 +353,7 @@ export function getCoreCode() {
 
       emptyState.style.display = 'none';
       secretsList.style.display = 'grid';
+      secretsList.classList.toggle('manual-sort-mode', currentSortType === 'manual-order');
 
       // 应用排序
       const sortedSecrets = sortSecrets(filteredSecrets, currentSortType);
@@ -385,6 +395,7 @@ export function getCoreCode() {
       const isInteractiveElement = target.closest('.card-menu') || 
                                    target.closest('.otp-code') || 
                                    target.closest('.otp-next-container') ||
+                                   target.closest('.drag-handle') ||
                                    target.closest('.secret-actions') ||
                                    target.closest('.action-btn');
       

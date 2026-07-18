@@ -9,6 +9,7 @@ import {
   handleAddSecret,
   handleUpdateSecret,
   handleDeleteSecret,
+  handleReorderSecrets,
   handleBatchAddSecrets,
   handleGenerateOTP
 } from '../../src/api/secrets/index.js';
@@ -175,6 +176,83 @@ describe('API Secrets Module', () => {
       expect(response.status).toBe(500);
       expect(data.error).toBe('ConfigurationError');
       expect(data.message).toContain('ENCRYPTION_KEY');
+    });
+  });
+
+  describe('handleReorderSecrets', () => {
+    it('应该按提交的 ID 顺序保存密钥', async () => {
+      const env = createMockEnv();
+
+      const first = await seedEncryptedSecret(env, { name: 'GitHub', secret: 'JBSWY3DPEHPK3PXP' });
+      const second = await seedEncryptedSecret(env, { name: 'Apple', secret: 'MFRGGZDFMZTWQ2LK' });
+      const third = await seedEncryptedSecret(env, { name: 'Microsoft', secret: 'KRSXG5CTMVRXEZLU' });
+
+      const response = await handleReorderSecrets(
+        createMockRequest(
+          {
+            ids: [third.secretId, first.secretId, second.secretId]
+          },
+          'POST',
+          'https://example.com/api/secrets/reorder'
+        ),
+        env
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.data.changed).toBe(true);
+      expect(data.data.secrets.map(secret => secret.name)).toEqual(['Microsoft', 'GitHub', 'Apple']);
+
+      const getResponse = await handleGetSecrets(env);
+      const savedSecrets = await getResponse.json();
+      expect(savedSecrets.map(secret => secret.name)).toEqual(['Microsoft', 'GitHub', 'Apple']);
+    });
+
+    it('应该拒绝缺失现有密钥 ID 的排序请求', async () => {
+      const env = createMockEnv();
+
+      const first = await seedEncryptedSecret(env, { name: 'GitHub', secret: 'JBSWY3DPEHPK3PXP' });
+      await seedEncryptedSecret(env, { name: 'Apple', secret: 'MFRGGZDFMZTWQ2LK' });
+
+      const response = await handleReorderSecrets(
+        createMockRequest(
+          {
+            ids: [first.secretId]
+          },
+          'POST',
+          'https://example.com/api/secrets/reorder'
+        ),
+        env
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toContain('请求验证失败');
+      expect(data.message).toContain('数量');
+    });
+
+    it('应该拒绝重复的排序 ID', async () => {
+      const env = createMockEnv();
+
+      const first = await seedEncryptedSecret(env, { name: 'GitHub', secret: 'JBSWY3DPEHPK3PXP' });
+      await seedEncryptedSecret(env, { name: 'Apple', secret: 'MFRGGZDFMZTWQ2LK' });
+
+      const response = await handleReorderSecrets(
+        createMockRequest(
+          {
+            ids: [first.secretId, first.secretId]
+          },
+          'POST',
+          'https://example.com/api/secrets/reorder'
+        ),
+        env
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toContain('请求验证失败');
+      expect(data.message).toContain('重复');
     });
   });
 

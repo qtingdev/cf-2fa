@@ -14,7 +14,7 @@
  */
 
 // CRUD 操作处理器
-export { handleGetSecrets, handleAddSecret, handleUpdateSecret, handleDeleteSecret } from './crud.js';
+export { handleGetSecrets, handleAddSecret, handleUpdateSecret, handleDeleteSecret, handleReorderSecrets } from './crud.js';
 
 // 批量导入处理器
 export { handleBatchAddSecrets } from './batch.js';

@@ -9,6 +9,7 @@ import {
 	handleAddSecret,
 	handleUpdateSecret,
 	handleDeleteSecret,
+	handleReorderSecrets,
 	handleGenerateOTP,
 	handleBatchAddSecrets,
 	handleBackupSecrets,
@@ -267,6 +268,13 @@ async function handleApiRequest(pathname, method, request, env, ctx) {
 	if (pathname === '/api/secrets/batch') {
 		if (method === 'POST') {
 			return handleBatchAddSecrets(request, env, ctx);
+		}
+		return createErrorResponse('方法不允许', `不支持的HTTP方法: ${method}`, 405, request);
+	}
+
+	if (pathname === '/api/secrets/reorder') {
+		if (method === 'POST') {
+			return handleReorderSecrets(request, env, ctx);
 		}
 		return createErrorResponse('方法不允许', `不支持的HTTP方法: ${method}`, 405, request);
 	}
