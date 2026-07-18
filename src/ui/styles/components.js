@@ -193,22 +193,17 @@ export function getComponentStyles() {
     }
 
     .secret-text .secret-account {
-      display: inline-block;
+      display: block;
       max-width: 100%;
-      margin-top: 5px;
-      padding: 3px 8px;
-      border: 1px solid var(--border-primary);
-      border-left: 3px solid var(--primary);
-      border-radius: var(--radius-sm);
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1.35;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      vertical-align: top;
+      margin-top: 3px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+      white-space: normal;
+      overflow: visible;
+      overflow-wrap: anywhere;
+      word-break: break-word;
       letter-spacing: 0;
       font-variant-numeric: tabular-nums;
     }
