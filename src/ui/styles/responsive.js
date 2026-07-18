@@ -55,7 +55,7 @@ export function getResponsiveStyles() {
         border: 1px solid var(--restore-warning-border);
         margin-top: 10px;
       }
-      
+
       .restore-content {
         display: flex;
         flex-direction: column;
@@ -106,7 +106,7 @@ export function getResponsiveStyles() {
         position: relative;
         width: 100%;
       }
-      
+
       .backup-select {
         width: 100%;
         min-width: 100%;
@@ -177,12 +177,12 @@ export function getResponsiveStyles() {
         color: var(--backup-header-text);
         font-weight: 600;
       }
-      
+
       .backup-preview {
         width: 100%;
         min-width: 0;
       }
-      
+
       .preview-header {
         font-weight: 600;
         color: var(--text-primary);
@@ -226,12 +226,12 @@ export function getResponsiveStyles() {
       .backup-preview-content::-webkit-scrollbar-thumb:hover {
         background: var(--success-dark);
       }
-      
+
       .backup-table-container {
         width: 100%;
         overflow-x: auto;
       }
-      
+
       .backup-table {
         width: 100%;
         border-collapse: collapse;
@@ -331,12 +331,12 @@ export function getResponsiveStyles() {
         align-items: center;
         gap: 12px;
       }
-      
+
       @keyframes spin {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
       }
-      
+
       .no-backups {
         text-align: center;
         padding: 30px 20px;
@@ -346,59 +346,59 @@ export function getResponsiveStyles() {
         align-items: center;
         gap: 12px;
       }
-      
+
       .loading-backup .ui-icon,
       .no-backups .ui-icon {
         width: 24px;
         height: 24px;
       }
-      
+
       .import-method {
         padding: 10px 12px;
         font-size: 13px;
       }
-      
+
       .file-import-section {
         padding: 20px;
         margin-bottom: 20px;
       }
-      
+
       .import-preview {
         padding: 15px;
         margin: 15px 0;
         max-height: 300px;
       }
-      
+
       .form-actions {
         margin-top: 20px;
         padding-top: 15px;
       }
-      
+
       .form-actions .btn {
         padding: 10px 16px;
         font-size: 13px;
       }
-      
+
       /* 实用工具移动端优化 */
       .tools-list {
         margin-top: 15px;
       }
-      
+
       .tool-item {
         padding: 15px;
       }
-      
+
       .tool-icon {
         font-size: 24px;
         width: 40px;
         height: 40px;
         margin-right: 12px;
       }
-      
+
       .tool-title {
         font-size: 15px;
       }
-      
+
       .tool-desc {
         font-size: 13px;
       }
@@ -408,20 +408,20 @@ export function getResponsiveStyles() {
       }
 
       .content {
-        padding: 15px;
+        padding: 15px 0;
       }
 
       .import-export-buttons {
         gap: 8px;
         margin-bottom: 15px;
       }
-      
+
       .export-button, .import-button {
         font-size: 14px;
         padding: 12px 16px;
         min-width: 160px;
       }
-      
+
       .secret-card {
         padding: 12px;
         padding-top: 16px;
@@ -429,19 +429,19 @@ export function getResponsiveStyles() {
         border-radius: var(--radius-surface);
         box-shadow: none;
       }
-      
+
       .secret-header {
         flex-direction: column;
         align-items: stretch;
         gap: 10px;
       }
-      
+
       .secret-actions {
         justify-content: center;
         width: 100%;
         gap: 8px;
       }
-      
+
       .action-btn {
         flex: 1;
         max-width: 90px;
@@ -449,17 +449,17 @@ export function getResponsiveStyles() {
         font-size: 11px;
         padding: 6px 8px;
       }
-      
+
       .otp-code {
         font-size: 24px;
         letter-spacing: 0;
         padding: 12px 16px;
       }
-      
+
       .otp-preview {
         margin-top: 8px;
       }
-      
+
       .otp-code {
         font-size: 28px !important;
         letter-spacing: 0 !important;
@@ -479,7 +479,7 @@ export function getResponsiveStyles() {
       .otp-countdown-ring-inner {
         inset: 4px;
       }
-      
+
       .otp-main {
         gap: 12px !important;
         /* Chrome兼容性修复 */
@@ -487,7 +487,7 @@ export function getResponsiveStyles() {
         -webkit-align-items: center !important;
         -webkit-justify-content: space-between !important;
       }
-      
+
       .otp-next-container {
         min-width: 70px !important;
         padding: 6px 8px !important;
@@ -499,12 +499,12 @@ export function getResponsiveStyles() {
         -webkit-flex-shrink: 0 !important;
         -webkit-box-flex: 0 !important;
       }
-      
+
       .otp-next-code {
         font-size: 14px !important;
         letter-spacing: 0 !important;
       }
-      
+
       .progress-mini {
         width: 60px;
         height: 5px;
@@ -513,9 +513,9 @@ export function getResponsiveStyles() {
       .modal {
         padding: 10px;
       }
-      
+
       .modal-content {
-        padding: 20px;
+        /*padding: 20px;*/
         /* 小屏幕移动端模态框滚动条样式 */
         scrollbar-width: thin;
         scrollbar-color: var(--scrollbar-thumb) transparent;
@@ -540,25 +540,25 @@ export function getResponsiveStyles() {
         background: var(--scrollbar-thumb-hover);
         background-clip: content-box;
       }
-      
+
       .form-actions {
         flex-direction: row;
         justify-content: space-between;
         gap: 4px;
       }
-      
+
       .form-actions .btn {
         flex: 1;
         padding: 10px 8px;
         font-size: 12px;
         min-width: auto;
       }
-      
+
       .btn {
         width: 100%;
       }
     }
-    
+
     /* 大屏幕手机和小平板适配 */
     @media (min-width: 481px) and (max-width: 767px) {
       /* 容器宽度适配 */
@@ -569,7 +569,7 @@ export function getResponsiveStyles() {
       body {
         padding: 8px;
       }
-      
+
       .secrets-list {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 12px;
@@ -585,11 +585,11 @@ export function getResponsiveStyles() {
         flex-wrap: nowrap;
         align-items: center;
       }
-      
+
       .secret-actions {
         flex-wrap: wrap;
       }
-      
+
       .action-btn {
         font-size: 12px;
         min-width: 50px;
@@ -797,9 +797,9 @@ export function getResponsiveStyles() {
         display: block !important;
       }
     }
-    
 
-    
+
+
     /* 大屏幕桌面端适配 */
     @media (min-width: 1200px) {
       /* 还原配置模态框优化 */

@@ -175,3 +175,5 @@ dist
 CLAUDE.md
 .claude/
 *.stackdump
+
+cf-2fa.code-workspace
