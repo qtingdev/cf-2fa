@@ -49,6 +49,7 @@ export function getVariables() {
       --radius-sm: 6px;
       --radius-md: 8px;
       --radius-lg: 12px;
+      --radius-surface: 12px;
 
       /* 品牌映射 */
       --primary: var(--primary-500);

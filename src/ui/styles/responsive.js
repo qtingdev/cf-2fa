@@ -426,7 +426,7 @@ export function getResponsiveStyles() {
         padding: 12px;
         padding-top: 16px;
         margin-bottom: 0;
-        border-radius: 4px;
+        border-radius: var(--radius-surface);
         box-shadow: none;
       }
       
@@ -851,7 +851,7 @@ export function getResponsiveStyles() {
         padding: 20px;
         padding-top: 24px;
         margin-bottom: 0;
-        border-radius: 6px;
+        border-radius: var(--radius-surface);
         box-shadow: none;
       }
 

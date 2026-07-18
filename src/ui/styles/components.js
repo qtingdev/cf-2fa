@@ -12,7 +12,7 @@ export function getComponentStyles() {
 
     .secret-card {
       background: var(--card-bg);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       padding: 16px;
       padding-top: 20px;
       border: 1px solid var(--card-border);
@@ -139,7 +139,7 @@ export function getComponentStyles() {
       right: -8px;
       background: var(--menu-bg);
       border: 1px solid var(--menu-border);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       min-width: 136px;
       width: fit-content;
       box-shadow: var(--menu-shadow);
@@ -391,7 +391,7 @@ export function getComponentStyles() {
     .dest-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       padding: 12px;
       margin-bottom: 10px;
       transition: opacity 0.2s ease;

@@ -258,7 +258,7 @@ export function getBaseStyles() {
       min-width: 200px;
       background: var(--menu-bg, var(--card-bg));
       border: 1px solid var(--menu-border, var(--border-primary));
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       box-shadow: var(--menu-shadow, 0 8px 24px rgba(0,0,0,0.15));
       padding: 4px;
       z-index: 1002;
@@ -369,7 +369,7 @@ export function getBaseStyles() {
       bottom: 70px;
       right: 0;
       background: var(--menu-bg);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       box-shadow: var(--menu-shadow);
       border: 1px solid var(--menu-border);
       opacity: 0;

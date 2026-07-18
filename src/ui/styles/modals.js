@@ -723,7 +723,7 @@ export function getModalStyles() {
     .import-method {
       background: var(--import-method-bg);
       border: 1px solid var(--import-method-border);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-surface);
       padding: 12px 15px;
       margin-bottom: 10px;
       font-size: 14px;
@@ -784,7 +784,7 @@ export function getModalStyles() {
     /* 实用工具模态框样式 */
     .tools-list {
       background: var(--tool-bg);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       overflow: hidden;
       margin-top: 20px;
     }
@@ -1412,7 +1412,7 @@ export function getModalStyles() {
       padding: 14px 8px;
       background: var(--bg-primary);
       border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       cursor: pointer;
       transition: all 0.2s ease;
       min-height: 72px;
@@ -2299,7 +2299,7 @@ export function getModalStyles() {
     .sync-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-surface);
       padding: 16px;
       cursor: pointer;
       transition: all 0.2s ease;
