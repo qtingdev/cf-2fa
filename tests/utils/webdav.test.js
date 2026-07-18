@@ -307,8 +307,189 @@ describe('WebDAV Utils Module (Multi-Destination)', () => {
 				expect(status.lastError).toBeNull();
 
 				// 验证 fetch URL
-				const fetchCall = globalThis.fetch.mock.calls[0];
-				expect(fetchCall[0]).toBe('https://dav.example.com/backup/backup_test.json');
+				const putCall = globalThis.fetch.mock.calls.find((call) => call[1]?.method === 'PUT');
+				expect(putCall[0]).toBe('https://dav.example.com/backup/cf-2fa-backup/backup_test.json');
+			} finally {
+				globalThis.fetch = originalFetch;
+			}
+		});
+
+		it('应自动创建并使用 cf-2fa-backup 子目录', async () => {
+			await saveWebDAVSingleConfig(env, {
+				name: 'NAS1',
+				url: 'https://dav.example.com',
+				username: 'u',
+				password: 'p',
+				path: '/',
+			});
+
+			const originalFetch = globalThis.fetch;
+			globalThis.fetch = vi.fn().mockImplementation((url, options = {}) => {
+				if (options.method === 'PROPFIND') {
+					return Promise.resolve({
+						ok: true,
+						status: 207,
+						statusText: 'Multi-Status',
+						text: async () => '<d:multistatus xmlns:d="DAV:" />',
+					});
+				}
+				return Promise.resolve({ ok: true, status: 201, statusText: 'Created' });
+			});
+
+			try {
+				const result = await pushToAllWebDAV('backup_test.json', '{}', env);
+
+				expect(result.successCount).toBe(1);
+
+				const probeCall = globalThis.fetch.mock.calls.find((call) => call[1]?.method === 'PROPFIND' && call[1]?.headers?.Depth === '0');
+				const putCall = globalThis.fetch.mock.calls.find((call) => call[1]?.method === 'PUT');
+				expect(probeCall[0]).toBe('https://dav.example.com/cf-2fa-backup/');
+				expect(putCall[0]).toBe('https://dav.example.com/cf-2fa-backup/backup_test.json');
+			} finally {
+				globalThis.fetch = originalFetch;
+			}
+		});
+
+		it('备份目录不存在时应逐级创建后再上传', async () => {
+			await saveWebDAVSingleConfig(env, {
+				name: 'NAS1',
+				url: 'https://dav.example.com',
+				username: 'u',
+				password: 'p',
+				path: '/dav',
+			});
+
+			const originalFetch = globalThis.fetch;
+			globalThis.fetch = vi.fn().mockImplementation((url, options = {}) => {
+				if (options.method === 'PROPFIND' && options.headers.Depth === '0') {
+					return Promise.resolve({ ok: false, status: 404, statusText: 'Not Found' });
+				}
+				if (options.method === 'MKCOL' && url.endsWith('/dav/')) {
+					return Promise.resolve({ ok: false, status: 405, statusText: 'Method Not Allowed' });
+				}
+				if (options.method === 'MKCOL' && url.endsWith('/dav/cf-2fa-backup/')) {
+					return Promise.resolve({ ok: true, status: 201, statusText: 'Created' });
+				}
+				if (options.method === 'PUT') {
+					return Promise.resolve({ ok: true, status: 201, statusText: 'Created' });
+				}
+				if (options.method === 'PROPFIND' && options.headers.Depth === '1') {
+					return Promise.resolve({
+						ok: true,
+						status: 207,
+						statusText: 'Multi-Status',
+						text: async () => '<d:multistatus xmlns:d="DAV:" />',
+					});
+				}
+				return Promise.resolve({ ok: false, status: 500, statusText: 'Unexpected' });
+			});
+
+			try {
+				const result = await pushToAllWebDAV('backup_test.json', '{}', env);
+
+				expect(result.successCount).toBe(1);
+
+				const mkcolCalls = globalThis.fetch.mock.calls.filter((call) => call[1]?.method === 'MKCOL');
+				const putCall = globalThis.fetch.mock.calls.find((call) => call[1]?.method === 'PUT');
+				expect(mkcolCalls.map((call) => call[0])).toEqual([
+					'https://dav.example.com/dav/',
+					'https://dav.example.com/dav/cf-2fa-backup/',
+				]);
+				expect(putCall[0]).toBe('https://dav.example.com/dav/cf-2fa-backup/backup_test.json');
+			} finally {
+				globalThis.fetch = originalFetch;
+			}
+		});
+
+		it('配置路径已是 cf-2fa-backup 时不应重复追加目录', async () => {
+			await saveWebDAVSingleConfig(env, {
+				name: 'NAS1',
+				url: 'https://dav.example.com',
+				username: 'u',
+				password: 'p',
+				path: '/cf-2fa-backup',
+			});
+
+			const originalFetch = globalThis.fetch;
+			globalThis.fetch = vi.fn().mockImplementation((url, options = {}) => {
+				if (options.method === 'PROPFIND') {
+					return Promise.resolve({
+						ok: true,
+						status: 207,
+						statusText: 'Multi-Status',
+						text: async () => '<d:multistatus xmlns:d="DAV:" />',
+					});
+				}
+				return Promise.resolve({ ok: true, status: 201, statusText: 'Created' });
+			});
+
+			try {
+				const result = await pushToAllWebDAV('backup_test.json', '{}', env);
+
+				expect(result.successCount).toBe(1);
+
+				const putCall = globalThis.fetch.mock.calls.find((call) => call[1]?.method === 'PUT');
+				expect(putCall[0]).toBe('https://dav.example.com/cf-2fa-backup/backup_test.json');
+			} finally {
+				globalThis.fetch = originalFetch;
+			}
+		});
+
+		it('推送成功后应清理 7 天前的远端备份', async () => {
+			const addResult = await saveWebDAVSingleConfig(env, {
+				name: 'NAS1',
+				url: 'https://dav.example.com',
+				username: 'u',
+				password: 'p',
+				path: '/',
+			});
+			const currentBackupKey = 'backup_2999-01-01_00-00-00-000-UTC-new1.json';
+			const oldBackupKey = 'backup_2020-01-01_00-00-00-000-UTC-old1.json';
+			const recentBackupKey = 'backup_2999-01-02_00-00-00-000-UTC-new2.json';
+			const listing = [
+				'<d:multistatus xmlns:d="DAV:">',
+				`<d:response><d:href>/cf-2fa-backup/${oldBackupKey}</d:href></d:response>`,
+				`<d:response><d:href>/cf-2fa-backup/${currentBackupKey}</d:href></d:response>`,
+				`<d:response><d:href>/cf-2fa-backup/${recentBackupKey}</d:href></d:response>`,
+				'<d:response><d:href>/cf-2fa-backup/readme.txt</d:href></d:response>',
+				'</d:multistatus>',
+			].join('');
+
+			const originalFetch = globalThis.fetch;
+			globalThis.fetch = vi.fn().mockImplementation((url, options = {}) => {
+				if (options.method === 'PROPFIND' && options.headers.Depth === '0') {
+					return Promise.resolve({ ok: true, status: 207, statusText: 'Multi-Status' });
+				}
+				if (options.method === 'PUT') {
+					return Promise.resolve({ ok: true, status: 201, statusText: 'Created' });
+				}
+				if (options.method === 'PROPFIND' && options.headers.Depth === '1') {
+					return Promise.resolve({
+						ok: true,
+						status: 207,
+						statusText: 'Multi-Status',
+						text: async () => listing,
+					});
+				}
+				if (options.method === 'DELETE') {
+					return Promise.resolve({ ok: true, status: 204, statusText: 'No Content' });
+				}
+				return Promise.resolve({ ok: false, status: 500, statusText: 'Unexpected' });
+			});
+
+			try {
+				const result = await pushToAllWebDAV(currentBackupKey, '{}', env);
+
+				expect(result.successCount).toBe(1);
+				expect(result.results[0].cleanup.deletedCount).toBe(1);
+				expect(result.results[0].cleanup.retentionDays).toBe(7);
+
+				const deleteCalls = globalThis.fetch.mock.calls.filter((call) => call[1]?.method === 'DELETE');
+				expect(deleteCalls.length).toBe(1);
+				expect(deleteCalls[0][0]).toBe(`https://dav.example.com/cf-2fa-backup/${oldBackupKey}`);
+
+				const status = await getWebDAVStatus(env, addResult.id);
+				expect(status.lastCleanup.deletedCount).toBe(1);
 			} finally {
 				globalThis.fetch = originalFetch;
 			}
@@ -334,8 +515,9 @@ describe('WebDAV Utils Module (Multi-Destination)', () => {
 				await pushToAllWebDAV('backup_test.csv', 'service,secret', env);
 				await pushToAllWebDAV('backup_test.html', 'v1:encrypted-backup', env);
 
-				expect(globalThis.fetch.mock.calls[0][1].headers['Content-Type']).toBe('text/csv;charset=utf-8');
-				expect(globalThis.fetch.mock.calls[1][1].headers['Content-Type']).toBe('application/octet-stream');
+				const putCalls = globalThis.fetch.mock.calls.filter((call) => call[1]?.method === 'PUT');
+				expect(putCalls[0][1].headers['Content-Type']).toBe('text/csv;charset=utf-8');
+				expect(putCalls[1][1].headers['Content-Type']).toBe('application/octet-stream');
 			} finally {
 				globalThis.fetch = originalFetch;
 			}
@@ -351,10 +533,15 @@ describe('WebDAV Utils Module (Multi-Destination)', () => {
 			});
 
 			const originalFetch = globalThis.fetch;
-			globalThis.fetch = vi.fn().mockResolvedValue({
-				ok: false,
-				status: 403,
-				statusText: 'Forbidden',
+			globalThis.fetch = vi.fn().mockImplementation((url, options = {}) => {
+				if (options.method === 'PROPFIND') {
+					return Promise.resolve({ ok: true, status: 207, statusText: 'Multi-Status', text: async () => '' });
+				}
+				return Promise.resolve({
+					ok: false,
+					status: 403,
+					statusText: 'Forbidden',
+				});
 			});
 
 			try {

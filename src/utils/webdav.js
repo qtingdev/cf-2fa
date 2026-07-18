@@ -11,9 +11,13 @@
 
 import { encryptData, decryptData, isEncrypted } from './encryption.js';
 import { getLogger } from './logger.js';
-import { getBackupContentType } from './backup-format.js';
+import { getBackupContentType, isValidBackupKey, parseBackupTimeFromKey } from './backup-format.js';
 
 const WEBDAV_USER_AGENT = '2FA-Manager/1.0 (Cloudflare Workers; WebDAV Client)';
+const WEBDAV_BACKUP_DIRECTORY = 'cf-2fa-backup';
+const WEBDAV_RETENTION_DAYS = 7;
+const WEBDAV_RETENTION_MS = WEBDAV_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+const WEBDAV_TIMEOUT_MS = 15000;
 // ==================== 多目标配置管理 ====================
 
 /**
@@ -227,22 +231,31 @@ async function _pushToSingleWebDAV(backupKey, backupContent, config, env) {
 
 	try {
 		const baseUrl = config.url.replace(/\/+$/, '');
-		const cleanPath = config.path === '/' ? '' : config.path.replace(/\/+$/, '');
-		const targetUrl = `${baseUrl}${cleanPath}/${backupKey}`;
+		const backupDirectoryPath = _resolveBackupDirectoryPath(config.path);
+		const targetUrl = `${baseUrl}${backupDirectoryPath}/${backupKey}`;
 		const authHeader = 'Basic ' + _encodeBasicAuth(config.username, config.password);
 
 		logger.info('开始推送备份到 WebDAV', {
 			backupKey,
 			targetName: config.name,
+			targetPath: backupDirectoryPath,
 			targetUrl,
 			contentLength: backupContent.length,
 		});
 
+		const ensureOk = await _withTimeout((signal) => _ensureDirectoryExists(baseUrl, backupDirectoryPath, authHeader, logger, signal));
+		if (!ensureOk) {
+			const errorMsg = `WebDAV 备份目录创建失败：${backupDirectoryPath}`;
+			logger.warn(errorMsg, { backupKey, targetName: config.name });
+			await _recordWebDAVStatusError(env, config.id, backupKey, errorMsg);
+			return { success: false, id: config.id, name: config.name, backupKey, error: errorMsg };
+		}
+
 		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), 15000);
+		const timeoutId = setTimeout(() => controller.abort(), WEBDAV_TIMEOUT_MS);
 
 		try {
-			let response = await fetch(targetUrl, {
+			const response = await fetch(targetUrl, {
 				method: 'PUT',
 				signal: controller.signal,
 				headers: {
@@ -253,39 +266,25 @@ async function _pushToSingleWebDAV(backupKey, backupContent, config, env) {
 				body: backupContent,
 			});
 
-			// 404/409 时尝试自动创建目录后重试
-			if ((response.status === 404 || response.status === 409) && cleanPath) {
-				logger.info('目标目录不存在，尝试自动创建', { path: cleanPath });
-				const mkcolOk = await _ensureDirectory(baseUrl, cleanPath, authHeader, logger, controller.signal);
-				if (mkcolOk) {
-					response = await fetch(targetUrl, {
-						method: 'PUT',
-						signal: controller.signal,
-						headers: {
-							Authorization: authHeader,
-							'Content-Type': getBackupContentType(backupKey, { encrypted: backupContent.startsWith('v1:') }),
-							'User-Agent': WEBDAV_USER_AGENT,
-						},
-						body: backupContent,
-					});
-				}
-			}
-
 			clearTimeout(timeoutId);
 
 			if (response.ok || response.status === 201 || response.status === 204) {
+				const cleanup = await _cleanupOldWebDAVBackups(baseUrl, backupDirectoryPath, authHeader, backupKey, logger);
+
 				logger.info('WebDAV 推送成功', {
 					backupKey,
 					targetName: config.name,
 					status: response.status,
+					cleanup,
 				});
 
 				await _recordWebDAVStatus(env, config.id, {
 					lastSuccess: { backupKey, timestamp: new Date().toISOString() },
+					lastCleanup: cleanup,
 					lastError: null,
 				});
 
-				return { success: true, id: config.id, name: config.name, backupKey, status: response.status };
+				return { success: true, id: config.id, name: config.name, backupKey, status: response.status, cleanup };
 			}
 
 			const errorMsg = `WebDAV 服务器返回 ${response.status}: ${response.statusText}`;
@@ -296,7 +295,8 @@ async function _pushToSingleWebDAV(backupKey, backupContent, config, env) {
 		} catch (fetchError) {
 			clearTimeout(timeoutId);
 
-			const errorMsg = fetchError.name === 'AbortError' ? 'WebDAV 推送超时（15s）' : `WebDAV 推送失败: ${fetchError.message}`;
+			const errorMsg =
+				fetchError.name === 'AbortError' ? `WebDAV 推送超时（${WEBDAV_TIMEOUT_MS / 1000}s）` : `WebDAV 推送失败: ${fetchError.message}`;
 			logger.warn(errorMsg, { backupKey, targetName: config.name });
 
 			try {
@@ -353,8 +353,8 @@ function _friendlyFetchError(error, prefix = '连接') {
 export async function testWebDAVConnection(config) {
 	const baseUrl = config.url.replace(/\/+$/, '');
 	const path = config.path || '/';
-	const cleanPath = path === '/' ? '' : path.replace(/\/+$/, '');
 	const targetUrl = path === '/' ? `${baseUrl}/` : `${baseUrl}${path}`;
+	const backupDirectoryPath = _resolveBackupDirectoryPath(path);
 	const authHeader = 'Basic ' + _encodeBasicAuth(config.username, config.password);
 
 	const methods = [
@@ -373,7 +373,7 @@ export async function testWebDAVConnection(config) {
 
 	for (const { method, headers } of methods) {
 		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), 15000);
+		const timeoutId = setTimeout(() => controller.abort(), WEBDAV_TIMEOUT_MS);
 
 		try {
 			const response = await fetch(targetUrl, {
@@ -414,7 +414,7 @@ export async function testWebDAVConnection(config) {
 			all520 = false;
 
 			if (error.name === 'AbortError') {
-				return { success: false, message: '连接超时（15s），请检查服务器地址' };
+				return { success: false, message: `连接超时（${WEBDAV_TIMEOUT_MS / 1000}s），请检查服务器地址` };
 			}
 
 			continue;
@@ -434,7 +434,7 @@ export async function testWebDAVConnection(config) {
 
 	// 写入测试文件
 	const testFileName = '.2fa-webdav-test.txt';
-	const testFileUrl = `${baseUrl}${cleanPath}/${testFileName}`;
+	const testFileUrl = `${baseUrl}${backupDirectoryPath}/${testFileName}`;
 	const testContent = JSON.stringify({
 		test: true,
 		timestamp: new Date().toISOString(),
@@ -442,10 +442,22 @@ export async function testWebDAVConnection(config) {
 	});
 
 	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), 15000);
+	const timeoutId = setTimeout(() => controller.abort(), WEBDAV_TIMEOUT_MS);
 
 	try {
-		let putResponse = await fetch(testFileUrl, {
+		const backupDirOk = await _ensureDirectoryExists(
+			baseUrl,
+			backupDirectoryPath,
+			authHeader,
+			{ info: () => {}, debug: () => {}, warn: () => {} },
+			controller.signal,
+		);
+		if (!backupDirOk) {
+			clearTimeout(timeoutId);
+			return { success: false, message: `写入测试失败：无法创建备份目录 ${backupDirectoryPath}` };
+		}
+
+		const putResponse = await fetch(testFileUrl, {
 			method: 'PUT',
 			signal: controller.signal,
 			headers: {
@@ -456,32 +468,14 @@ export async function testWebDAVConnection(config) {
 			body: testContent,
 		});
 
-		if ((putResponse.status === 404 || putResponse.status === 409) && cleanPath) {
-			const mkcolOk = await _ensureDirectory(
-				baseUrl,
-				cleanPath,
-				authHeader,
-				{ info: () => {}, debug: () => {}, warn: () => {} },
-				controller.signal,
-			);
-			if (mkcolOk) {
-				putResponse = await fetch(testFileUrl, {
-					method: 'PUT',
-					signal: controller.signal,
-					headers: {
-						Authorization: authHeader,
-						'Content-Type': 'application/json',
-						'User-Agent': WEBDAV_USER_AGENT,
-					},
-					body: testContent,
-				});
-			}
-		}
-
 		clearTimeout(timeoutId);
 
 		if (putResponse.ok || putResponse.status === 201 || putResponse.status === 204) {
-			return { success: true, message: `连接成功，已验证写入权限（测试文件：${testFileName}）`, method: successMethod };
+			return {
+				success: true,
+				message: `连接成功，已验证写入权限（备份目录：${backupDirectoryPath}，测试文件：${testFileName}）`,
+				method: successMethod,
+			};
 		}
 
 		if (putResponse.status === 404) {
@@ -497,7 +491,7 @@ export async function testWebDAVConnection(config) {
 		clearTimeout(timeoutId);
 
 		if (error.name === 'AbortError') {
-			return { success: false, message: '写入测试超时（15s）' };
+			return { success: false, message: `写入测试超时（${WEBDAV_TIMEOUT_MS / 1000}s）` };
 		}
 
 		return { success: false, message: _friendlyFetchError(error, '写入测试') };
@@ -552,6 +546,221 @@ async function _recordWebDAVStatusError(env, id, backupKey, errorMsg) {
 			timestamp: new Date().toISOString(),
 		},
 	});
+}
+
+/**
+ * 给用户配置的基础路径追加固定备份目录。
+ * @private
+ */
+function _resolveBackupDirectoryPath(configPath = '/') {
+	const normalizedPath = _normalizeWebDAVPath(configPath);
+	const parts = normalizedPath.split('/').filter(Boolean);
+
+	if (parts[parts.length - 1] === WEBDAV_BACKUP_DIRECTORY) {
+		return normalizedPath;
+	}
+
+	return _joinWebDAVPath(normalizedPath, WEBDAV_BACKUP_DIRECTORY);
+}
+
+/**
+ * 归一化 WebDAV 路径，保留根路径为 /。
+ * @private
+ */
+function _normalizeWebDAVPath(path = '/') {
+	const parts = String(path || '/')
+		.trim()
+		.replace(/\/+/g, '/')
+		.split('/')
+		.filter(Boolean);
+
+	return parts.length === 0 ? '/' : '/' + parts.join('/');
+}
+
+/**
+ * 拼接 WebDAV 路径。
+ * @private
+ */
+function _joinWebDAVPath(...segments) {
+	const parts = segments
+		.flatMap((segment) =>
+			String(segment || '')
+				.split('/')
+				.filter(Boolean),
+		)
+		.filter(Boolean);
+
+	return '/' + parts.join('/');
+}
+
+/**
+ * 在固定超时时间内执行 WebDAV 请求组。
+ * @private
+ */
+async function _withTimeout(task) {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), WEBDAV_TIMEOUT_MS);
+
+	try {
+		return await task(controller.signal);
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
+
+/**
+ * 判断目录是否存在，不存在时逐级创建。
+ * @private
+ */
+async function _ensureDirectoryExists(baseUrl, path, authHeader, logger, signal) {
+	const normalizedPath = _normalizeWebDAVPath(path);
+	const dirUrl = `${baseUrl}${normalizedPath}/`;
+
+	try {
+		const response = await fetch(dirUrl, {
+			method: 'PROPFIND',
+			headers: {
+				Authorization: authHeader,
+				Depth: '0',
+				'Content-Type': 'application/xml',
+				'User-Agent': WEBDAV_USER_AGENT,
+			},
+			signal,
+		});
+
+		if (response.ok || response.status === 207) {
+			logger.debug('WebDAV 备份目录已存在', { path: normalizedPath });
+			return true;
+		}
+
+		if (response.status !== 404) {
+			logger.debug('WebDAV 目录探测不可用，改用 MKCOL 确认', { path: normalizedPath, status: response.status });
+		}
+	} catch (error) {
+		if (error.name === 'AbortError') {
+			throw error;
+		}
+		logger.debug('WebDAV 目录探测失败，改用 MKCOL 确认', { path: normalizedPath, error: error.message });
+	}
+
+	return _ensureDirectory(baseUrl, normalizedPath, authHeader, logger, signal);
+}
+
+/**
+ * 清理远端 7 天前的备份文件，清理失败不影响当前备份。
+ * @private
+ */
+async function _cleanupOldWebDAVBackups(baseUrl, backupDirectoryPath, authHeader, currentBackupKey, logger) {
+	try {
+		return await _withTimeout(async (signal) => {
+			const cutoff = Date.now() - WEBDAV_RETENTION_MS;
+			const listUrl = `${baseUrl}${backupDirectoryPath}/`;
+			const response = await fetch(listUrl, {
+				method: 'PROPFIND',
+				headers: {
+					Authorization: authHeader,
+					Depth: '1',
+					'Content-Type': 'application/xml',
+					'User-Agent': WEBDAV_USER_AGENT,
+				},
+				signal,
+			});
+
+			if (!(response.ok || response.status === 207)) {
+				logger.warn('WebDAV 旧备份清理跳过：目录列表读取失败', {
+					path: backupDirectoryPath,
+					status: response.status,
+					statusText: response.statusText,
+				});
+				return { success: false, deletedCount: 0, retentionDays: WEBDAV_RETENTION_DAYS, error: `PROPFIND ${response.status}` };
+			}
+
+			const xml = await response.text();
+			const backupKeys = _extractBackupKeysFromWebDAVListing(xml);
+			const expiredKeys = backupKeys.filter((key) => {
+				if (key === currentBackupKey) {
+					return false;
+				}
+
+				const createdAt = Date.parse(parseBackupTimeFromKey(key));
+				return Number.isFinite(createdAt) && createdAt < cutoff;
+			});
+
+			if (expiredKeys.length === 0) {
+				return { success: true, deletedCount: 0, retentionDays: WEBDAV_RETENTION_DAYS };
+			}
+
+			const results = await Promise.allSettled(
+				expiredKeys.map((key) =>
+					fetch(`${baseUrl}${backupDirectoryPath}/${key}`, {
+						method: 'DELETE',
+						headers: { Authorization: authHeader, 'User-Agent': WEBDAV_USER_AGENT },
+						signal,
+					}),
+				),
+			);
+
+			const deletedCount = results.filter((result) => {
+				if (result.status !== 'fulfilled') {
+					return false;
+				}
+				const response = result.value;
+				return response.ok || response.status === 204 || response.status === 404;
+			}).length;
+			const failedCount = expiredKeys.length - deletedCount;
+
+			if (failedCount > 0) {
+				logger.warn('WebDAV 旧备份部分清理失败', { deletedCount, failedCount });
+			}
+
+			return { success: failedCount === 0, deletedCount, failedCount, retentionDays: WEBDAV_RETENTION_DAYS };
+		});
+	} catch (error) {
+		const errorMsg = error.name === 'AbortError' ? `清理超时（${WEBDAV_TIMEOUT_MS / 1000}s）` : error.message;
+		logger.warn('WebDAV 旧备份清理失败', { path: backupDirectoryPath, error: errorMsg });
+		return { success: false, deletedCount: 0, retentionDays: WEBDAV_RETENTION_DAYS, error: errorMsg };
+	}
+}
+
+/**
+ * 从 WebDAV multistatus XML 中提取备份文件名。
+ * @private
+ */
+function _extractBackupKeysFromWebDAVListing(xml) {
+	const backupKeys = new Set();
+	const hrefRegex = /<[^>]*href[^>]*>([^<]+)<\/[^>]*href>/gi;
+	let match;
+
+	while ((match = hrefRegex.exec(xml))) {
+		const rawHref = match[1]
+			.replace(/&amp;/g, '&')
+			.replace(/&lt;/g, '<')
+			.replace(/&gt;/g, '>')
+			.replace(/&quot;/g, '"')
+			.replace(/&#39;/g, "'");
+		const fileName = _extractFileNameFromHref(rawHref);
+		if (isValidBackupKey(fileName)) {
+			backupKeys.add(fileName);
+		}
+	}
+
+	return Array.from(backupKeys);
+}
+
+/**
+ * 从 href 中取文件名。
+ * @private
+ */
+function _extractFileNameFromHref(href) {
+	try {
+		const decoded = decodeURIComponent(href);
+		const pathname = decoded.startsWith('http://') || decoded.startsWith('https://') ? new URL(decoded).pathname : decoded;
+		const parts = pathname.split('/').filter(Boolean);
+		return parts[parts.length - 1] || '';
+	} catch {
+		const parts = String(href).split('/').filter(Boolean);
+		return parts[parts.length - 1] || '';
+	}
 }
 
 /**

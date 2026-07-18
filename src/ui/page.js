@@ -847,8 +847,9 @@ function getHTMLBody() {
             </div>
 
             <div style="margin-bottom: 15px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">远程路径</label>
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">远程基础路径</label>
               <input type="text" id="webdavPath" class="secret-input" value="/" placeholder="/" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <div style="margin-top: 6px; color: var(--text-tertiary); font-size: 12px; line-height: 1.5;">备份会自动写入此路径下的 cf-2fa-backup 目录，并保留最近 7 天的远端备份。</div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 8px;">
@@ -860,7 +861,7 @@ function getHTMLBody() {
         </div>
 
         <div class="advanced-info" style="margin-top: 10px; padding: 12px; border-radius: 6px; font-size: 12px; color: var(--text-tertiary); background: var(--bg-secondary); line-height: 1.6;">
-          配置 WebDAV 后，每次备份（事件驱动、定时、手动）都会自动推送到所有已启用的 WebDAV 目标。支持 NextCloud、Alist 等。
+          配置 WebDAV 后，每次备份（事件驱动、定时、手动）都会自动推送到所有已启用的 WebDAV 目标。系统会自动创建 cf-2fa-backup 目录，并清理 7 天前的远端备份。支持 NextCloud、Alist 等。
         </div>
       </div>
 
