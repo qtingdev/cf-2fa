@@ -205,10 +205,63 @@ export function getCoreCode() {
       return colors[Math.abs(hash) % colors.length];
     }
 
+    function escapeAttribute(value) {
+      return String(value || '').replace(/[&<>"']/g, function(char) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[char];
+      });
+    }
+
+    function getDisplayAccount(secret) {
+      const rawAccount = String(secret && secret.account ? secret.account : '').trim();
+      if (!rawAccount) {
+        return '';
+      }
+
+      let account = rawAccount;
+
+      if (/^otpauth:\\/\\//i.test(account)) {
+        try {
+          const url = new URL(account);
+          account = decodeURIComponent(url.pathname.replace(/^\\/+/, ''));
+        } catch (error) {
+          account = account.replace(/^otpauth:\\/\\/(totp|hotp)\\//i, '');
+        }
+      }
+
+      account = account
+        .replace(/^\\/+/, '')
+        .replace(/^(totp|hotp)\\//i, '')
+        .split('?')[0]
+        .trim();
+
+      const colonIndex = account.indexOf(':');
+      if (colonIndex !== -1) {
+        account = account.slice(colonIndex + 1).trim();
+      }
+
+      try {
+        account = decodeURIComponent(account);
+      } catch {
+        // 保留原始账号文本
+      }
+
+      return account.trim();
+    }
+
     // 创建密钥卡片
     function createSecretCard(secret) {
       const logoUrl = getServiceLogo(secret.name);
       const isHOTP = secret.type && secret.type.toUpperCase() === 'HOTP';
+      const displayAccount = getDisplayAccount(secret);
+      const safeServiceName = escapeHTML(secret.name || '');
+      const safeAccount = escapeHTML(displayAccount);
+      const accountTitle = escapeAttribute(displayAccount);
 
       return '<div class="secret-card" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="点击卡片复制验证码">' +
         // TOTP 显示进度条，HOTP 不显示
@@ -227,8 +280,8 @@ export function getCoreCode() {
               ) +
             '</div>' +
             '<div class="secret-text">' +
-            '<h3>' + secret.name + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
-            (secret.account ? '<p>' + secret.account + '</p>' : '') +
+            '<h3>' + safeServiceName + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
+            (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
             (isHOTP ? '<p style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">计数器: ' + (secret.counter || 0) + '</p>' : '') +
             '</div>' +
           '</div>' +
