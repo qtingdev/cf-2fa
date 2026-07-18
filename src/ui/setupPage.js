@@ -4,6 +4,7 @@
  */
 
 import { getVariables } from './styles/variables.js';
+import { icon } from './icons.js';
 
 /**
  * 创建首次设置页面
@@ -40,8 +41,8 @@ export async function createSetupPage() {
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: var(--bg-secondary);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg-primary);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -52,8 +53,9 @@ export async function createSetupPage() {
 
     .setup-container {
       background: var(--bg-primary);
+      border: 1px solid var(--border-primary);
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xl);
+      box-shadow: var(--shadow-lg);
       max-width: 480px;
       width: 100%;
       padding: 40px;
@@ -65,8 +67,16 @@ export async function createSetupPage() {
     }
 
     .setup-icon {
-      font-size: 64px;
+      width: 56px;
+      height: 56px;
       margin-bottom: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      background: var(--accent);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
     }
 
     .setup-title {
@@ -84,8 +94,8 @@ export async function createSetupPage() {
 
     .security-notice {
       background: var(--warning-light);
-      border-left: 4px solid var(--warning-dark);
-      border-radius: var(--radius-sm);
+      border: 1px solid var(--warning-dark);
+      border-radius: var(--radius-md);
       padding: 15px;
       margin-bottom: 25px;
       font-size: 13px;
@@ -97,6 +107,23 @@ export async function createSetupPage() {
       display: block;
       margin-bottom: 5px;
       font-size: 14px;
+    }
+
+    .notice-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ui-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .setup-icon .ui-icon {
+      width: 28px;
+      height: 28px;
     }
 
     .form-group {
@@ -118,7 +145,7 @@ export async function createSetupPage() {
     .form-input {
       width: 100%;
       padding: 14px 40px 14px 16px;
-      border: 2px solid var(--input-border);
+      border: 1px solid var(--input-border);
       border-radius: var(--radius-md);
       font-size: 15px;
       transition: all 0.3s ease;
@@ -131,7 +158,7 @@ export async function createSetupPage() {
       outline: none;
       border-color: var(--input-border-focus);
       background: var(--input-bg-focus);
-      box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.12);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .toggle-password {
@@ -142,7 +169,6 @@ export async function createSetupPage() {
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 20px;
       padding: 5px;
       color: var(--text-tertiary);
       transition: color 0.2s;
@@ -173,11 +199,15 @@ export async function createSetupPage() {
     }
 
     .password-requirements li:before {
-      content: '✓';
+      content: '';
       position: absolute;
       left: 0;
+      top: 9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #4caf50;
       color: #4caf50;
-      font-weight: bold;
     }
 
     .password-strength {
@@ -202,7 +232,7 @@ export async function createSetupPage() {
     .submit-button {
       width: 100%;
       padding: 16px;
-      background: var(--primary-600);
+      background: var(--primary);
       color: white;
       border: none;
       border-radius: var(--radius-md);
@@ -214,7 +244,7 @@ export async function createSetupPage() {
     }
 
     .submit-button:hover {
-      background: var(--primary-700);
+      background: var(--primary-hover);
     }
 
     .submit-button:active {
@@ -288,7 +318,7 @@ export async function createSetupPage() {
 <body>
   <div class="setup-container">
     <div class="setup-header">
-      <div class="setup-icon">🔐</div>
+      <div class="setup-icon">${icon('lock', 'ui-icon')}</div>
       <h1 class="setup-title">欢迎使用 2FA</h1>
       <p class="setup-description">
         首次使用需要设置管理密码<br>
@@ -297,7 +327,7 @@ export async function createSetupPage() {
     </div>
 
     <div class="security-notice">
-      <strong>🛡️ 安全提示</strong>
+      <strong class="notice-title">${icon('shield', 'ui-icon')}安全提示</strong>
       请设置一个强密码，并妥善保管。这是您登录管理密钥的唯一凭证。
     </div>
 
@@ -318,7 +348,7 @@ export async function createSetupPage() {
             oninput="checkPasswordStrength()"
           >
           <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')" title="显示/隐藏密码">
-            👁️
+            ${icon('eye', 'ui-icon')}
           </button>
         </div>
         <div class="password-strength" id="passwordStrength">
@@ -348,7 +378,7 @@ export async function createSetupPage() {
             required
           >
           <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirmPassword')" title="显示/隐藏密码">
-            👁️
+            ${icon('eye', 'ui-icon')}
           </button>
         </div>
       </div>
@@ -360,6 +390,9 @@ export async function createSetupPage() {
   </div>
 
   <script>
+    const eyeIcon = ${JSON.stringify(icon('eye', 'ui-icon'))};
+    const eyeOffIcon = ${JSON.stringify(icon('eyeOff', 'ui-icon'))};
+
     // 切换密码可见性
     function togglePasswordVisibility(inputId) {
       const input = document.getElementById(inputId);
@@ -367,10 +400,10 @@ export async function createSetupPage() {
 
       if (input.type === 'password') {
         input.type = 'text';
-        button.textContent = '🙈';
+        button.innerHTML = eyeOffIcon;
       } else {
         input.type = 'password';
-        button.textContent = '👁️';
+        button.innerHTML = eyeIcon;
       }
     }
 

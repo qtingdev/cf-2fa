@@ -172,9 +172,9 @@ export function getAuthCode() {
 
           // 显示登录成功信息（包含过期时间）
           if (data.expiresIn) {
-            showCenterToast('✅', '登录成功，有效期 ' + data.expiresIn);
+            showCenterToast('check', '登录成功，有效期 ' + data.expiresIn);
           } else {
-            showCenterToast('✅', '登录成功');
+            showCenterToast('check', '登录成功');
           }
 
           // 重新加载密钥列表
@@ -220,7 +220,7 @@ export function getAuthCode() {
         console.warn('清除缓存失败:', e);
       }
 
-      showCenterToast('⚠️', '登录已过期，请重新登录');
+      showCenterToast('alertTriangle', '登录已过期，请重新登录');
       setTimeout(() => {
         showLoginModal();
       }, 1500);
@@ -287,9 +287,9 @@ export function getAuthCode() {
 
       // 3. 反馈给用户
       if (serverSuccess) {
-        showCenterToast('👋', '已退出登录');
+        showCenterToast('logOut', '已退出登录');
       } else {
-        showCenterToast('⚠️', '已清除本地登录状态：' + serverErrorMessage);
+        showCenterToast('alertTriangle', '已清除本地登录状态：' + serverErrorMessage);
       }
 
       setTimeout(() => {

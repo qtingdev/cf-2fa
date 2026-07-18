@@ -163,7 +163,7 @@ export function getCoreCode() {
 
             // 提示用户正在使用缓存数据
             const cacheTime = new Date(timestamp).toLocaleString('zh-CN');
-            showCenterToast('💾', '网络异常，显示缓存数据（' + cacheTime + '）');
+            showCenterToast('save', '网络异常，显示缓存数据（' + cacheTime + '）');
 
             console.log('使用缓存数据，缓存时间:', cacheTime);
             return;
@@ -233,12 +233,12 @@ export function getCoreCode() {
             '</div>' +
           '</div>' +
           '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)">' +
-            '<div class="menu-dots">⋮</div>' +
+            '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
             '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
-              '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">二维码</div>' +
-              '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">复制链接</div>' +
-              '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">编辑</div>' +
-              '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">删除</div>' +
+              '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
+              '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
+              '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
+              '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -270,10 +270,10 @@ export function getCoreCode() {
       if (currentSearchQuery && filteredSecrets.length === 0) {
         secretsList.style.display = 'none';
         emptyState.innerHTML =
-          '<div class="icon">🔍</div>' +
+          '<div class="icon">' + renderIcon('search', 'ui-icon empty-icon-svg') + '</div>' +
           '<h3>未找到匹配的密钥</h3>' +
           '<p>尝试使用不同的关键字搜索</p>' +
-          '<button style="margin-top: 15px; padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="clearSearch()">清除搜索</button>';
+          '<button class="btn btn-primary empty-action-btn" onclick="clearSearch()">清除搜索</button>';
         emptyState.style.display = 'block';
         return;
       }
@@ -281,7 +281,7 @@ export function getCoreCode() {
       if (secrets.length === 0) {
         secretsList.style.display = 'none';
         emptyState.innerHTML =
-          '<div class="icon">🔑</div>' +
+          '<div class="icon">' + renderIcon('key', 'ui-icon empty-icon-svg') + '</div>' +
           '<h3>还没有密钥</h3>' +
           '<p>点击上方按钮添加您的第一个2FA密钥</p>' +
           '<div style="margin-top: 20px; font-size: 12px; color: #95a5a6;">' +
@@ -376,7 +376,7 @@ export function getCoreCode() {
       const secret = secrets.find(s => s.id === secretId);
       const serviceName = secret ? secret.name : '验证码';
       
-      showCenterToast('✅', serviceName + ' 验证码已复制到剪贴板');
+      showCenterToast('check', serviceName + ' 验证码已复制到剪贴板');
     }
 
     async function copyNextOTP(secretId) {
@@ -407,14 +407,14 @@ export function getCoreCode() {
       const secret = secrets.find(s => s.id === secretId);
       const serviceName = secret ? secret.name : '验证码';
 
-      showCenterToast('⏭️', serviceName + ' 下一个验证码已复制到剪贴板');
+      showCenterToast('arrowRight', serviceName + ' 下一个验证码已复制到剪贴板');
     }
 
     // 复制OTP链接（otpauth://格式）
     async function copyOTPAuthURL(secretId) {
       const secret = secrets.find(s => s.id === secretId);
       if (!secret) {
-        showCenterToast('❌', '未找到密钥');
+        showCenterToast('x', '未找到密钥');
         return;
       }
 
@@ -461,10 +461,10 @@ export function getCoreCode() {
 
         // 复制到剪贴板
         await navigator.clipboard.writeText(otpauthURL);
-        showCenterToast('🔗', secret.name + ' 链接已复制到剪贴板');
+        showCenterToast('link', secret.name + ' 链接已复制到剪贴板');
       } catch (err) {
         console.error('复制链接失败:', err);
-        showCenterToast('❌', '复制链接失败: ' + err.message);
+        showCenterToast('x', '复制链接失败: ' + err.message);
       }
     }
 
@@ -569,7 +569,7 @@ export function getCoreCode() {
             // 检查是否为离线排队响应
             if (result.queued && result.offline) {
               console.log('📥 [离线模式] 删除操作已排队，等待同步:', result.operationId);
-              showCenterToast('📥', result.message || '操作已保存，网络恢复后自动同步');
+              showCenterToast('download', result.message || '操作已保存，网络恢复后自动同步');
 
               // 离线模式下，暂时不更新本地状态，等待同步完成后由 PWA 模块刷新
               return;
@@ -586,11 +586,11 @@ export function getCoreCode() {
 
             console.log('✅ [保存队列] 删除成功:', secret.name);
           } else {
-            showCenterToast('❌', '删除失败，请重试');
+            showCenterToast('x', '删除失败，请重试');
           }
         } catch (error) {
           console.error('❌ [保存队列] 删除失败:', error);
-          showCenterToast('❌', '删除失败：' + error.message);
+          showCenterToast('x', '删除失败：' + error.message);
         }
       }).catch(err => {
         console.error('❌ [保存队列] 队列执行错误:', err);
@@ -648,7 +648,7 @@ export function getCoreCode() {
       const counter = parseInt(document.getElementById('secretCounter').value) || 0;
 
       if (!name || !secret) {
-        showCenterToast('❌', '请填写服务名称和密钥');
+        showCenterToast('x', '请填写服务名称和密钥');
         return;
       }
 
@@ -697,7 +697,7 @@ export function getCoreCode() {
             // 检查是否为离线排队响应
             if (result.queued && result.offline) {
               console.log('📥 [离线模式] 操作已排队，等待同步:', result.operationId);
-              showCenterToast('📥', result.message || '操作已保存，网络恢复后自动同步');
+              showCenterToast('download', result.message || '操作已保存，网络恢复后自动同步');
 
               // 离线模式下，暂时不更新本地状态，等待同步完成后由 PWA 模块刷新
               hideSecretModal();
@@ -722,11 +722,11 @@ export function getCoreCode() {
           } else {
             const error = await response.json();
             const errorMessage = error.message || error.error || '保存失败，请重试';
-            showCenterToast('❌', errorMessage);
+            showCenterToast('x', errorMessage);
           }
         } catch (error) {
           console.error('❌ [保存队列] 保存失败:', error);
-          showCenterToast('❌', '保存失败：' + error.message);
+          showCenterToast('x', '保存失败：' + error.message);
         } finally {
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;

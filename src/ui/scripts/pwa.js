@@ -81,7 +81,7 @@ export function getPWACode() {
         case 'SYNC_FAILED':
           // 单个操作同步失败
           console.error('❌ 离线操作同步失败:', message.operationType, message.error);
-          showCenterToast('⚠️', \`同步失败: \${message.operationType}\`);
+          showCenterToast('alertTriangle', \`同步失败: \${message.operationType}\`);
           break;
 
         case 'SYNC_COMPLETE':
@@ -89,7 +89,7 @@ export function getPWACode() {
           console.log(\`🎉 同步完成: 成功 \${message.successCount} 个, 失败 \${message.failCount} 个\`);
 
           if (message.successCount > 0) {
-            showCenterToast('✅', \`已同步 \${message.successCount} 个离线操作\`);
+            showCenterToast('check', \`已同步 \${message.successCount} 个离线操作\`);
             // 刷新密钥列表
             if (typeof loadSecrets === 'function') {
               loadSecrets();
@@ -97,7 +97,7 @@ export function getPWACode() {
           }
 
           if (message.failCount > 0) {
-            showCenterToast('⚠️', \`\${message.failCount} 个操作同步失败\`);
+            showCenterToast('alertTriangle', \`\${message.failCount} 个操作同步失败\`);
           }
           break;
 
@@ -135,7 +135,7 @@ export function getPWACode() {
       }
 
       section.style.display = '';
-      btn.textContent = '📱 安装到桌面';
+      btn.innerHTML = renderIcon('smartphone', 'ui-icon') + '安装到桌面';
 
       if (deferredPrompt) {
         btn.disabled = false;
@@ -155,7 +155,7 @@ export function getPWACode() {
 
       if (btn) {
         btn.disabled = true;
-        btn.textContent = '⏳ 安装中…';
+        btn.innerHTML = renderIcon('loader', 'ui-icon spin-icon') + '安装中...';
       }
 
       try {
@@ -164,9 +164,9 @@ export function getPWACode() {
         console.log(\`用户选择: \${outcome}\`);
 
         if (outcome === 'accepted') {
-          showCenterToast('✅', '已发起安装');
+          showCenterToast('check', '已发起安装');
         } else {
-          showCenterToast('❌', '已取消安装');
+          showCenterToast('x', '已取消安装');
         }
       } finally {
         deferredPrompt = null;
@@ -181,7 +181,7 @@ export function getPWACode() {
       console.log('✅ PWA 应用已成功安装');
       deferredPrompt = null;
       updateSettingsPwaInstallButton();
-      showCenterToast('✅', '应用已安装到桌面');
+      showCenterToast('check', '应用已安装到桌面');
     });
 
     /**
@@ -211,7 +211,7 @@ export function getPWACode() {
         setTimeout(() => offlineBanner.remove(), 300);
       }
 
-      showCenterToast('🌐', '网络已恢复，正在同步...');
+      showCenterToast('globe', '网络已恢复，正在同步...');
 
       // 手动触发同步（作为备用，如果 Background Sync 不可用）
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -232,7 +232,7 @@ export function getPWACode() {
       document.body.classList.add('offline-mode');
       showOfflineBanner();
 
-      showCenterToast('📡', '已离线，操作将保存待同步');
+      showCenterToast('cloud', '已离线，操作将保存待同步');
     });
 
     /**
@@ -249,7 +249,7 @@ export function getPWACode() {
       banner.id = 'offline-banner';
       banner.className = 'offline-banner';
       banner.innerHTML = \`
-        <span class="offline-banner-icon">📡</span>
+        <span class="offline-banner-icon">\${renderIcon('cloud', 'ui-icon')}</span>
         <span class="offline-banner-text">离线模式 - 操作将在网络恢复后自动同步</span>
       \`;
       document.body.prepend(banner); // 添加到页面顶部

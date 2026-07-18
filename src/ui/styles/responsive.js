@@ -254,7 +254,7 @@ export function getResponsiveStyles() {
         font-weight: 600;
         font-size: 12px;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0;
         border-bottom: 2px solid var(--table-header-border);
         border-right: 1px solid rgba(255, 255, 255, 0.3);
       }
@@ -332,12 +332,6 @@ export function getResponsiveStyles() {
         gap: 12px;
       }
       
-      .loading-backup::before {
-        content: '⏳';
-        font-size: 24px;
-        animation: spin 1s linear infinite;
-      }
-      
       @keyframes spin {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
@@ -353,9 +347,10 @@ export function getResponsiveStyles() {
         gap: 12px;
       }
       
-      .no-backups::before {
-        content: '📭';
-        font-size: 24px;
+      .loading-backup .ui-icon,
+      .no-backups .ui-icon {
+        width: 24px;
+        height: 24px;
       }
       
       .import-method {
@@ -457,7 +452,7 @@ export function getResponsiveStyles() {
       
       .otp-code {
         font-size: 24px;
-        letter-spacing: 5px;
+        letter-spacing: 0;
         padding: 12px 16px;
       }
       
@@ -467,7 +462,7 @@ export function getResponsiveStyles() {
       
       .otp-code {
         font-size: 28px !important;
-        letter-spacing: 4px !important;
+        letter-spacing: 0 !important;
         margin: 6px 0 !important;
       }
       
@@ -493,7 +488,7 @@ export function getResponsiveStyles() {
       
       .otp-next-code {
         font-size: 14px !important;
-        letter-spacing: 1px !important;
+        letter-spacing: 0 !important;
       }
       
       .progress-mini {
@@ -688,7 +683,7 @@ export function getResponsiveStyles() {
         font-weight: 600 !important;
         font-size: 12px !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0 !important;
         border-bottom: 2px solid var(--table-header-border) !important;
         border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
       }
@@ -862,7 +857,7 @@ export function getResponsiveStyles() {
 
       .otp-code {
         font-size: 38px;
-        letter-spacing: 6px;
+        letter-spacing: 0;
         margin: 6px 0;
       }
 
@@ -906,7 +901,7 @@ export function getResponsiveStyles() {
         font-weight: 600 !important;
         font-size: 12px !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0 !important;
         border-bottom: 2px solid var(--table-header-border) !important;
         border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
       }
@@ -1052,8 +1047,18 @@ export function getResponsiveStyles() {
     }
 
     .toast-icon {
-      font-size: 20px;
       flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-icon .ui-icon,
+    .toast-svg {
+      width: 20px;
+      height: 20px;
     }
 
     .toast-message {
@@ -1074,7 +1079,14 @@ export function getResponsiveStyles() {
       }
 
       .toast-icon {
-        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      .toast-icon .ui-icon,
+      .toast-svg {
+        width: 18px;
+        height: 18px;
       }
     }
 
@@ -1087,7 +1099,15 @@ export function getResponsiveStyles() {
       }
 
       .toast-icon {
-        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+
+      .toast-icon .ui-icon,
+      .toast-svg {
+        width: 16px;
+        height: 16px;
+      }
       }
     }
 
@@ -1163,7 +1183,15 @@ export function getResponsiveStyles() {
       }
 
       .toast-icon {
-        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+
+      .toast-icon .ui-icon,
+      .toast-svg {
+        width: 22px;
+        height: 22px;
+      }
       }
     }
 
@@ -1176,7 +1204,15 @@ export function getResponsiveStyles() {
       }
 
       .toast-icon {
-        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .toast-icon .ui-icon,
+      .toast-svg {
+        width: 24px;
+        height: 24px;
+      }
       }
     }
 
@@ -1413,11 +1449,6 @@ export function getResponsiveStyles() {
       box-shadow: var(--shadow-sm);
     }
 
-    .scanner-status::before {
-      content: '📡';
-      font-size: 20px;
-    }
-
     .scanner-error {
       background: var(--danger-light);
       border: 1px solid var(--danger);
@@ -1435,13 +1466,6 @@ export function getResponsiveStyles() {
       line-height: 1.4;
       font-weight: 500;
       white-space: pre-line; /* 支持换行符显示 */
-    }
-
-    .scanner-error::before {
-      content: '⚠️';
-      display: block;
-      font-size: 20px;
-      margin-bottom: 6px;
     }
 
     .scanner-actions {

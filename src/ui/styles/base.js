@@ -17,11 +17,27 @@ export function getBaseStyles() {
       overflow-x: hidden;
     }
 
+    .ui-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: -0.125em;
+    }
+
+    .spin-icon {
+      animation: icon-spin 1s linear infinite;
+    }
+
+    @keyframes icon-spin {
+      to { transform: rotate(360deg); }
+    }
+
     .container {
-      max-width: 420px;
+      max-width: 1180px;
       margin: 0 auto;
       background: transparent;
-      padding: 0;
+      padding: 0 18px;
       min-height: 100vh;
     }
 
@@ -37,7 +53,7 @@ export function getBaseStyles() {
       font-size: 28px;
       font-weight: 600;
       margin-bottom: 8px;
-      letter-spacing: -0.5px;
+      letter-spacing: 0;
     }
 
     .header p {
@@ -47,7 +63,7 @@ export function getBaseStyles() {
     }
 
     .content {
-      padding: 30px 20px 20px 20px;
+      padding: 28px 0 20px 0;
     }
 
     /* 搜索功能样式 */
@@ -64,8 +80,8 @@ export function getBaseStyles() {
       display: flex;
       align-items: center;
       background: var(--search-bg);
-      border: 2px solid var(--search-border);
-      border-radius: var(--radius-sm);
+      border: 1px solid var(--search-border);
+      border-radius: var(--radius-md);
       padding: 0;
       transition: border-color 0.2s ease;
       box-shadow: none;
@@ -74,13 +90,12 @@ export function getBaseStyles() {
 
     .search-input-wrapper:focus-within {
       border-color: var(--search-border-focus);
-      box-shadow: none;
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .search-icon {
-      padding: 11px 16px;
+      padding: 0 14px;
       color: var(--search-icon);
-      font-size: 16px;
       user-select: none;
       height: 46px;
       box-sizing: border-box;
@@ -117,10 +132,9 @@ export function getBaseStyles() {
       top: 0;
       background: none;
       border: none;
-      padding: 11px 12px;
+      padding: 0 12px;
       color: var(--text-tertiary);
       cursor: pointer;
-      font-size: 16px;
       transition: color 0.2s ease;
       user-select: none;
       height: 46px;
@@ -171,8 +185,8 @@ export function getBaseStyles() {
 
     .sort-select {
       padding: 10px 12px;
-      border: 2px solid var(--border-primary);
-      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
       background: var(--input-bg-focus);
       color: var(--text-primary);
       font-size: 14px;
@@ -190,7 +204,7 @@ export function getBaseStyles() {
 
     .sort-select:focus {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     /* ========== P1.2 排序 popover（搜索右侧 icon-button） ========== */
@@ -210,8 +224,8 @@ export function getBaseStyles() {
       align-items: center;
       gap: 6px;
       padding: 0 14px;
-      border: 2px solid var(--border-primary);
-      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
       background: var(--input-bg-focus);
       color: var(--text-primary);
       font-size: 14px;
@@ -230,7 +244,7 @@ export function getBaseStyles() {
 
     .sort-dropdown[open] > .sort-trigger {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .sort-trigger svg {
@@ -244,9 +258,9 @@ export function getBaseStyles() {
       min-width: 200px;
       background: var(--menu-bg, var(--card-bg));
       border: 1px solid var(--menu-border, var(--border-primary));
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       box-shadow: var(--menu-shadow, 0 8px 24px rgba(0,0,0,0.15));
-      padding: 6px;
+      padding: 4px;
       z-index: 1002;
       display: flex;
       flex-direction: column;
@@ -261,7 +275,7 @@ export function getBaseStyles() {
       font-size: 14px;
       color: var(--text-primary);
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       white-space: nowrap;
       transition: background 0.15s;
       font-family: inherit;
@@ -277,10 +291,14 @@ export function getBaseStyles() {
     }
 
     .sort-option.active::before {
-      content: '✓';
-      color: var(--success, #10b981);
-      margin-right: 6px;
-      font-weight: bold;
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--success, #10b981);
+      margin-right: 8px;
+      vertical-align: middle;
     }
 
     /* 手机端：隐藏 trigger 文字，保留 icon，压缩为 44x44 icon-button */
@@ -306,13 +324,12 @@ export function getBaseStyles() {
     }
 
     .main-action-button {
-      background: #8e44ad;
-      color: white;
+      background: var(--float-btn-bg);
+      color: var(--float-btn-text);
       border: none;
       width: 48px;
       height: 48px;
-      border-radius: 50%;
-      font-size: 20px;
+      border-radius: 999px;
       cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
@@ -329,7 +346,7 @@ export function getBaseStyles() {
     }
 
     .main-action-button:hover {
-      background: #7d3c98;
+      background: var(--float-btn-hover);
       box-shadow: var(--shadow-lg);
     }
 
@@ -352,7 +369,7 @@ export function getBaseStyles() {
       bottom: 70px;
       right: 0;
       background: var(--menu-bg);
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       box-shadow: var(--menu-shadow);
       border: 1px solid var(--menu-border);
       opacity: 0;
@@ -377,7 +394,8 @@ export function getBaseStyles() {
     .submenu-item {
       display: flex;
       align-items: center;
-      padding: 12px 16px;
+      gap: 12px;
+      padding: 12px 14px;
       color: var(--text-primary);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -395,11 +413,13 @@ export function getBaseStyles() {
     }
 
     .item-icon {
-      font-size: 16px;
-      margin-right: 12px;
       width: 20px;
+      height: 20px;
       text-align: center;
       opacity: 0.8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .item-text {

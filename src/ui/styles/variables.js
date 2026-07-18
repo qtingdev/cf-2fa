@@ -47,8 +47,8 @@ export function getVariables() {
 
       /* 圆角 */
       --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
 
       /* 品牌映射 */
       --primary: var(--primary-500);
@@ -241,6 +241,76 @@ export function getVariables() {
       --float-btn-text: #ffffff;
       --float-btn-shadow: 0 8px 32px rgba(52, 152, 219, 0.3);
 
+      /* shadcn-inspired semantic layer */
+      --primary-50: #f4f4f5;
+      --primary-100: #e4e4e7;
+      --primary-200: #d4d4d8;
+      --primary-300: #a1a1aa;
+      --primary-400: #71717a;
+      --primary-500: #3f3f46;
+      --primary-600: #27272a;
+      --primary-700: #18181b;
+      --primary-800: #09090b;
+      --primary-900: #000000;
+      --primary: #18181b;
+      --primary-hover: #27272a;
+      --primary-rgb: 24, 24, 27;
+      --ring: rgba(24, 24, 27, 0.12);
+      --accent: #f4f4f5;
+      --accent-foreground: #18181b;
+      --bg-primary: #fafafa;
+      --bg-secondary: #f4f4f5;
+      --bg-tertiary: #e4e4e7;
+      --bg-elevated: #ffffff;
+      --bg-hover: #f4f4f5;
+      --bg-active: #e4e4e7;
+      --text-primary: #18181b;
+      --text-secondary: #52525b;
+      --text-tertiary: #71717a;
+      --border-primary: #e4e4e7;
+      --border-secondary: #d4d4d8;
+      --border-focus: #18181b;
+      --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.04);
+      --shadow-md: 0 2px 10px rgba(24, 24, 27, 0.06);
+      --shadow-lg: 0 8px 24px rgba(24, 24, 27, 0.08);
+      --shadow-xl: 0 18px 48px rgba(24, 24, 27, 0.14);
+      --btn-primary-bg: #18181b;
+      --btn-primary-hover: #27272a;
+      --btn-secondary-bg: #f4f4f5;
+      --btn-secondary-hover: #e4e4e7;
+      --btn-secondary-text: #18181b;
+      --btn-info-bg: #0f766e;
+      --btn-info-hover: #115e59;
+      --input-bg: #ffffff;
+      --input-bg-focus: #ffffff;
+      --input-border: #e4e4e7;
+      --input-border-focus: #18181b;
+      --card-bg: #ffffff;
+      --card-border: #e4e4e7;
+      --card-shadow: var(--shadow-sm);
+      --card-hover-border: #a1a1aa;
+      --card-hover-shadow: var(--shadow-lg);
+      --modal-bg: #ffffff;
+      --modal-border: #e4e4e7;
+      --modal-overlay: rgba(9, 9, 11, 0.72);
+      --modal-header-border: #e4e4e7;
+      --search-bg: #ffffff;
+      --search-border: #e4e4e7;
+      --search-border-focus: #18181b;
+      --menu-bg: #ffffff;
+      --menu-border: #e4e4e7;
+      --menu-item-hover: #f4f4f5;
+      --menu-shadow: var(--shadow-lg);
+      --toast-bg: #18181b;
+      --toast-text: #ffffff;
+      --toast-border: rgba(255, 255, 255, 0.08);
+      --float-btn-bg: #18181b;
+      --float-btn-hover: #27272a;
+      --float-btn-shadow: 0 12px 30px rgba(24, 24, 27, 0.22);
+      --action-btn-bg: #18181b;
+      --action-btn-hover: #27272a;
+      --action-btn-shadow: 0 12px 30px rgba(24, 24, 27, 0.22);
+
     }
 
     /* ========== 深色模式变量覆盖 ========== */
@@ -404,6 +474,67 @@ export function getVariables() {
       --float-btn-bg: #3182ce;
       --float-btn-hover: #2c5282;
       --float-btn-shadow: 0 8px 32px rgba(49, 130, 206, 0.4);
+
+      /* shadcn-inspired semantic layer */
+      --primary: #fafafa;
+      --primary-hover: #e4e4e7;
+      --primary-rgb: 250, 250, 250;
+      --ring: rgba(250, 250, 250, 0.14);
+      --accent: #27272a;
+      --accent-foreground: #fafafa;
+      --bg-primary: #09090b;
+      --bg-secondary: #18181b;
+      --bg-tertiary: #27272a;
+      --bg-elevated: #18181b;
+      --bg-hover: #27272a;
+      --bg-active: #3f3f46;
+      --text-primary: #fafafa;
+      --text-secondary: #d4d4d8;
+      --text-tertiary: #a1a1aa;
+      --border-primary: #27272a;
+      --border-secondary: #3f3f46;
+      --border-focus: #fafafa;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.42);
+      --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.48);
+      --shadow-xl: 0 18px 56px rgba(0, 0, 0, 0.6);
+      --btn-primary-bg: #fafafa;
+      --btn-primary-hover: #e4e4e7;
+      --btn-primary-text: #09090b;
+      --btn-secondary-bg: #27272a;
+      --btn-secondary-hover: #3f3f46;
+      --btn-secondary-text: #fafafa;
+      --btn-info-bg: #14b8a6;
+      --btn-info-hover: #0d9488;
+      --input-bg: #09090b;
+      --input-bg-focus: #09090b;
+      --input-border: #27272a;
+      --input-border-focus: #fafafa;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --card-hover-border: #52525b;
+      --card-hover-shadow: var(--shadow-lg);
+      --modal-bg: #18181b;
+      --modal-border: #27272a;
+      --modal-overlay: rgba(0, 0, 0, 0.78);
+      --modal-header-border: #27272a;
+      --search-bg: #18181b;
+      --search-border: #27272a;
+      --search-border-focus: #fafafa;
+      --menu-bg: #18181b;
+      --menu-border: #27272a;
+      --menu-item-hover: #27272a;
+      --menu-shadow: var(--shadow-lg);
+      --toast-bg: #fafafa;
+      --toast-text: #09090b;
+      --toast-border: rgba(9, 9, 11, 0.1);
+      --float-btn-bg: #fafafa;
+      --float-btn-hover: #e4e4e7;
+      --float-btn-text: #09090b;
+      --float-btn-shadow: 0 12px 30px rgba(250, 250, 250, 0.16);
+      --action-btn-bg: #fafafa;
+      --action-btn-hover: #e4e4e7;
+      --action-btn-shadow: 0 12px 30px rgba(250, 250, 250, 0.16);
 
     }
 

@@ -338,15 +338,15 @@ export function getSettingsCode() {
           const savedFormat = (data.settings && data.settings.defaultExportFormat) || selectedFormat;
           formatSelect.value = savedFormat;
           localStorage.setItem('defaultExportFormat', savedFormat);
-          showCenterToast('✅', '偏好格式已保存，批量导出和备份导出会优先使用该格式');
+          showCenterToast('check', '偏好格式已保存，批量导出和备份导出会优先使用该格式');
         } else {
-          showCenterToast('❌', data.message || '保存偏好格式失败');
+          showCenterToast('x', data.message || '保存偏好格式失败');
         }
       } catch {
         if (requestId !== defaultExportFormatSaveRequestId) {
           return;
         }
-        showCenterToast('❌', '网络错误，请稍后重试');
+        showCenterToast('x', '网络错误，请稍后重试');
       }
     }
 

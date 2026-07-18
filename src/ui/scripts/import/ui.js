@@ -140,7 +140,7 @@ export function getImportUICode() {
       const isValidType = validExtensions.some(ext => fileName.endsWith(ext));
 
       if (!isValidType) {
-        showCenterToast('❌', '不支持的文件格式');
+        showCenterToast('x', '不支持的文件格式');
         return;
       }
 
@@ -158,7 +158,7 @@ export function getImportUICode() {
         }, 100);
       };
       reader.onerror = function() {
-        showCenterToast('❌', '读取文件失败');
+        showCenterToast('x', '读取文件失败');
       };
       reader.readAsArrayBuffer(file);
     }
@@ -269,7 +269,7 @@ export function getImportUICode() {
         // 重置导入按钮
         const executeBtn = document.getElementById('executeImportBtn');
         executeBtn.disabled = true;
-        executeBtn.textContent = '📥 导入';
+        executeBtn.innerHTML = renderIcon('download', 'ui-icon') + '导入';
         // 隐藏文件信息徽章
         const badge = document.getElementById('fileInfoBadge');
         if (badge) badge.style.display = 'none';
@@ -310,7 +310,7 @@ export function getImportUICode() {
         // 重置导入按钮
         const executeBtn = document.getElementById('executeImportBtn');
         executeBtn.disabled = true;
-        executeBtn.textContent = '📥 导入';
+        executeBtn.innerHTML = renderIcon('download', 'ui-icon') + '导入';
         // 清空预览数据数组
         importPreviewData = [];
         resetImportRetryState();

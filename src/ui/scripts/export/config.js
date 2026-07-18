@@ -18,7 +18,7 @@ export function getExportConfigCode() {
         options: [
           {
             id: 'freeotp-plus',
-            icon: '🔓',
+            icon: 'file',
             name: 'FreeOTP+ 原生',
             ext: '.json',
             desc: '社区版原生格式，明文JSON文件',
@@ -26,7 +26,7 @@ export function getExportConfigCode() {
           },
           {
             id: 'freeotp-txt',
-            icon: '🔓',
+            icon: 'fileText',
             name: '标准格式',
             ext: '.txt',
             desc: 'OTPAuth URL格式，兼容所有验证器',
@@ -39,7 +39,7 @@ export function getExportConfigCode() {
         options: [
           {
             id: 'aegis',
-            icon: '🔓',
+            icon: 'file',
             name: 'Aegis 原生',
             ext: '.json',
             desc: 'Aegis Authenticator 完整格式',
@@ -47,7 +47,7 @@ export function getExportConfigCode() {
           },
           {
             id: 'aegis-txt',
-            icon: '🔓',
+            icon: 'fileText',
             name: '标准格式',
             ext: '.txt',
             desc: 'OTPAuth URL格式，兼容所有验证器',
@@ -60,7 +60,7 @@ export function getExportConfigCode() {
         options: [
           {
             id: 'authpro',
-            icon: '🔓',
+            icon: 'file',
             name: 'Auth Pro 原生',
             ext: '.authpro',
             desc: 'Stratum 原生格式',
@@ -68,7 +68,7 @@ export function getExportConfigCode() {
           },
           {
             id: 'authenticator-txt',
-            icon: '🔓',
+            icon: 'fileText',
             name: '标准格式',
             ext: '.txt',
             desc: 'OTPAuth URL格式，兼容所有验证器',
@@ -132,7 +132,7 @@ export function getExportConfigCode() {
         exportSecretsAsFormat(secretsToExport, format);
       } catch (error) {
         console.error('导出失败:', error);
-        showCenterToast('❌', '导出失败：' + error.message);
+        showCenterToast('x', '导出失败：' + error.message);
       }
     }
 `;

@@ -404,7 +404,7 @@ export function getGoogleMigrationCode() {
      */
     function showExportToGoogleModal() {
       if (!secrets || secrets.length === 0) {
-        showCenterToast('⚠️', '没有可导出的密钥');
+        showCenterToast('alertTriangle', '没有可导出的密钥');
         return;
       }
 
@@ -421,8 +421,8 @@ export function getGoogleMigrationCode() {
 
       content.innerHTML =
         '<div class="modal-header">' +
-          '<h2>📤 导出到 Google Authenticator</h2>' +
-          '<button class="close-btn" onclick="closeExportToGoogleModal()">&times;</button>' +
+          '<h2>' + renderIcon('upload', 'modal-title-icon') + '导出到 Google Authenticator</h2>' +
+          '<button class="close-btn" onclick="closeExportToGoogleModal()" aria-label="关闭">' + renderIcon('x', 'ui-icon') + '</button>' +
         '</div>' +
         '<div class="modal-body">' +
           '<p style="margin-bottom: 15px; color: var(--text-secondary);">选择要导出的密钥（共 <strong>' + secrets.length + '</strong> 个）</p>' +
@@ -488,7 +488,7 @@ export function getGoogleMigrationCode() {
       });
 
       if (selectedSecrets.length === 0) {
-        showCenterToast('⚠️', '请至少选择一个密钥');
+        showCenterToast('alertTriangle', '请至少选择一个密钥');
         return;
       }
 
@@ -545,8 +545,8 @@ export function getGoogleMigrationCode() {
       modal.innerHTML =
         '<div class="modal-content fab-modal-sm-content" style="text-align: center;">' +
           '<div class="modal-header">' +
-            '<h2>📱 扫描导入到 Google Authenticator</h2>' +
-            '<button class="close-btn" onclick="closeExportQRCodeModal()">&times;</button>' +
+            '<h2>' + renderIcon('smartphone', 'modal-title-icon') + '扫描导入到 Google Authenticator</h2>' +
+            '<button class="close-btn" onclick="closeExportQRCodeModal()" aria-label="关闭">' + renderIcon('x', 'ui-icon') + '</button>' +
           '</div>' +
           '<div class="modal-body">' +
             (totalPages > 1 ?
@@ -554,7 +554,7 @@ export function getGoogleMigrationCode() {
               '<p style="margin-bottom: 10px; color: var(--text-secondary);">共 ' + totalSecrets + ' 个密钥</p>'
             ) +
             '<div class="qr-code-container" style="display: flex; justify-content: center; align-items: center; min-height: 250px; background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px;">' +
-              '<div style="color: #666;">🔄 生成中...</div>' +
+              '<div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #666;">' + renderIcon('loader', 'ui-icon spin-icon') + '<span>生成中...</span></div>' +
             '</div>' +
             '<div style="margin-bottom: 15px; font-size: 12px; color: var(--text-tertiary);">' +
               '用 Google Authenticator 扫描此二维码' +
@@ -588,7 +588,7 @@ export function getGoogleMigrationCode() {
       } catch (error) {
         console.error('生成二维码失败:', error);
         const container = modal.querySelector('.qr-code-container');
-        container.innerHTML = '<div style="color: #e74c3c;">❌ 生成失败: ' + error.message + '</div>';
+        container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #e74c3c;">' + renderIcon('x', 'ui-icon') + '<span>生成失败: ' + error.message + '</span></div>';
       }
     }
 
@@ -641,8 +641,8 @@ export function getGoogleMigrationCode() {
 
       content.innerHTML =
         '<div class="modal-header">' +
-          '<h2>📱 Google Authenticator 导入</h2>' +
-          '<button class="close-btn" onclick="closeMigrationPreview()">&times;</button>' +
+          '<h2>' + renderIcon('smartphone', 'modal-title-icon') + 'Google Authenticator 导入</h2>' +
+          '<button class="close-btn" onclick="closeMigrationPreview()" aria-label="关闭">' + renderIcon('x', 'ui-icon') + '</button>' +
         '</div>' +
         '<div class="modal-body">' +
           '<p style="margin-bottom: 15px; color: var(--text-secondary);">检测到 <strong>' + parsedSecrets.length + '</strong> 个密钥，确认导入？</p>' +
@@ -710,19 +710,19 @@ export function getGoogleMigrationCode() {
 
       content.innerHTML =
         '<div class="modal-header">' +
-          '<h2>📊 导入结果</h2>' +
-          '<button class="close-btn" onclick="closeImportResultModal()">&times;</button>' +
+          '<h2>' + renderIcon('barChart', 'modal-title-icon') + '导入结果</h2>' +
+          '<button class="close-btn" onclick="closeImportResultModal()" aria-label="关闭">' + renderIcon('x', 'ui-icon') + '</button>' +
         '</div>' +
         '<div class="modal-body">' +
           '<div style="text-align: center; margin-bottom: 20px;">' +
-            '<div style="font-size: 48px; margin-bottom: 10px;">⚠️</div>' +
+            '<div style="display: inline-flex; width: 48px; height: 48px; margin-bottom: 10px; color: #f59e0b;">' + renderIcon('alertTriangle', 'ui-icon') + '</div>' +
             '<div style="font-size: 16px; color: var(--text-primary);">' +
               '成功 <span style="color: #4CAF50; font-weight: bold;">' + successCount + '</span> 个，' +
               '失败 <span style="color: #f44336; font-weight: bold;">' + failCount + '</span> 个' +
             '</div>' +
           '</div>' +
           '<div style="background: var(--bg-secondary); border-radius: 8px; padding: 15px; margin-bottom: 15px;">' +
-            '<div style="font-weight: 600; margin-bottom: 10px; color: #f44336;">❌ 失败详情：</div>' +
+            '<div style="display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 10px; color: #f44336;">' + renderIcon('x', 'ui-icon') + '失败详情：</div>' +
             '<div style="font-size: 13px; color: var(--text-secondary); white-space: pre-wrap; line-height: 1.6;">' + failedDetails + '</div>' +
           '</div>' +
           '<div style="text-align: center;">' +
@@ -925,7 +925,7 @@ export function getGoogleMigrationCode() {
     async function confirmGoogleMigration() {
       const pendingSecrets = window.pendingMigrationSecrets;
       if (!pendingSecrets || pendingSecrets.length === 0) {
-        showCenterToast('❌', '没有可导入的密钥');
+        showCenterToast('x', '没有可导入的密钥');
         closeMigrationPreview();
         return;
       }
@@ -936,13 +936,13 @@ export function getGoogleMigrationCode() {
       });
 
       if (selectedSecrets.length === 0) {
-        showCenterToast('⚠️', '请至少选择一个密钥');
+        showCenterToast('alertTriangle', '请至少选择一个密钥');
         return;
       }
 
       window.pendingMigrationSecrets = selectedSecrets.slice();
       closeMigrationPreview(true);
-      showCenterToast('⏳', '正在导入 ' + selectedSecrets.length + ' 个密钥...');
+      showCenterToast('loader', '正在导入 ' + selectedSecrets.length + ' 个密钥...');
 
       const secretsToImport = selectedSecrets.map(function(secret) {
         let serviceName = secret.issuer || '';
@@ -1003,7 +1003,7 @@ export function getGoogleMigrationCode() {
         window.pendingMigrationPriorFailures = [];
 
         if (aggregateFail === 0) {
-          showCenterToast('✅', '成功导入 ' + aggregateSuccess + ' 个密钥');
+          showCenterToast('check', '成功导入 ' + aggregateSuccess + ' 个密钥');
         } else {
           showImportResultModal(aggregateSuccess, aggregateFail, aggregateFailureLines.join('\\n'));
         }
@@ -1037,9 +1037,9 @@ export function getGoogleMigrationCode() {
           window.pendingMigrationPriorFailures = aggregateFailureLines;
 
           if (aggregateSuccess > 0) {
-            showCenterToast('⚠️', '累计成功 ' + aggregateSuccess + ' 条，剩余 ' + remainingSecrets.length + ' 条待继续：' + error.message);
+            showCenterToast('alertTriangle', '累计成功 ' + aggregateSuccess + ' 条，剩余 ' + remainingSecrets.length + ' 条待继续：' + error.message);
           } else {
-            showCenterToast('❌', '导入中断，剩余 ' + remainingSecrets.length + ' 条未处理：' + error.message);
+            showCenterToast('x', '导入中断，剩余 ' + remainingSecrets.length + ' 条未处理：' + error.message);
           }
           showGoogleMigrationPreview(remainingSecrets);
         } else if (aggregateSuccess > 0 || aggregateFail > 0) {
@@ -1050,14 +1050,14 @@ export function getGoogleMigrationCode() {
           window.pendingMigrationPriorFailures = [];
 
           if (aggregateFail === 0) {
-            showCenterToast('⚠️', '已成功导入 ' + aggregateSuccess + ' 条，后续已停止：' + error.message);
+            showCenterToast('alertTriangle', '已成功导入 ' + aggregateSuccess + ' 条，后续已停止：' + error.message);
           } else {
             showImportResultModal(aggregateSuccess, aggregateFail, aggregateFailureLines.join('\\n'));
           }
         } else {
           // 首轮未产生任何结果就失败：重新打开预览，让用户整批重试
           // （showGoogleMigrationPreview 会把 selectedSecrets 写回 window.pendingMigrationSecrets）
-          showCenterToast('❌', '导入失败: ' + error.message);
+          showCenterToast('x', '导入失败: ' + error.message);
           showGoogleMigrationPreview(selectedSecrets);
         }
       }

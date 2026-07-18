@@ -73,7 +73,7 @@ export function getStandardFormatsCode() {
           await exportAsOTPAuth(secretsData, { formatName: format });
           break;
         default:
-          showCenterToast('❌', '不支持的导出格式');
+          showCenterToast('x', '不支持的导出格式');
       }
     }
 
@@ -107,7 +107,7 @@ export function getStandardFormatsCode() {
     async function exportStandardFormatViaApi(sortedSecrets, format, options = {}) {
       const fallbackToLocalExport = async (reasonMessage) => {
         console.warn('Export API unavailable, falling back to local export:', reasonMessage);
-        showCenterToast('⚠️', reasonMessage);
+        showCenterToast('alertTriangle', reasonMessage);
         await exportStandardFormatLocally(sortedSecrets, format, options);
       };
 

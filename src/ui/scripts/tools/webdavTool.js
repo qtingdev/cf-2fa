@@ -133,7 +133,7 @@ export function getWebdavToolCode() {
 
         showWebdavForm(id);
       } catch (error) {
-        showCenterToast('❌', '加载配置失败: ' + error.message);
+        showCenterToast('x', '加载配置失败: ' + error.message);
       }
     }
 
@@ -146,7 +146,7 @@ export function getWebdavToolCode() {
       const path = document.getElementById('webdavPath').value.trim() || '/';
 
       if (!name || !url || !username) {
-        showCenterToast('⚠️', '请填写目标名称、服务器地址和用户名');
+        showCenterToast('alertTriangle', '请填写目标名称、服务器地址和用户名');
         return;
       }
 
@@ -168,16 +168,16 @@ export function getWebdavToolCode() {
 
         if (data.success) {
           if (data.warning) {
-            showCenterToast('⚠️', data.warning);
+            showCenterToast('alertTriangle', data.warning);
           } else {
-            showCenterToast('✅', 'WebDAV 配置已保存');
+            showCenterToast('check', 'WebDAV 配置已保存');
           }
           loadWebdavDestinations();
         } else {
-          showCenterToast('❌', data.message || '保存失败');
+          showCenterToast('x', data.message || '保存失败');
         }
       } catch (error) {
-        showCenterToast('❌', '保存失败: ' + error.message);
+        showCenterToast('x', '保存失败: ' + error.message);
       } finally {
         saveBtn.textContent = originalText;
         saveBtn.disabled = false;
@@ -193,7 +193,7 @@ export function getWebdavToolCode() {
       const path = document.getElementById('webdavPath').value.trim() || '/';
 
       if (!name || !url || !username) {
-        showCenterToast('⚠️', '请填写目标名称、服务器地址和用户名');
+        showCenterToast('alertTriangle', '请填写目标名称、服务器地址和用户名');
         return;
       }
 
@@ -214,12 +214,12 @@ export function getWebdavToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', data.message || '连接成功');
+          showCenterToast('check', data.message || '连接成功');
         } else {
-          showCenterToast('❌', data.message || '连接失败');
+          showCenterToast('x', data.message || '连接失败');
         }
       } catch (error) {
-        showCenterToast('❌', '测试失败: ' + error.message);
+        showCenterToast('x', '测试失败: ' + error.message);
       } finally {
         testBtn.textContent = originalText;
         testBtn.disabled = false;
@@ -245,13 +245,13 @@ export function getWebdavToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', 'WebDAV 目标已删除');
+          showCenterToast('check', 'WebDAV 目标已删除');
           loadWebdavDestinations();
         } else {
-          showCenterToast('❌', data.message || '删除失败');
+          showCenterToast('x', data.message || '删除失败');
         }
       } catch (error) {
-        showCenterToast('❌', '删除失败: ' + error.message);
+        showCenterToast('x', '删除失败: ' + error.message);
       }
     }
 
@@ -265,14 +265,14 @@ export function getWebdavToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', data.message);
+          showCenterToast('check', data.message);
           loadWebdavDestinations();
         } else {
-          showCenterToast('❌', data.message || '操作失败');
+          showCenterToast('x', data.message || '操作失败');
           loadWebdavDestinations();
         }
       } catch (error) {
-        showCenterToast('❌', '操作失败: ' + error.message);
+        showCenterToast('x', '操作失败: ' + error.message);
         loadWebdavDestinations();
       }
     }

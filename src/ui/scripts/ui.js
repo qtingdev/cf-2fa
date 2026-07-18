@@ -35,7 +35,7 @@ export function getUICode() {
       }
 
       // 更新内容
-      iconElement.textContent = icon;
+      iconElement.innerHTML = renderIcon(getToastIconName(icon), 'ui-icon toast-svg');
       messageElement.textContent = message;
 
       // 如果toast已经显示，先隐藏再显示，确保动画效果

@@ -14,7 +14,7 @@ export function getModalStyles() {
       padding: 20px;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
     }
 
     .modal.show {
@@ -25,7 +25,7 @@ export function getModalStyles() {
       background: var(--modal-bg);
       border: 1px solid var(--modal-border);
       border-radius: var(--radius-lg);
-      padding: 30px;
+      padding: 24px;
       max-width: 600px;
       width: 100%;
       max-height: 85vh;
@@ -112,7 +112,7 @@ export function getModalStyles() {
       align-items: center;
       margin-bottom: 25px;
       padding-bottom: 20px;
-      border-bottom: 2px solid var(--modal-header-border);
+      border-bottom: 1px solid var(--modal-header-border);
     }
 
     .modal-header h2 {
@@ -120,6 +120,15 @@ export function getModalStyles() {
       font-size: 22px;
       font-weight: 600;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-title-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--text-secondary);
     }
 
     .modal-actions {
@@ -134,7 +143,7 @@ export function getModalStyles() {
     /* 按钮样式 - 添加outline和active状态支持 */
     .btn-outline {
       background: transparent !important;
-      border: 2px solid var(--border-primary) !important;
+      border: 1px solid var(--border-primary) !important;
       color: var(--text-primary) !important;
     }
 
@@ -151,13 +160,12 @@ export function getModalStyles() {
 
     .close-btn {
       background: none;
-      border: none;
-      font-size: 28px;
+      border: 1px solid transparent;
       cursor: pointer;
       color: var(--text-secondary);
       padding: 8px;
-      border-radius: 50%;
-      transition: all 0.3s ease;
+      border-radius: var(--radius-sm);
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
       width: 40px;
       height: 40px;
       display: flex;
@@ -174,8 +182,9 @@ export function getModalStyles() {
     }
 
     .close-btn:hover {
-      color: var(--danger-dark);
-      background: var(--danger-light);
+      color: var(--text-primary);
+      background: var(--bg-hover);
+      border-color: var(--border-primary);
     }
 
     .form-group {
@@ -193,7 +202,7 @@ export function getModalStyles() {
     .form-group input {
       width: 100%;
       padding: 14px 16px;
-      border: 2px solid var(--input-border);
+      border: 1px solid var(--input-border);
       border-radius: var(--radius-md);
       font-size: 16px;
       transition: all 0.3s ease;
@@ -205,13 +214,13 @@ export function getModalStyles() {
       outline: none;
       border-color: var(--input-border-focus);
       background: var(--input-bg-focus);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .form-group select {
       width: 100%;
       padding: 14px 16px;
-      border: 2px solid var(--input-border);
+      border: 1px solid var(--input-border);
       border-radius: var(--radius-md);
       font-size: 16px;
       background: var(--input-bg-focus);
@@ -223,13 +232,13 @@ export function getModalStyles() {
       outline: none;
       border-color: var(--input-border-focus);
       background: var(--input-bg-focus);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     /* 高级选项样式 */
     .form-section {
       margin: 25px 0;
-      border: 2px solid var(--border-primary);
+      border: 1px solid var(--border-primary);
       border-radius: var(--radius-md);
       overflow: hidden;
       background: var(--bg-secondary);
@@ -310,7 +319,7 @@ export function getModalStyles() {
       width: 100%;
       font-size: 14px;
       padding: 12px 16px;
-      border: 2px solid var(--input-border);
+      border: 1px solid var(--input-border);
       border-radius: var(--radius-sm);
       background: var(--input-bg-focus);
       color: var(--input-text);
@@ -322,7 +331,7 @@ export function getModalStyles() {
     .form-group-small input:focus {
       outline: none;
       border-color: var(--input-border-focus);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      box-shadow: 0 0 0 3px var(--ring);
       background: var(--input-bg-focus);
     }
 
@@ -341,11 +350,6 @@ export function getModalStyles() {
       margin-top: 15px;
       line-height: 1.5;
       box-shadow: var(--shadow-sm);
-    }
-
-    .advanced-info::before {
-      content: "💡 ";
-      margin-right: 4px;
     }
 
     /* 响应式设计 */
@@ -393,12 +397,12 @@ export function getModalStyles() {
 
     .btn {
       padding: 14px 24px;
-      border: none;
+      border: 1px solid transparent;
       border-radius: var(--radius-sm);
       font-size: 15px;
       font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       min-width: 120px;
       display: flex;
       align-items: center;
@@ -415,9 +419,15 @@ export function getModalStyles() {
       background: var(--btn-primary-hover);
     }
 
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
     .btn-secondary {
       background: var(--btn-secondary-bg);
       color: var(--btn-secondary-text);
+      border-color: var(--border-primary);
     }
 
     .btn-secondary:hover {
@@ -503,9 +513,21 @@ export function getModalStyles() {
     }
 
     .confirm-dialog-icon {
-      font-size: 24px;
-      line-height: 1;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-primary);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirm-dialog-svg {
+      width: 20px;
+      height: 20px;
     }
 
     .confirm-dialog-title {
@@ -716,7 +738,7 @@ export function getModalStyles() {
 
     .file-import-section {
       background: var(--import-file-bg);
-      border: 2px dashed var(--import-file-border);
+      border: 1px dashed var(--import-file-border);
       border-radius: var(--radius-sm);
       padding: 25px;
       text-align: center;
@@ -789,7 +811,6 @@ export function getModalStyles() {
     }
 
     .tool-icon {
-      font-size: 32px;
       margin-right: 16px;
       width: 48px;
       height: 48px;
@@ -834,7 +855,7 @@ export function getModalStyles() {
 
     .import-textarea {
       border-radius: var(--radius-sm);
-      border: 2px solid var(--input-border);
+      border: 1px solid var(--input-border);
       font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
       font-size: 13px;
       line-height: 1.5;
@@ -846,6 +867,7 @@ export function getModalStyles() {
     .import-textarea:focus {
       border-color: var(--input-border-focus);
       outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .import-form-actions {
@@ -909,11 +931,6 @@ export function getModalStyles() {
       gap: 8px;
     }
 
-    .import-preview h3::before {
-      content: '📋';
-      font-size: 20px;
-    }
-
     .import-preview-item {
       background: var(--card-bg);
       border: 1px solid var(--border-secondary);
@@ -951,6 +968,9 @@ export function getModalStyles() {
     .import-preview-item .service-name {
       font-weight: bold;
       color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .import-preview-item .account-name {
@@ -976,7 +996,7 @@ export function getModalStyles() {
     textarea {
       width: 100%;
       padding: 12px;
-      border: 2px solid var(--input-border);
+      border: 1px solid var(--input-border);
       border-radius: var(--radius-sm);
       font-size: 14px;
       font-family: monospace;
@@ -988,7 +1008,8 @@ export function getModalStyles() {
 
     textarea:focus {
       outline: none;
-      border-color: var(--info);
+      border-color: var(--input-border-focus);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     /* 二维码模态框样式 - 已移除，使用标准模态框样式 */
@@ -1374,7 +1395,7 @@ export function getModalStyles() {
       margin-bottom: 10px;
       padding-left: 2px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0;
     }
 
     .format-grid {
@@ -1390,7 +1411,7 @@ export function getModalStyles() {
       justify-content: center;
       padding: 14px 8px;
       background: var(--bg-primary);
-      border: 2px solid var(--border-primary);
+      border: 1px solid var(--border-primary);
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -1408,9 +1429,15 @@ export function getModalStyles() {
     }
 
     .format-icon {
-      font-size: 24px;
       margin-bottom: 6px;
       line-height: 1;
+      color: var(--text-secondary);
+    }
+
+    .format-icon .ui-icon,
+    .format-option-icon .ui-icon {
+      width: 24px;
+      height: 24px;
     }
 
     .format-name {
@@ -1521,7 +1548,6 @@ export function getModalStyles() {
       }
 
       .format-icon {
-        font-size: 22px;
         margin-bottom: 4px;
       }
 
@@ -1661,8 +1687,10 @@ export function getModalStyles() {
     }
 
     .file-info-badge .file-icon {
-      font-size: 16px;
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .file-info-badge .file-name {
@@ -1811,11 +1839,6 @@ export function getModalStyles() {
       display: flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .preview-title::before {
-      content: '📋';
-      font-size: 16px;
     }
 
     .import-stats-inline {
@@ -2039,21 +2062,29 @@ export function getModalStyles() {
       gap: 16px;
       padding: 16px;
       background: var(--bg-primary);
-      border: 2px solid var(--border-primary);
+      border: 1px solid var(--border-primary);
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .sub-format-option:hover {
-      border-color: var(--accent-color);
+      border-color: var(--border-focus);
       background: var(--bg-hover);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-md);
     }
 
     .sub-format-icon {
-      font-size: 32px;
       flex-shrink: 0;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sub-format-icon .ui-icon {
+      width: 28px;
+      height: 28px;
     }
 
     .sub-format-info {
@@ -2098,7 +2129,8 @@ export function getModalStyles() {
       }
 
       .sub-format-icon {
-        font-size: 40px;
+        width: 40px;
+        height: 40px;
       }
     }
 
@@ -2150,14 +2182,18 @@ export function getModalStyles() {
 
     .settings-tab.active {
       background: var(--bg-tertiary, rgba(0, 0, 0, 0.05));
-      color: var(--accent-color, #2196F3);
-      border-left-color: var(--accent-color, #2196F3);
+      color: var(--text-primary);
+      border-left-color: var(--border-focus);
       font-weight: 600;
     }
 
     .settings-tab-icon {
-      font-size: 16px;
       flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .settings-tab-text {
@@ -2236,7 +2272,8 @@ export function getModalStyles() {
 
     .settings-field input:focus {
       outline: none;
-      border-color: var(--accent-color, #2196F3);
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .change-password-result {
@@ -2269,8 +2306,8 @@ export function getModalStyles() {
     }
 
     .sync-card:hover {
-      border-color: var(--accent-color, #2196F3);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-color: var(--border-focus);
+      box-shadow: var(--shadow-md);
     }
 
     .sync-card-header {
@@ -2286,8 +2323,13 @@ export function getModalStyles() {
     }
 
     .sync-card-icon {
-      font-size: 24px;
       flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
     }
 
     .sync-card-title {

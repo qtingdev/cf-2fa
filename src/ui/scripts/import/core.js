@@ -17,7 +17,7 @@ export function getPreviewImportCode() {
     function previewImport() {
       const text = document.getElementById('importText').value.trim();
       if (!text) {
-        showCenterToast('❌', '请先输入或选择要导入的内容');
+        showCenterToast('x', '请先输入或选择要导入的内容');
         return;
       }
 
@@ -54,7 +54,7 @@ export function getPreviewImportCode() {
           if (meta.digits && meta.digits !== 6) displayInfo += ' [' + meta.digits + '位]';
 
           item.innerHTML =
-            '<div class="service-name">🔒 ' + displayInfo + '</div>' +
+            '<div class="service-name">' + renderIcon('lock', 'ui-icon') + displayInfo + '</div>' +
             '<div class="account-name">' + (account || '(需要密码解密)') + '</div>';
 
           previewList.appendChild(item);
@@ -72,7 +72,7 @@ export function getPreviewImportCode() {
         const statsDiv = document.createElement('div');
         statsDiv.style.cssText = 'margin: 15px 0; padding: 15px; background: var(--bg-secondary); border-radius: 6px; font-size: 14px; color: var(--text-primary);';
         statsDiv.innerHTML =
-          '<strong>🔐 FreeOTP 加密备份</strong><br>' +
+          '<strong>' + renderIcon('lock', 'ui-icon') + ' FreeOTP 加密备份</strong><br>' +
           '<span style="color: var(--text-secondary);">检测到 ' + tokenCount + ' 个加密密钥</span><br><br>' +
           '<div style="display: flex; gap: 10px; align-items: center;">' +
           '<input type="password" id="freeotpPassword" placeholder="输入备份密码" ' +
@@ -84,7 +84,7 @@ export function getPreviewImportCode() {
         updateImportStats(validCount, 0, 0);
         previewDiv.style.display = 'block';
         executeBtn.disabled = true;
-        executeBtn.textContent = '🔒 需要先解密';
+        executeBtn.innerHTML = renderIcon('lock', 'ui-icon') + '需要先解密';
         return;
       }
 
@@ -95,7 +95,7 @@ export function getPreviewImportCode() {
         const statsDiv = document.createElement('div');
         statsDiv.className = 'import-stats-header';
         statsDiv.innerHTML =
-          '<strong>🔐 TOTP Authenticator 加密备份</strong><br>' +
+          '<strong>' + renderIcon('lock', 'ui-icon') + ' TOTP Authenticator 加密备份</strong><br>' +
           '<span style="color: var(--text-secondary);">检测到加密的 TOTP Authenticator 备份</span><br><br>' +
           '<div style="display: flex; gap: 10px; align-items: center;">' +
           '<input type="password" id="totpAuthPassword" placeholder="输入备份密码" ' +
@@ -106,7 +106,7 @@ export function getPreviewImportCode() {
         previewList.appendChild(statsDiv);
         previewDiv.style.display = 'block';
         executeBtn.disabled = true;
-        executeBtn.textContent = '🔒 需要先解密';
+        executeBtn.innerHTML = renderIcon('lock', 'ui-icon') + '需要先解密';
         return;
       }
 
@@ -119,7 +119,7 @@ export function getPreviewImportCode() {
       if (isHtmlFormat) {
         const htmlLines = parseHTMLImport(text);
         if (htmlLines.length === 0) {
-          showCenterToast('❌', '未从HTML文件中提取到有效密钥');
+          showCenterToast('x', '未从HTML文件中提取到有效密钥');
           return;
         }
         lines = htmlLines;
@@ -138,12 +138,12 @@ export function getPreviewImportCode() {
           try {
           lines = parseJsonImport(jsonData);
           if (lines.length === 0) {
-            showCenterToast('❌', '未找到有效的密钥数据');
+            showCenterToast('x', '未找到有效的密钥数据');
             return;
           }
           } catch (parseError) {
             console.error('JSON导入解析失败:', parseError);
-            showCenterToast('❌', parseError.message || '未识别的 JSON 导入格式');
+            showCenterToast('x', parseError.message || '未识别的 JSON 导入格式');
             return;
           }
         }
@@ -153,7 +153,7 @@ export function getPreviewImportCode() {
                (text.toLowerCase().includes('service') && text.toLowerCase().includes('secret') && text.includes(','))) {
         const csvLines = parseCSVImport(text);
         if (csvLines.length === 0) {
-          showCenterToast('❌', '未从CSV文件中提取到有效密钥');
+          showCenterToast('x', '未从CSV文件中提取到有效密钥');
           return;
         }
         lines = csvLines;
@@ -193,7 +193,7 @@ export function getPreviewImportCode() {
             if (isDeleted) {
               item.className += ' skipped';
               item.innerHTML =
-                '<div class="service-name">⏭️ ' + (issuer || '未知服务') + '</div>' +
+                '<div class="service-name">' + renderIcon('arrowRight', 'ui-icon') + (issuer || '未知服务') + '</div>' +
                 '<div class="account-name">已删除条目，跳过导入</div>';
               previewList.appendChild(item);
               skippedCount++;
@@ -230,7 +230,7 @@ export function getPreviewImportCode() {
                 if (algorithm !== 'SHA1') displayInfo += ' [' + algorithm + ']';
 
                 item.innerHTML =
-                  '<div class="service-name">✅ ' + displayInfo + '</div>' +
+                  '<div class="service-name">' + renderIcon('check', 'ui-icon') + displayInfo + '</div>' +
                   '<div class="account-name">' + (account || '(无账户)') + '</div>';
 
                 importPreviewData.push({
@@ -259,7 +259,7 @@ export function getPreviewImportCode() {
         } catch (error) {
           item.className += ' invalid';
           item.innerHTML =
-            '<div class="service-name">❌ 第' + (index + 1) + '行</div>' +
+            '<div class="service-name">' + renderIcon('x', 'ui-icon') + '第' + (index + 1) + '行</div>' +
             '<div class="error-msg">' + error.message + '</div>';
 
           importPreviewData.push({
@@ -276,7 +276,7 @@ export function getPreviewImportCode() {
 
       updateImportStats(validCount, invalidCount, skippedCount);
       previewDiv.style.display = 'block';
-      executeBtn.textContent = '📥 导入';
+      executeBtn.innerHTML = renderIcon('download', 'ui-icon') + '导入';
       executeBtn.disabled = validCount === 0;
     }
 `;
@@ -348,13 +348,13 @@ export function getExecuteImportCode() {
         : importPreviewData.filter(item => item.valid);
 
       if (validItems.length === 0) {
-        showCenterToast('❌', '没有有效的密钥可以导入');
+        showCenterToast('x', '没有有效的密钥可以导入');
         return;
       }
 
       const executeBtn = document.getElementById('executeImportBtn');
       executeBtn.disabled = true;
-      executeBtn.textContent = '⏳ 导入中...';
+      executeBtn.innerHTML = renderIcon('loader', 'ui-icon spin-icon') + '导入中...';
 
       // 跨轮累计的进度坐标系：
       //   - 首轮把当前 validItems.length 记为整批原始总数
@@ -464,9 +464,9 @@ export function getExecuteImportCode() {
           const aggregateSuccess = pendingImportPriorSuccessCount;
           const aggregateFail = pendingImportPriorFailCount;
           const aggregateProcessed = pendingImportPriorProcessedItems;
-          showCenterToast('⚠️', '本轮已处理 ' + processedValidItems + ' 条（累计成功 ' + aggregateSuccess + '，累计失败 ' + aggregateFail + '），剩余 ' + remainingRetryItems.length + ' 条待继续：' + error.message);
+          showCenterToast('alertTriangle', '本轮已处理 ' + processedValidItems + ' 条（累计成功 ' + aggregateSuccess + '，累计失败 ' + aggregateFail + '），剩余 ' + remainingRetryItems.length + ' 条待继续：' + error.message);
           executeBtn.disabled = false;
-          executeBtn.textContent = remainingRetryItems.length > 0 ? '📥 继续导入剩余项' : '📥 导入';
+          executeBtn.innerHTML = renderIcon('download', 'ui-icon') + (remainingRetryItems.length > 0 ? '继续导入剩余项' : '导入');
           updateImportProgress({
             title: '部分导入成功',
             message: '已处理 ' + aggregateProcessed + ' / ' + originalTotalItems + '，剩余 ' + remainingRetryItems.length + ' 条待继续',
@@ -485,9 +485,9 @@ export function getExecuteImportCode() {
         if (!isRetryingPendingItems) {
           resetImportRetryState();
         }
-        showCenterToast('❌', '导入失败：' + error.message);
+        showCenterToast('x', '导入失败：' + error.message);
         executeBtn.disabled = false;
-        executeBtn.textContent = isRetryingPendingItems ? '📥 继续导入剩余项' : '📥 导入';
+        executeBtn.innerHTML = renderIcon('download', 'ui-icon') + (isRetryingPendingItems ? '继续导入剩余项' : '导入');
         return;
       }
 
@@ -509,9 +509,9 @@ export function getExecuteImportCode() {
       });
 
       if (aggregateFail === 0) {
-        showCenterToast('✅', '成功导入 ' + aggregateSuccess + ' 个密钥');
+        showCenterToast('check', '成功导入 ' + aggregateSuccess + ' 个密钥');
       } else {
-        showCenterToast('⚠️', '导入完成: ' + aggregateSuccess + ' 成功, ' + aggregateFail + ' 失败');
+        showCenterToast('alertTriangle', '导入完成: ' + aggregateSuccess + ' 成功, ' + aggregateFail + ' 失败');
         // 把累计失败明细打印出来，方便用户在 devtools 里核对（UI 层没有专门的汇总模态框）
         aggregateFailures.forEach(function(f) {
           console.error('❌ 第' + f.line + ' 行导入失败（累计）', f.name, f.error);

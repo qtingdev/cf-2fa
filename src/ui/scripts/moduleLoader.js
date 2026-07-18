@@ -89,7 +89,7 @@ export function getModuleLoaderCode() {
         console.error(\`❌ 加载模块 \${moduleName} 失败:\`, error);
         moduleLoadState[moduleName].loading = false;
         hideLoadingToast();
-        showCenterToast('❌', \`加载功能失败: \${error.message}\`);
+        showCenterToast('x', \`加载功能失败: \${error.message}\`);
         throw error;
       } finally {
         moduleLoadState[moduleName].loading = false;
@@ -199,7 +199,7 @@ export function getModuleLoaderCode() {
           }
         } catch (error) {
           console.error(\`调用 \${functionName} 失败:\`, error);
-          showCenterToast('❌', \`功能加载失败: \${error.message}\`);
+          showCenterToast('x', \`功能加载失败: \${error.message}\`);
         }
       };
 

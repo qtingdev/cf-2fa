@@ -154,35 +154,35 @@ export function getTOTPAuthDecryptCode() {
       const password = passwordInput ? passwordInput.value : '';
 
       if (!password) {
-        showCenterToast('❌', '请输入解密密码');
+        showCenterToast('x', '请输入解密密码');
         return;
       }
 
       if (!totpAuthBackupData) {
-        showCenterToast('❌', '未找到 TOTP Authenticator 备份数据');
+        showCenterToast('x', '未找到 TOTP Authenticator 备份数据');
         return;
       }
 
       try {
-        showCenterToast('⏳', '正在解密...');
+        showCenterToast('loader', '正在解密...');
 
         const otpauthUrls = await decryptTOTPAuthenticatorBackup(totpAuthBackupData, password);
 
         if (otpauthUrls.length === 0) {
-          showCenterToast('⚠️', '解密成功但未找到有效密钥');
+          showCenterToast('alertTriangle', '解密成功但未找到有效密钥');
           return;
         }
 
         document.getElementById('importText').value = otpauthUrls.join('\n');
         previewImport();
 
-        showCenterToast('✅', '解密成功，共 ' + otpauthUrls.length + ' 条');
+        showCenterToast('check', '解密成功，共 ' + otpauthUrls.length + ' 条');
       } catch (error) {
         console.error('TOTP Authenticator 解密失败:', error);
         if (error.message && error.message.includes('decrypt')) {
-          showCenterToast('❌', '解密失败：密码错误');
+          showCenterToast('x', '解密失败：密码错误');
         } else {
-          showCenterToast('❌', '解密失败：' + (error.message || '未知错误'));
+          showCenterToast('x', '解密失败：' + (error.message || '未知错误'));
         }
       }
     }
@@ -696,37 +696,37 @@ export function getFreeOTPDecryptCode() {
       const password = passwordInput ? passwordInput.value : '';
 
       if (!password) {
-        showCenterToast('❌', '请输入解密密码');
+        showCenterToast('x', '请输入解密密码');
         return;
       }
 
       if (!freeotpBackupData) {
-        showCenterToast('❌', '未找到 FreeOTP 备份数据');
+        showCenterToast('x', '未找到 FreeOTP 备份数据');
         return;
       }
 
       try {
-        showCenterToast('⏳', '正在解密...');
+        showCenterToast('loader', '正在解密...');
 
         const otpauthUrls = await decryptFreeOTPBackup(freeotpBackupData, password);
 
         if (otpauthUrls.length === 0) {
-          showCenterToast('⚠️', '解密成功但未找到有效密钥');
+          showCenterToast('alertTriangle', '解密成功但未找到有效密钥');
           return;
         }
 
         document.getElementById('importText').value = otpauthUrls.join('\n');
         previewImport();
 
-        showCenterToast('✅', '解密成功，共 ' + otpauthUrls.length + ' 条');
+        showCenterToast('check', '解密成功，共 ' + otpauthUrls.length + ' 条');
       } catch (error) {
         console.error('FreeOTP 解密失败:', error);
         if (error.name === 'OperationError') {
-          showCenterToast('❌', '解密失败：密码错误或备份格式不兼容');
+          showCenterToast('x', '解密失败：密码错误或备份格式不兼容');
         } else if (error.message && error.message.includes('decrypt')) {
-          showCenterToast('❌', '解密失败：密码错误');
+          showCenterToast('x', '解密失败：密码错误');
         } else {
-          showCenterToast('❌', '解密失败：' + (error.message || '未知错误'));
+          showCenterToast('x', '解密失败：' + (error.message || '未知错误'));
         }
       }
     }

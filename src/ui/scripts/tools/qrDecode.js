@@ -277,7 +277,7 @@ export function getQRDecodeToolCode() {
       resultContent.textContent = qrCodeData;
       resultSection.style.display = 'block';
 
-      showCenterToast('✅', '二维码解析成功');
+      showCenterToast('check', '二维码解析成功');
     }
 
     function uploadImageForDecode() {
@@ -307,10 +307,10 @@ export function getQRDecodeToolCode() {
               if (code) {
                 processDecodeResult(code.data);
               } else {
-                showCenterToast('❌', '未在图片中找到二维码，请尝试其他图片');
+                showCenterToast('x', '未在图片中找到二维码，请尝试其他图片');
               }
             } else {
-              showCenterToast('❌', '二维码解析库未加载');
+              showCenterToast('x', '二维码解析库未加载');
             }
           };
           img.src = e.target.result;
@@ -323,22 +323,22 @@ export function getQRDecodeToolCode() {
     async function copyDecodeResult() {
       const content = document.getElementById('decodeResultContent').textContent;
       if (!content) {
-        showCenterToast('❌', '没有可复制的内容');
+        showCenterToast('x', '没有可复制的内容');
         return;
       }
 
       try {
         await navigator.clipboard.writeText(content);
-        showCenterToast('✅', '内容已复制到剪贴板');
+        showCenterToast('check', '内容已复制到剪贴板');
       } catch (error) {
-        showCenterToast('❌', '复制失败');
+        showCenterToast('x', '复制失败');
       }
     }
 
     async function generateDecodeQRCode() {
       const content = document.getElementById('decodeResultContent').textContent;
       if (!content) {
-        showCenterToast('❌', '没有可生成二维码的内容');
+        showCenterToast('x', '没有可生成二维码的内容');
         return;
       }
 
@@ -360,12 +360,12 @@ export function getQRDecodeToolCode() {
           document.getElementById('decodeQRSection').style.display = 'block';
         };
         qrImage.onerror = function() {
-          showCenterToast('❌', '二维码生成失败');
+          showCenterToast('x', '二维码生成失败');
         };
 
       } catch (error) {
         console.error('二维码生成过程发生错误:', error);
-        showCenterToast('❌', '二维码生成失败: ' + error.message);
+        showCenterToast('x', '二维码生成失败: ' + error.message);
       }
     }
 
@@ -385,16 +385,16 @@ export function getQRDecodeToolCode() {
         }
 
         if (!imageBlob) {
-          showCenterToast('❌', '剪贴板中没有图片，请先截图或复制图片');
+          showCenterToast('x', '剪贴板中没有图片，请先截图或复制图片');
           return;
         }
 
         processImageBlobForDecode(imageBlob);
       } catch (error) {
         if (error.name === 'NotAllowedError') {
-          showCenterToast('❌', '请允许浏览器访问剪贴板');
+          showCenterToast('x', '请允许浏览器访问剪贴板');
         } else {
-          showCenterToast('❌', '读取剪贴板失败: ' + error.message);
+          showCenterToast('x', '读取剪贴板失败: ' + error.message);
         }
       }
     }
@@ -422,7 +422,7 @@ export function getQRDecodeToolCode() {
           const imageData = ctx.getImageData(0, 0, width, height);
 
           if (typeof jsQR === 'undefined') {
-            showCenterToast('❌', '二维码解析库未加载');
+            showCenterToast('x', '二维码解析库未加载');
             return;
           }
 
@@ -444,11 +444,11 @@ export function getQRDecodeToolCode() {
           if (qrCode) {
             processDecodeResult(qrCode);
           } else {
-            showCenterToast('❌', '未在图片中找到二维码，请尝试其他图片');
+            showCenterToast('x', '未在图片中找到二维码，请尝试其他图片');
           }
         };
         img.onerror = function() {
-          showCenterToast('❌', '图片加载失败');
+          showCenterToast('x', '图片加载失败');
         };
         img.src = e.target.result;
       };
@@ -485,7 +485,7 @@ export function getQRDecodeToolCode() {
         if (files.length > 0 && files[0].type.startsWith('image/')) {
           processImageBlobForDecode(files[0]);
         } else {
-          showCenterToast('❌', '请拖入图片文件');
+          showCenterToast('x', '请拖入图片文件');
         }
       });
 

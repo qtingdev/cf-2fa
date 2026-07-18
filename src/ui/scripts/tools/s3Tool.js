@@ -137,7 +137,7 @@ export function getS3ToolCode() {
 
         showS3Form(id);
       } catch (error) {
-        showCenterToast('❌', '加载配置失败: ' + error.message);
+        showCenterToast('x', '加载配置失败: ' + error.message);
       }
     }
 
@@ -152,7 +152,7 @@ export function getS3ToolCode() {
       const prefix = document.getElementById('s3Prefix').value.trim();
 
       if (!name || !endpoint || !bucket || !accessKeyId) {
-        showCenterToast('⚠️', '请填写目标名称、Endpoint、Bucket 和 Access Key ID');
+        showCenterToast('alertTriangle', '请填写目标名称、Endpoint、Bucket 和 Access Key ID');
         return;
       }
 
@@ -174,16 +174,16 @@ export function getS3ToolCode() {
 
         if (data.success) {
           if (data.warning) {
-            showCenterToast('⚠️', data.warning);
+            showCenterToast('alertTriangle', data.warning);
           } else {
-            showCenterToast('✅', 'S3 配置已保存');
+            showCenterToast('check', 'S3 配置已保存');
           }
           loadS3Destinations();
         } else {
-          showCenterToast('❌', data.message || '保存失败');
+          showCenterToast('x', data.message || '保存失败');
         }
       } catch (error) {
-        showCenterToast('❌', '保存失败: ' + error.message);
+        showCenterToast('x', '保存失败: ' + error.message);
       } finally {
         saveBtn.textContent = originalText;
         saveBtn.disabled = false;
@@ -201,7 +201,7 @@ export function getS3ToolCode() {
       const prefix = document.getElementById('s3Prefix').value.trim();
 
       if (!name || !endpoint || !bucket || !accessKeyId) {
-        showCenterToast('⚠️', '请填写目标名称、Endpoint、Bucket 和 Access Key ID');
+        showCenterToast('alertTriangle', '请填写目标名称、Endpoint、Bucket 和 Access Key ID');
         return;
       }
 
@@ -222,12 +222,12 @@ export function getS3ToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', data.message || '连接成功');
+          showCenterToast('check', data.message || '连接成功');
         } else {
-          showCenterToast('❌', data.message || '连接失败');
+          showCenterToast('x', data.message || '连接失败');
         }
       } catch (error) {
-        showCenterToast('❌', '测试失败: ' + error.message);
+        showCenterToast('x', '测试失败: ' + error.message);
       } finally {
         testBtn.textContent = originalText;
         testBtn.disabled = false;
@@ -253,13 +253,13 @@ export function getS3ToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', 'S3 目标已删除');
+          showCenterToast('check', 'S3 目标已删除');
           loadS3Destinations();
         } else {
-          showCenterToast('❌', data.message || '删除失败');
+          showCenterToast('x', data.message || '删除失败');
         }
       } catch (error) {
-        showCenterToast('❌', '删除失败: ' + error.message);
+        showCenterToast('x', '删除失败: ' + error.message);
       }
     }
 
@@ -273,14 +273,14 @@ export function getS3ToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', data.message);
+          showCenterToast('check', data.message);
           loadS3Destinations();
         } else {
-          showCenterToast('❌', data.message || '操作失败');
+          showCenterToast('x', data.message || '操作失败');
           loadS3Destinations();
         }
       } catch (error) {
-        showCenterToast('❌', '操作失败: ' + error.message);
+        showCenterToast('x', '操作失败: ' + error.message);
         loadS3Destinations();
       }
     }

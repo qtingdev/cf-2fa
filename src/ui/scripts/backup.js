@@ -120,7 +120,10 @@ export function getBackupCode() {
         return;
       }
       previewElement.style.display = 'block';
-      previewContent.innerHTML = '<div class="' + (className || 'loading-backup') + '">' + escapeHTML(message) + '</div>';
+      const messageClass = className || 'loading-backup';
+      const iconName = messageClass === 'loading-backup' ? 'loader' : 'file';
+      const iconClass = messageClass === 'loading-backup' ? 'ui-icon spin-icon' : 'ui-icon';
+      previewContent.innerHTML = '<div class="' + messageClass + '">' + renderIcon(iconName, iconClass) + '<span>' + escapeHTML(message) + '</span></div>';
     }
 
     function resetBackupSelection() {
@@ -262,7 +265,7 @@ export function getBackupCode() {
           backupSelectElement.disabled = true;
           resetBackupSelection();
         } else {
-          showCenterToast('❌', '加载更多备份失败: ' + error.message);
+          showCenterToast('x', '加载更多备份失败: ' + error.message);
         }
       } finally {
         backupListLoading = false;
@@ -485,12 +488,12 @@ export function getBackupCode() {
           '</div>';
         const previewWarning = isPartialBackup
           ? '<div style="margin-bottom: 14px; padding: 12px 14px; border-radius: 8px; border: 1px solid #f59e0b; background: #fff7ed; color: #9a3412;">' +
-              '⚠️ ' + escapeHTML(warningMessage) +
+              renderIcon('alertTriangle', 'ui-icon') + ' ' + escapeHTML(warningMessage) +
             '</div>'
           : '';
         const previewEmptyWarning = isEmptyBackup
           ? '<div style="margin-bottom: 14px; padding: 12px 14px; border-radius: 8px; border: 1px solid #f97316; background: #fff7ed; color: #9a3412;">' +
-              '⚠️ ' + escapeHTML(emptyBackupMessage) +
+              renderIcon('alertTriangle', 'ui-icon') + ' ' + escapeHTML(emptyBackupMessage) +
             '</div>'
           : '';
 
@@ -512,9 +515,9 @@ export function getBackupCode() {
               '<table class="backup-table">' +
                 '<thead>' +
                   '<tr>' +
-                    '<th>🔐 服务名称</th>' +
-                    '<th>👤 账户信息</th>' +
-                    '<th>🔢 类型</th>' +
+                    '<th>服务名称</th>' +
+                    '<th>账户信息</th>' +
+                    '<th>类型</th>' +
                   '</tr>' +
                 '</thead>' +
                 '<tbody>' +
@@ -550,7 +553,7 @@ export function getBackupCode() {
 
     async function confirmRestore() {
       if (!selectedBackup) {
-        showCenterToast('❌', '请先选择一个备份文件');
+        showCenterToast('x', '请先选择一个备份文件');
         return;
       }
 
@@ -590,7 +593,7 @@ export function getBackupCode() {
         }
 
         const result = await response.json();
-        showCenterToast('✅', '还原成功！恢复了 ' + result.count + ' 个密钥');
+        showCenterToast('check', '还原成功！恢复了 ' + result.count + ' 个密钥');
 
         // 关闭模态框并刷新页面
         hideRestoreModal();
@@ -600,7 +603,7 @@ export function getBackupCode() {
 
       } catch (error) {
         console.error('还原失败:', error);
-        showCenterToast('❌', '还原失败: ' + error.message);
+        showCenterToast('x', '还原失败: ' + error.message);
       } finally {
         confirmBtn.textContent = originalText;
         confirmBtn.disabled = false;
@@ -610,11 +613,11 @@ export function getBackupCode() {
     // 显示备份导出格式选择模态框
     function exportSelectedBackup() {
       if (!selectedBackup) {
-        showCenterToast('❌', '请先选择一个备份文件');
+        showCenterToast('x', '请先选择一个备份文件');
         return;
       }
       if (selectedBackup.uploaded === true) {
-        showCenterToast('ℹ️', '上传的备份文件无需再次导出');
+        showCenterToast('info', '上传的备份文件无需再次导出');
         return;
       }
 
@@ -647,12 +650,12 @@ export function getBackupCode() {
 
     async function executeBackupExport(format) {
       if (!selectedBackup) {
-        showCenterToast('❌', '请先选择一个备份文件');
+        showCenterToast('x', '请先选择一个备份文件');
         return;
       }
 
       try {
-        showCenterToast('ℹ️', '正在导出备份文件...');
+        showCenterToast('info', '正在导出备份文件...');
 
         const exportUrl = '/api/backup/export/' + selectedBackup.key + '?format=' + format;
         const response = await authenticatedFetch(exportUrl);
@@ -688,10 +691,10 @@ export function getBackupCode() {
           'html': 'HTML'
         };
         const formatName = formatNames[format] || format.toUpperCase();
-        showCenterToast('✅', '备份文件已导出为 ' + formatName + ' 格式！');
+        showCenterToast('check', '备份文件已导出为 ' + formatName + ' 格式！');
       } catch (error) {
         console.error('导出备份失败:', error);
-        showCenterToast('❌', '导出失败: ' + error.message);
+        showCenterToast('x', '导出失败: ' + error.message);
       }
     }
 `;

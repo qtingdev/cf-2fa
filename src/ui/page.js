@@ -6,6 +6,7 @@
 
 import { getStyles } from './styles/index.js';
 import { getScripts, getCoreScripts } from './scripts/index.js';
+import { icon } from './icons.js';
 
 /**
  * 创建主页面（密钥管理界面）
@@ -117,7 +118,7 @@ function getHTMLBody() {
           <!-- 搜索框和操作按钮的水平布局 -->
           <div class="search-action-row">
           <div class="search-input-wrapper">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon">${icon('search', 'ui-icon')}</span>
             <input type="search"
                    id="searchInput"
                    name="search-query"
@@ -136,7 +137,7 @@ function getHTMLBody() {
                    data-bwignore="true"
                    readonly
                    onfocus="this.removeAttribute('readonly')">
-            <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display: none;">✕</button>
+            <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display: none;" aria-label="清除搜索">${icon('x', 'ui-icon')}</button>
       </div>
           <div class="sort-controls">
             <details class="sort-dropdown" id="sortDropdown">
@@ -175,7 +176,7 @@ function getHTMLBody() {
       <div class="menu-overlay" id="menuOverlay" onclick="closeActionMenu()"></div>
       
       <div id="loading" class="loading">
-        <div>⏳ 加载中...</div>
+        <div class="loading-inner">${icon('loader', 'ui-icon spin-icon')}<span>加载中...</span></div>
       </div>
       
       <div id="secretsList" class="secrets-list" style="display: none;">
@@ -183,7 +184,7 @@ function getHTMLBody() {
       </div>
       
       <div id="emptyState" class="empty-state" style="display: none;">
-        <div class="icon">🔑</div>
+        <div class="icon">${icon('key', 'ui-icon empty-icon-svg')}</div>
         <h3>还没有密钥</h3>
         <p>点击上方按钮添加您的第一个2FA密钥</p>
         <div style="margin-top: 20px; font-size: 12px; color: var(--text-tertiary);">
@@ -199,8 +200,8 @@ function getHTMLBody() {
   <div id="qrScanModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>📷 扫描二维码添加密钥</h2>
-        <button class="close-btn" onclick="hideQRScanner()">&times;</button>
+        <h2>${icon('camera', 'modal-title-icon')}扫描二维码添加密钥</h2>
+        <button class="close-btn" onclick="hideQRScanner()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="scanner-section">
@@ -224,7 +225,7 @@ function getHTMLBody() {
 
         <div id="scannerError" class="scanner-error" style="display: none;">
           <div id="errorMessage"></div>
-          <button class="btn btn-primary" onclick="retryCamera()" style="margin-top: 10px;">🔄 重试摄像头</button>
+          <button class="btn btn-primary" onclick="retryCamera()" style="margin-top: 10px;">${icon('refresh', 'ui-icon')}重试摄像头</button>
         </div>
 
         <!-- 底部操作区：连续扫描 + 选择图片 + 粘贴截图 -->
@@ -234,10 +235,10 @@ function getHTMLBody() {
             <span>连续扫描</span>
           </label>
           <input type="file" id="qrImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
-          <button class="btn btn-info btn-compact" onclick="document.getElementById('qrImageInput').click()">📁 选择图片</button>
-          <button class="btn btn-info btn-compact" onclick="pasteImageForScan()">📋 粘贴截图</button>
+          <button class="btn btn-info btn-compact" onclick="document.getElementById('qrImageInput').click()">${icon('image', 'ui-icon')}选择图片</button>
+          <button class="btn btn-info btn-compact" onclick="pasteImageForScan()">${icon('clipboard', 'ui-icon')}粘贴截图</button>
         </div>
-        <div class="scanner-hint">💡 支持拖拽图片到此处、Ctrl+V 粘贴截图、Google迁移码批量导入</div>
+        <div class="scanner-hint">${icon('info', 'ui-icon hint-icon')}支持拖拽图片到此处、Ctrl+V 粘贴截图、Google迁移码批量导入</div>
       </div>
     </div>
   </div>
@@ -247,7 +248,7 @@ function getHTMLBody() {
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modalTitle">添加新密钥</h2>
-        <button class="close-btn" onclick="hideSecretModal()">&times;</button>
+        <button class="close-btn" onclick="hideSecretModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <form id="secretForm" onsubmit="handleSubmit(event)" autocomplete="off">
@@ -280,7 +281,7 @@ function getHTMLBody() {
           <div id="advancedOptions" class="advanced-options" style="display: none;">
             <div class="form-row">
               <div class="form-group-small">
-                <label for="secretType">🔐 类型</label>
+                <label for="secretType">类型</label>
                 <select id="secretType" onchange="updateAdvancedOptionsForType()">
                   <option value="TOTP" selected>TOTP (时间基准)</option>
                   <option value="HOTP">HOTP (计数器基准)</option>
@@ -288,7 +289,7 @@ function getHTMLBody() {
               </div>
               
               <div class="form-group-small" id="digitsGroup">
-                <label for="secretDigits">🔢 位数</label>
+                <label for="secretDigits">位数</label>
                 <select id="secretDigits">
                   <option value="6" selected>6位</option>
                   <option value="8">8位</option>
@@ -298,7 +299,7 @@ function getHTMLBody() {
             
             <div class="form-row">
               <div class="form-group-small" id="periodGroup">
-                <label for="secretPeriod">⏱️ 周期(秒)</label>
+                <label for="secretPeriod">周期(秒)</label>
                 <select id="secretPeriod">
                   <option value="30" selected>30秒</option>
                   <option value="60">60秒</option>
@@ -307,7 +308,7 @@ function getHTMLBody() {
               </div>
               
               <div class="form-group-small" id="algorithmGroup">
-                <label for="secretAlgorithm">🔧 算法</label>
+                <label for="secretAlgorithm">算法</label>
                 <select id="secretAlgorithm">
                   <option value="SHA1" selected>SHA1</option>
                   <option value="SHA256">SHA256</option>
@@ -318,7 +319,7 @@ function getHTMLBody() {
             
             <div class="form-row" id="counterRow" style="display: none;">
               <div class="form-group-small" id="counterGroup">
-                <label for="secretCounter">📊 计数器</label>
+                <label for="secretCounter">计数器</label>
                 <input type="number" id="secretCounter" value="0" min="0" step="1" placeholder="初始计数器值" autocomplete="off">
               </div>
             </div>
@@ -341,8 +342,8 @@ function getHTMLBody() {
   <div id="importModal" class="modal fab-modal">
     <div class="modal-content import-modal-compact">
       <div class="modal-header">
-        <h2>📥 批量导入密钥</h2>
-        <button class="close-btn" onclick="hideImportModal()">&times;</button>
+        <h2>${icon('download', 'modal-title-icon')}批量导入密钥</h2>
+        <button class="close-btn" onclick="hideImportModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <!-- 隐藏的文件输入 -->
@@ -362,27 +363,27 @@ function getHTMLBody() {
       <!-- 选择文件按钮 -->
       <div class="import-file-btn-wrapper">
         <button type="button" class="btn btn-info import-file-btn" onclick="document.getElementById('importFileInput').click()">
-          📁 选择文件
+          ${icon('folder', 'ui-icon')}选择文件
         </button>
         <span class="import-file-hint">支持 TXT, JSON, CSV, HTML, 2FAS, XML, AuthPro, Encrypt</span>
       </div>
 
       <!-- 已选文件信息徽章 -->
       <div class="file-info-badge" id="fileInfoBadge" style="display: none;">
-        <span class="file-icon">📄</span>
+        <span class="file-icon">${icon('file', 'ui-icon')}</span>
         <span class="file-name" id="selectedFileName"></span>
         <span class="file-size" id="selectedFileSize"></span>
-        <button type="button" class="file-clear-btn" onclick="clearSelectedFile(event)">✕</button>
+        <button type="button" class="file-clear-btn" onclick="clearSelectedFile(event)" aria-label="清除文件">${icon('x', 'ui-icon')}</button>
       </div>
 
       <!-- 小提示 -->
       <div class="import-tips">
-        <span class="import-tip">💡 从 Google Authenticator 导入？<a href="javascript:void(0)" onclick="hideImportModal(); showQRScanner();">扫描迁移二维码</a></span>
+        <span class="import-tip">${icon('info', 'ui-icon hint-icon')}从 Google Authenticator 导入？<a href="javascript:void(0)" onclick="hideImportModal(); showQRScanner();">扫描迁移二维码</a></span>
       </div>
 
       <!-- 格式说明（可折叠） -->
       <details class="import-format-details">
-        <summary>📋 查看支持的格式</summary>
+        <summary>${icon('clipboard', 'ui-icon')}查看支持的格式</summary>
         <div class="import-format-help">
           <p><strong>TXT</strong> Aegis、Ente Auth、WinAuth</p>
           <p><strong>2FAS</strong> 2FAS</p>
@@ -398,7 +399,7 @@ function getHTMLBody() {
       <!-- 预览区域 -->
       <div id="importPreview" class="import-preview-compact" style="display: none;">
         <div class="import-preview-header">
-          <span class="preview-title">预览</span>
+          <span class="preview-title">${icon('clipboard', 'ui-icon')}预览</span>
           <div class="import-stats-inline">
             <span class="stat-valid" id="statValid">0 有效</span>
             <span class="stat-invalid" id="statInvalid">0 无效</span>
@@ -430,7 +431,7 @@ function getHTMLBody() {
       <!-- 操作按钮 -->
       <div class="form-actions import-form-actions">
         <button type="button" class="btn btn-secondary" onclick="hideImportModal()">取消</button>
-        <button type="button" class="btn btn-primary" onclick="executeImport()" id="executeImportBtn" disabled>📥 导入</button>
+        <button type="button" class="btn btn-primary" onclick="executeImport()" id="executeImportBtn" disabled>${icon('download', 'ui-icon')}导入</button>
       </div>
     </div>
   </div>
@@ -439,21 +440,21 @@ function getHTMLBody() {
   <div id="restoreModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🔄 还原配置</h2>
-        <button class="close-btn" onclick="hideRestoreModal()">&times;</button>
+        <h2>${icon('refresh', 'modal-title-icon')}还原配置</h2>
+        <button class="close-btn" onclick="hideRestoreModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="restore-instructions">
-        <p>🔄 从备份中选择一个配置进行还原：</p>
+        <p>${icon('refresh', 'ui-icon')}从备份中选择一个配置进行还原：</p>
         <p>
-          ⚠️ 警告：还原操作将覆盖当前所有密钥，请谨慎操作！
+          ${icon('alertTriangle', 'ui-icon')}警告：还原操作将覆盖当前所有密钥，请谨慎操作！
         </p>
       </div>
       
       <div class="restore-content">
         <div class="backup-list-container">
           <div class="backup-list-header">
-            <span>📋 选择备份文件</span>
+            <span>${icon('clipboard', 'ui-icon')}选择备份文件</span>
           </div>
           <div class="backup-select-wrapper">
             <select id="backupSelect" class="backup-select" onchange="selectBackupFromDropdown()">
@@ -461,10 +462,10 @@ function getHTMLBody() {
             </select>
           </div>
           <div class="backup-actions">
-            <button type="button" class="btn btn-outline" onclick="loadBackupList()" style="padding: 8px 16px; font-size: 12px;">🔄 刷新</button>
-            <button type="button" class="btn btn-outline" onclick="exportSelectedBackup()" id="exportBackupBtn" disabled style="padding: 8px 16px; font-size: 12px;">📥 导出备份</button>
+            <button type="button" class="btn btn-outline" onclick="loadBackupList()" style="padding: 8px 16px; font-size: 12px;">${icon('refresh', 'ui-icon')}刷新</button>
+            <button type="button" class="btn btn-outline" onclick="exportSelectedBackup()" id="exportBackupBtn" disabled style="padding: 8px 16px; font-size: 12px;">${icon('download', 'ui-icon')}导出备份</button>
             <input type="file" id="restoreBackupFileInput" accept=".txt,.csv,.json,.html" style="display: none;" onchange="handleRestoreBackupFile(event)">
-            <button type="button" class="btn btn-outline" onclick="document.getElementById('restoreBackupFileInput').click()" style="padding: 8px 16px; font-size: 12px;">📤 上传备份文件</button>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('restoreBackupFileInput').click()" style="padding: 8px 16px; font-size: 12px;">${icon('upload', 'ui-icon')}上传备份文件</button>
           </div>
           <div id="restoreUploadStatus" style="display: none; margin-top: 8px; font-size: 12px; color: var(--text-secondary);"></div>
           <div class="backup-pagination" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 10px;">
@@ -475,7 +476,7 @@ function getHTMLBody() {
         
         <div class="restore-preview" id="restorePreview" style="display: none;">
           <div class="preview-header">
-            <span>📋 备份预览</span>
+            <span>${icon('clipboard', 'ui-icon')}备份预览</span>
           </div>
           <div id="backupPreviewContent" class="backup-preview-content">
             <!-- 备份内容预览将在这里显示 -->
@@ -484,8 +485,8 @@ function getHTMLBody() {
       </div>
       
       <div class="modal-actions">
-        <button type="button" class="btn btn-outline" onclick="hideRestoreModal()" style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">❌ 取消</button>
-        <button type="button" class="btn btn-danger" onclick="confirmRestore()" id="confirmRestoreBtn" disabled style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">🔄 确认还原</button>
+        <button type="button" class="btn btn-outline" onclick="hideRestoreModal()" style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">取消</button>
+        <button type="button" class="btn btn-danger" onclick="confirmRestore()" id="confirmRestoreBtn" disabled style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">${icon('refresh', 'ui-icon')}确认还原</button>
       </div>
     </div>
   </div>
@@ -494,13 +495,13 @@ function getHTMLBody() {
   <div id="toolsModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🔧 实用工具</h2>
-        <button class="close-btn" onclick="hideToolsModal()">&times;</button>
+        <h2>${icon('wrench', 'modal-title-icon')}实用工具</h2>
+        <button class="close-btn" onclick="hideToolsModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tools-list">
         <div class="tool-item" onclick="showQRScanAndDecode()">
-          <div class="tool-icon">🔍</div>
+          <div class="tool-icon">${icon('search', 'ui-icon')}</div>
           <div class="tool-content">
             <div class="tool-title">二维码解析</div>
             <div class="tool-desc">扫描并显示二维码内容</div>
@@ -508,7 +509,7 @@ function getHTMLBody() {
         </div>
         
         <div class="tool-item" onclick="showQRGenerateTool()">
-          <div class="tool-icon">🔄</div>
+          <div class="tool-icon">${icon('qrCode', 'ui-icon')}</div>
           <div class="tool-content">
             <div class="tool-title">二维码生成</div>
             <div class="tool-desc">将文本转换为二维码</div>
@@ -516,7 +517,7 @@ function getHTMLBody() {
         </div>
 
         <div class="tool-item" onclick="showBase32Tool()">
-          <div class="tool-icon">🔐</div>
+          <div class="tool-icon">${icon('lock', 'ui-icon')}</div>
           <div class="tool-content">
             <div class="tool-title">Base32 编解码</div>
             <div class="tool-desc">TOTP密钥格式转换工具</div>
@@ -524,7 +525,7 @@ function getHTMLBody() {
         </div>
 
         <div class="tool-item" onclick="showTimestampTool()">
-          <div class="tool-icon">⏱️</div>
+          <div class="tool-icon">${icon('activity', 'ui-icon')}</div>
           <div class="tool-content">
             <div class="tool-title">时间戳工具</div>
             <div class="tool-desc">查看TOTP当前时间周期</div>
@@ -532,7 +533,7 @@ function getHTMLBody() {
         </div>
 
         <div class="tool-item" onclick="showKeyCheckTool()">
-          <div class="tool-icon">✅</div>
+          <div class="tool-icon">${icon('check', 'ui-icon')}</div>
           <div class="tool-content">
             <div class="tool-title">密钥检查器</div>
             <div class="tool-desc">验证密钥是否符合规范</div>
@@ -540,7 +541,7 @@ function getHTMLBody() {
         </div>
 
         <div class="tool-item" onclick="showKeyGeneratorTool()">
-          <div class="tool-icon">🎲</div>
+          <div class="tool-icon">${icon('sparkles', 'ui-icon')}</div>
           <div class="tool-content">
             <div class="tool-title">密钥生成器</div>
             <div class="tool-desc">生成随机TOTP密钥</div>
@@ -554,8 +555,8 @@ function getHTMLBody() {
   <div id="qrGenerateModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🔄 二维码生成</h2>
-        <button class="close-btn" onclick="hideQRGenerateModal()">&times;</button>
+        <h2>${icon('qrCode', 'modal-title-icon')}二维码生成</h2>
+        <button class="close-btn" onclick="hideQRGenerateModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tool-section">
@@ -581,7 +582,7 @@ function getHTMLBody() {
       </div>
       
       <div class="form-actions" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-primary); display: flex; justify-content: center;">
-        <button type="button" class="btn btn-primary" onclick="generateQRCode()" style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">🔄 生成二维码</button>
+        <button type="button" class="btn btn-primary" onclick="generateQRCode()" style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">${icon('qrCode', 'ui-icon')}生成二维码</button>
       </div>
     </div>
   </div>
@@ -590,8 +591,8 @@ function getHTMLBody() {
   <div id="base32Modal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🔐 Base32 编解码</h2>
-        <button class="close-btn" onclick="hideBase32Modal()">&times;</button>
+        <h2>${icon('lock', 'modal-title-icon')}Base32 编解码</h2>
+        <button class="close-btn" onclick="hideBase32Modal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tool-section">
@@ -640,8 +641,8 @@ function getHTMLBody() {
   <div id="timestampModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>⏱️ 时间戳工具</h2>
-        <button class="close-btn" onclick="hideTimestampModal()">&times;</button>
+        <h2>${icon('activity', 'modal-title-icon')}时间戳工具</h2>
+        <button class="close-btn" onclick="hideTimestampModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tool-section">
@@ -686,8 +687,8 @@ function getHTMLBody() {
   <div id="keyCheckModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>✅ 密钥检查器</h2>
-        <button class="close-btn" onclick="hideKeyCheckModal()">&times;</button>
+        <h2>${icon('check', 'modal-title-icon')}密钥检查器</h2>
+        <button class="close-btn" onclick="hideKeyCheckModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tool-section">
@@ -719,18 +720,18 @@ function getHTMLBody() {
   <div id="qrDecodeModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🔍 二维码解析</h2>
-        <button class="close-btn" onclick="hideQRDecodeModal()">&times;</button>
+        <h2>${icon('search', 'modal-title-icon')}二维码解析</h2>
+        <button class="close-btn" onclick="hideQRDecodeModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tool-section">
         <div class="section-title">扫描二维码</div>
         <div class="scan-options" style="display: flex; gap: 10px; margin-bottom: 10px;">
-          <button class="btn btn-primary" onclick="startQRDecodeScanner()" style="flex: 1; padding: 12px; font-size: 14px;">📷 摄像头扫描</button>
-          <button class="btn btn-info" onclick="uploadImageForDecode()" style="flex: 1; padding: 12px; font-size: 14px;">📁 选择图片</button>
-          <button class="btn btn-info" onclick="pasteImageForDecode()" style="flex: 1; padding: 12px; font-size: 14px;">📋 粘贴截图</button>
+          <button class="btn btn-primary" onclick="startQRDecodeScanner()" style="flex: 1; padding: 12px; font-size: 14px;">${icon('camera', 'ui-icon')}摄像头扫描</button>
+          <button class="btn btn-info" onclick="uploadImageForDecode()" style="flex: 1; padding: 12px; font-size: 14px;">${icon('image', 'ui-icon')}选择图片</button>
+          <button class="btn btn-info" onclick="pasteImageForDecode()" style="flex: 1; padding: 12px; font-size: 14px;">${icon('clipboard', 'ui-icon')}粘贴截图</button>
         </div>
-        <div class="scanner-hint" style="margin-bottom: 15px;">💡 支持拖拽图片到此处或 Ctrl+V 粘贴截图</div>
+        <div class="scanner-hint" style="margin-bottom: 15px;">${icon('info', 'ui-icon hint-icon')}支持拖拽图片到此处或 Ctrl+V 粘贴截图</div>
         
         <div id="decodeScannerContainer" style="display: none;">
           <div class="scanner-container" style="position: relative; margin: 15px 0;">
@@ -773,8 +774,8 @@ function getHTMLBody() {
   <div id="keyGeneratorModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🎲 密钥生成器</h2>
-        <button class="close-btn" onclick="hideKeyGeneratorModal()">&times;</button>
+        <h2>${icon('sparkles', 'modal-title-icon')}密钥生成器</h2>
+        <button class="close-btn" onclick="hideKeyGeneratorModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       
       <div class="tool-section">
@@ -809,8 +810,8 @@ function getHTMLBody() {
   <div id="webdavModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>☁️ WebDAV 同步</h2>
-        <button class="close-btn" onclick="hideWebdavModal()">&times;</button>
+        <h2>${icon('cloud', 'modal-title-icon')}WebDAV 同步</h2>
+        <button class="close-btn" onclick="hideWebdavModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="tool-section">
@@ -870,8 +871,8 @@ function getHTMLBody() {
   <div id="s3Modal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🪣 S3 同步</h2>
-        <button class="close-btn" onclick="hideS3Modal()">&times;</button>
+        <h2>${icon('database', 'modal-title-icon')}S3 同步</h2>
+        <button class="close-btn" onclick="hideS3Modal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="tool-section">
@@ -941,8 +942,8 @@ function getHTMLBody() {
   <div id="oneDriveModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🗂️ OneDrive 同步</h2>
-        <button class="close-btn" onclick="hideOneDriveModal()">&times;</button>
+        <h2>${icon('folder', 'modal-title-icon')}OneDrive 同步</h2>
+        <button class="close-btn" onclick="hideOneDriveModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="tool-section">
@@ -986,8 +987,8 @@ function getHTMLBody() {
   <div id="googleDriveModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>📁 Google Drive 同步</h2>
-        <button class="close-btn" onclick="hideGoogleDriveModal()">&times;</button>
+        <h2>${icon('folder', 'modal-title-icon')}Google Drive 同步</h2>
+        <button class="close-btn" onclick="hideGoogleDriveModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="tool-section">
@@ -1031,21 +1032,21 @@ function getHTMLBody() {
   <div id="settingsModal" class="modal fab-modal-lg">
     <div class="modal-content settings-modal-content">
       <div class="modal-header">
-        <h2>设置</h2>
-        <button class="close-btn" onclick="hideSettingsModal()">&times;</button>
+        <h2>${icon('settings', 'modal-title-icon')}设置</h2>
+        <button class="close-btn" onclick="hideSettingsModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
       <div class="settings-layout">
         <div class="settings-tabs">
           <div class="settings-tab active" data-tab="security" onclick="switchSettingsTab('security')">
-            <span class="settings-tab-icon">🔒</span>
+            <span class="settings-tab-icon">${icon('shield', 'ui-icon')}</span>
             <span class="settings-tab-text">账户安全</span>
           </div>
           <div class="settings-tab" data-tab="sync" onclick="switchSettingsTab('sync')">
-            <span class="settings-tab-icon">☁️</span>
+            <span class="settings-tab-icon">${icon('cloud', 'ui-icon')}</span>
             <span class="settings-tab-text">同步设置</span>
           </div>
           <div class="settings-tab" data-tab="preferences" onclick="switchSettingsTab('preferences')">
-            <span class="settings-tab-icon">🎨</span>
+            <span class="settings-tab-icon">${icon('palette', 'ui-icon')}</span>
             <span class="settings-tab-text">偏好设置</span>
           </div>
         </div>
@@ -1085,7 +1086,7 @@ function getHTMLBody() {
               <div class="sync-card" onclick="openWebdavFromSettings()">
                 <div class="sync-card-header">
                   <div class="sync-card-info">
-                    <span class="sync-card-icon">☁️</span>
+                    <span class="sync-card-icon">${icon('cloud', 'ui-icon')}</span>
                     <div>
                       <div class="sync-card-title">WebDAV 同步</div>
                       <div class="sync-card-desc">自动推送备份到 WebDAV 服务器</div>
@@ -1099,7 +1100,7 @@ function getHTMLBody() {
               <div class="sync-card" onclick="openS3FromSettings()">
                 <div class="sync-card-header">
                   <div class="sync-card-info">
-                    <span class="sync-card-icon">🪣</span>
+                    <span class="sync-card-icon">${icon('database', 'ui-icon')}</span>
                     <div>
                       <div class="sync-card-title">S3 同步</div>
                       <div class="sync-card-desc">自动推送备份到 S3 兼容存储</div>
@@ -1113,7 +1114,7 @@ function getHTMLBody() {
               <div class="sync-card" onclick="openOneDriveFromSettings()">
                 <div class="sync-card-header">
                   <div class="sync-card-info">
-                    <span class="sync-card-icon">🗂️</span>
+                    <span class="sync-card-icon">${icon('folder', 'ui-icon')}</span>
                     <div>
                       <div class="sync-card-title">OneDrive 同步</div>
                       <div class="sync-card-desc">自动推送备份到 Microsoft OneDrive</div>
@@ -1127,7 +1128,7 @@ function getHTMLBody() {
               <div class="sync-card" onclick="openGoogleDriveFromSettings()">
                 <div class="sync-card-header">
                   <div class="sync-card-info">
-                    <span class="sync-card-icon">📁</span>
+                    <span class="sync-card-icon">${icon('folder', 'ui-icon')}</span>
                     <div>
                       <div class="sync-card-title">Google Drive 同步</div>
                       <div class="sync-card-desc">自动推送备份到 Google Drive</div>
@@ -1149,15 +1150,15 @@ function getHTMLBody() {
               <div class="theme-options">
                 <label class="theme-option">
                   <input type="radio" name="settingsTheme" value="light" onchange="applyThemeFromSettings('light')" />
-                  <span class="theme-option-label">☀️ 浅色模式</span>
+                   <span class="theme-option-label">${icon('sun', 'ui-icon')}浅色模式</span>
                 </label>
                 <label class="theme-option">
                   <input type="radio" name="settingsTheme" value="dark" onchange="applyThemeFromSettings('dark')" />
-                  <span class="theme-option-label">🌙 深色模式</span>
+                   <span class="theme-option-label">${icon('moon', 'ui-icon')}深色模式</span>
                 </label>
                 <label class="theme-option">
                   <input type="radio" name="settingsTheme" value="auto" onchange="applyThemeFromSettings('auto')" />
-                  <span class="theme-option-label">🌓 跟随系统</span>
+                   <span class="theme-option-label">${icon('monitor', 'ui-icon')}跟随系统</span>
                 </label>
               </div>
             </div>
@@ -1198,7 +1199,7 @@ function getHTMLBody() {
             <div class="settings-section" id="settingsPwaSection">
               <h3 class="settings-section-title">安装到桌面</h3>
               <p class="settings-desc">以应用形式将 2FA Manager 添加到主屏幕或桌面，支持离线访问。</p>
-              <button class="btn btn-primary btn-sm" id="settingsPwaInstallBtn" onclick="triggerPwaInstallFromSettings()" title="暂不可用（浏览器未触发安装提示）" disabled>📱 安装到桌面</button>
+              <button class="btn btn-primary btn-sm" id="settingsPwaInstallBtn" onclick="triggerPwaInstallFromSettings()" title="暂不可用（浏览器未触发安装提示）" disabled>${icon('smartphone', 'ui-icon')}安装到桌面</button>
             </div>
           </div>
         </div>
@@ -1211,7 +1212,7 @@ function getHTMLBody() {
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="qrTitle">二维码</h2>
-        <button class="close-btn" onclick="hideQRModal()">&times;</button>
+        <button class="close-btn" onclick="hideQRModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="qr-subtitle-section">
@@ -1223,7 +1224,7 @@ function getHTMLBody() {
       </div>
 
       <div class="qr-info">
-        💡 使用任意2FA应用扫描二维码即可添加此账户<br>
+        ${icon('info', 'ui-icon hint-icon')}使用任意2FA应用扫描二维码即可添加此账户<br>
         支持：Google Authenticator、Microsoft Authenticator、Authy等
       </div>
     </div>
@@ -1232,7 +1233,7 @@ function getHTMLBody() {
       <!-- 中间提示组件 -->
   <div id="centerToast" class="center-toast">
     <div class="toast-content">
-      <div class="toast-icon">✅</div>
+      <div class="toast-icon">${icon('check', 'ui-icon')}</div>
       <div class="toast-message">验证码已复制到剪贴板</div>
     </div>
   </div>
@@ -1266,25 +1267,25 @@ function getHTMLBody() {
         <div class="format-section-title">通用格式</div>
         <div class="format-grid">
           <div class="format-card" onclick="selectExportFormat('txt')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('fileText', 'ui-icon')}</span>
             <span class="format-name">OTPAuth</span>
             <span class="format-ext">.txt</span>
             <span class="format-compat">通用</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('json')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('file', 'ui-icon')}</span>
             <span class="format-name">JSON</span>
             <span class="format-ext">.json</span>
             <span class="format-compat">通用</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('csv')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('table', 'ui-icon')}</span>
             <span class="format-name">CSV</span>
             <span class="format-ext">.csv</span>
             <span class="format-compat">Excel</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('html')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('globe', 'ui-icon')}</span>
             <span class="format-name">HTML</span>
             <span class="format-ext">.html</span>
             <span class="format-compat">打印/扫码</span>
@@ -1297,79 +1298,79 @@ function getHTMLBody() {
         <div class="format-section-title">验证器应用</div>
         <div class="format-grid">
           <div class="format-card" onclick="selectExportFormat('google')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('qrCode', 'ui-icon')}</span>
             <span class="format-name">Google</span>
             <span class="format-ext">迁移</span>
             <span class="format-compat">iOS/Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('2fas')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('shieldCheck', 'ui-icon')}</span>
             <span class="format-name">2FAS</span>
             <span class="format-ext">.2fas</span>
             <span class="format-compat">iOS/Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('aegis-multi')">
-            <span class="format-icon">🛡️</span>
+            <span class="format-icon">${icon('shield', 'ui-icon')}</span>
             <span class="format-name">Aegis</span>
-            <span class="format-ext">⚙️ 多种格式</span>
+            <span class="format-ext">多种格式</span>
             <span class="format-compat">Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('andotp')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('file', 'ui-icon')}</span>
             <span class="format-name">andOTP</span>
             <span class="format-ext">.json</span>
             <span class="format-compat">Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('authpro-multi')">
-            <span class="format-icon">🛡️</span>
+            <span class="format-icon">${icon('shield', 'ui-icon')}</span>
             <span class="format-name">Auth Pro</span>
-            <span class="format-ext">⚙️ 多种格式</span>
+            <span class="format-ext">多种格式</span>
             <span class="format-compat">全平台</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('bitwarden-auth-multi')">
-            <span class="format-icon">🛡️</span>
+            <span class="format-icon">${icon('shield', 'ui-icon')}</span>
             <span class="format-name">Bitwarden Auth</span>
-            <span class="format-ext">⚙️ 多种格式</span>
+            <span class="format-ext">多种格式</span>
             <span class="format-compat">全平台</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('ente-auth')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('fileText', 'ui-icon')}</span>
             <span class="format-name">Ente Auth</span>
             <span class="format-ext">.txt</span>
             <span class="format-compat">iOS/Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('freeotp')">
-            <span class="format-icon">🔐</span>
+            <span class="format-icon">${icon('lock', 'ui-icon')}</span>
             <span class="format-name">FreeOTP</span>
             <span class="format-ext">.xml</span>
             <span class="format-compat">Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('freeotp-plus-multi')">
-            <span class="format-icon">🛡️</span>
+            <span class="format-icon">${icon('shield', 'ui-icon')}</span>
             <span class="format-name">FreeOTP+</span>
-            <span class="format-ext">⚙️ 多种格式</span>
+            <span class="format-ext">多种格式</span>
             <span class="format-compat">Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('lastpass')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('file', 'ui-icon')}</span>
             <span class="format-name">LastPass</span>
             <span class="format-ext">.json</span>
             <span class="format-compat">iOS/Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('proton')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('file', 'ui-icon')}</span>
             <span class="format-name">Proton</span>
             <span class="format-ext">.json</span>
             <span class="format-compat">iOS/Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('totp-auth')">
-            <span class="format-icon">🔐</span>
+            <span class="format-icon">${icon('lock', 'ui-icon')}</span>
             <span class="format-name">TOTP Auth</span>
             <span class="format-ext">.encrypt</span>
             <span class="format-compat">Android</span>
           </div>
           <div class="format-card" onclick="selectExportFormat('winauth')">
-            <span class="format-icon">🔓</span>
+            <span class="format-icon">${icon('fileText', 'ui-icon')}</span>
             <span class="format-name">WinAuth</span>
             <span class="format-ext">.txt</span>
             <span class="format-compat">Windows</span>
@@ -1379,7 +1380,7 @@ function getHTMLBody() {
 
       <!-- 格式说明（可折叠） -->
       <details class="format-details">
-        <summary>💡 查看格式说明与兼容性</summary>
+        <summary>${icon('info', 'ui-icon')}查看格式说明与兼容性</summary>
         <div class="format-help-content">
           <p><strong>OTPAuth</strong> 标准 URI 格式 → Google/Microsoft/Authy/Aegis/2FAS/andOTP/FreeOTP/Ente Auth/WinAuth 等</p>
           <p><strong>JSON</strong> 结构化数据 → 本应用、程序处理</p>
@@ -1423,13 +1424,13 @@ function getHTMLBody() {
   <div id="freeotpExportModal" class="modal fab-modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>🔒 FreeOTP 加密导出</h2>
-        <button class="close-btn" onclick="hideFreeOTPExportModal()">&times;</button>
+        <h2>${icon('lock', 'modal-title-icon')}FreeOTP 加密导出</h2>
+        <button class="close-btn" onclick="hideFreeOTPExportModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div style="margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px; font-size: 14px;">
         <p style="margin: 0 0 10px 0; color: var(--text-primary);">
-          📱 <strong>导出 <span id="freeotpExportCount">0</span> 个密钥到 FreeOTP</strong>
+          ${icon('smartphone', 'ui-icon')}<strong>导出 <span id="freeotpExportCount">0</span> 个密钥到 FreeOTP</strong>
         </p>
         <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">
           设置加密密码保护您的备份文件。<br>
@@ -1444,7 +1445,7 @@ function getHTMLBody() {
 
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" onclick="hideFreeOTPExportModal()">取消</button>
-        <button type="button" class="btn btn-primary" onclick="executeFreeOTPExport()">🔐 加密导出</button>
+        <button type="button" class="btn btn-primary" onclick="executeFreeOTPExport()">${icon('lock', 'ui-icon')}加密导出</button>
       </div>
     </div>
   </div>
@@ -1453,13 +1454,13 @@ function getHTMLBody() {
   <div id="totpAuthExportModal" class="modal fab-modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>⏱️ TOTP Authenticator 加密导出</h2>
-        <button class="close-btn" onclick="hideTOTPAuthExportModal()">&times;</button>
+        <h2>${icon('activity', 'modal-title-icon')}TOTP Authenticator 加密导出</h2>
+        <button class="close-btn" onclick="hideTOTPAuthExportModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div style="margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px; font-size: 14px;">
         <p style="margin: 0 0 10px 0; color: var(--text-primary);">
-          📱 <strong>导出 <span id="totpAuthExportCount">0</span> 个密钥到 TOTP Authenticator</strong>
+          ${icon('smartphone', 'ui-icon')}<strong>导出 <span id="totpAuthExportCount">0</span> 个密钥到 TOTP Authenticator</strong>
         </p>
         <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">
           设置加密密码保护您的备份文件。<br>
@@ -1474,7 +1475,7 @@ function getHTMLBody() {
 
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" onclick="hideTOTPAuthExportModal()">取消</button>
-        <button type="button" class="btn btn-primary" onclick="executeTOTPAuthExport()">🔐 加密导出</button>
+        <button type="button" class="btn btn-primary" onclick="executeTOTPAuthExport()">${icon('lock', 'ui-icon')}加密导出</button>
       </div>
     </div>
   </div>
@@ -1483,13 +1484,13 @@ function getHTMLBody() {
   <div id="backupExportFormatModal" class="modal fab-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>📤 选择备份导出格式</h2>
-        <button class="close-btn" onclick="hideBackupExportFormatModal()">&times;</button>
+        <h2>${icon('upload', 'modal-title-icon')}选择备份导出格式</h2>
+        <button class="close-btn" onclick="hideBackupExportFormatModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
 
       <div class="export-instructions" style="margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px; font-size: 14px;">
         <p style="margin: 0; color: var(--text-primary);">
-          💡 <strong>导出选中的备份文件</strong><br>
+          ${icon('info', 'ui-icon')}<strong>导出选中的备份文件</strong><br>
           <small style="color: var(--text-secondary);">请选择您需要的导出格式，不同格式适用于不同的场景。设置页中的默认导出格式也会用于新创建的备份文件和远程自动备份。</small>
         </p>
         <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
@@ -1498,46 +1499,46 @@ function getHTMLBody() {
       </div>
 
       <div class="export-formats">
-        <div class="format-option" onclick="selectBackupExportFormat('txt')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 2px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='#4CAF50'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
+        <div class="format-option" onclick="selectBackupExportFormat('txt')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='var(--border-focus)'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
           <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="font-size: 32px;">📝</div>
+            <div class="format-option-icon">${icon('fileText', 'ui-icon')}</div>
             <div style="flex: 1;">
               <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--text-primary);">OTPAuth 文本格式</div>
               <div style="font-size: 13px; color: var(--text-secondary);">标准 otpauth:// URLs，兼容大多数2FA应用</div>
-              <div style="font-size: 12px; color: var(--success); margin-top: 4px;">✓ Google Authenticator · Authy · Microsoft Authenticator</div>
+              <div style="font-size: 12px; color: var(--success); margin-top: 4px;">Google Authenticator · Authy · Microsoft Authenticator</div>
             </div>
           </div>
         </div>
 
-        <div class="format-option" onclick="selectBackupExportFormat('json')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 2px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='#4CAF50'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
+        <div class="format-option" onclick="selectBackupExportFormat('json')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='var(--border-focus)'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
           <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="font-size: 32px;">📋</div>
+            <div class="format-option-icon">${icon('clipboard', 'ui-icon')}</div>
             <div style="flex: 1;">
               <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--text-primary);">JSON 数据格式</div>
               <div style="font-size: 13px; color: var(--text-secondary);">包含完整信息的结构化数据，适合程序处理</div>
-              <div style="font-size: 12px; color: var(--info); margin-top: 4px;">✓ 完整数据 · 易于解析 · 支持元数据</div>
+              <div style="font-size: 12px; color: var(--info); margin-top: 4px;">完整数据 · 易于解析 · 支持元数据</div>
             </div>
           </div>
         </div>
 
-        <div class="format-option" onclick="selectBackupExportFormat('csv')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 2px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='#4CAF50'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
+        <div class="format-option" onclick="selectBackupExportFormat('csv')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='var(--border-focus)'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
           <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="font-size: 32px;">📊</div>
+            <div class="format-option-icon">${icon('table', 'ui-icon')}</div>
             <div style="flex: 1;">
               <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--text-primary);">CSV 表格格式</div>
               <div style="font-size: 13px; color: var(--text-secondary);">可用 Excel、Numbers 打开，方便查看和编辑</div>
-              <div style="font-size: 12px; color: var(--warning); margin-top: 4px;">✓ Excel · Numbers · Google Sheets</div>
+              <div style="font-size: 12px; color: var(--warning); margin-top: 4px;">Excel · Numbers · Google Sheets</div>
             </div>
           </div>
         </div>
 
-        <div class="format-option" onclick="selectBackupExportFormat('html')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 2px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='#4CAF50'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
+        <div class="format-option" onclick="selectBackupExportFormat('html')" style="cursor: pointer; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-primary); border-radius: 8px; transition: all 0.2s; background: var(--bg-primary);" onmouseover="this.style.borderColor='var(--border-focus)'; this.style.background='var(--bg-hover)'" onmouseout="this.style.borderColor='var(--border-primary)'; this.style.background='var(--bg-primary)'">
           <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="font-size: 32px;">🌐</div>
+            <div class="format-option-icon">${icon('globe', 'ui-icon')}</div>
             <div style="flex: 1;">
               <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--text-primary);">HTML 网页格式</div>
               <div style="font-size: 13px; color: var(--text-secondary);">优先生成内嵌二维码的独立网页，条目过多时会自动保留表格和可恢复数据</div>
-              <div style="font-size: 12px; color: var(--danger); margin-top: 4px;">✓ 优先内嵌二维码 · 美观排版 · 可打印</div>
+              <div style="font-size: 12px; color: var(--danger); margin-top: 4px;">优先内嵌二维码 · 美观排版 · 可打印</div>
             </div>
           </div>
         </div>
@@ -1552,7 +1553,7 @@ function getHTMLBody() {
   <!-- 登录模态框 -->
   <div id="loginModal" class="modal login-modal">
     <div class="modal-content login-modal-content">
-      <h2 class="login-modal-title">🔐 身份验证</h2>
+      <h2 class="login-modal-title">${icon('lock', 'modal-title-icon')}身份验证</h2>
       <p class="login-modal-description">
         请输入密码以管理密钥<br>
         <small class="login-modal-hint">或点击"取消"使用 OTP 生成功能</small>
@@ -1630,7 +1631,7 @@ function getHTMLBody() {
         </a>
       </div>
       <div class="footer-info">
-        Made with ❤️ by <a href="https://github.com/wuzf" target="_blank" rel="noopener noreferrer" class="footer-link">wuzf</a>
+        Maintained by <a href="https://github.com/qtingdev/cf-2fa" target="_blank" rel="noopener noreferrer" class="footer-link">qtingdev/cf-2fa</a>
       </div>
     </div>
   </footer>
@@ -1639,36 +1640,36 @@ function getHTMLBody() {
   <!-- 操作菜单按钮 -->
   <div class="action-menu-float">
     <button class="main-action-button" id="mainActionBtn" onclick="toggleActionMenu()" title="操作菜单">
-      ➕
+      ${icon('plus', 'ui-icon')}
     </button>
 
     <div class="action-submenu" id="actionSubmenu">
       <div class="submenu-item" onclick="showQRScanner(); closeActionMenu();">
-        <span class="item-icon">📷</span>
+        <span class="item-icon">${icon('camera', 'ui-icon')}</span>
         <span class="item-text">扫二维码</span>
       </div>
       <div class="submenu-item" onclick="showAddModal(); closeActionMenu();">
-        <span class="item-icon">➕</span>
+        <span class="item-icon">${icon('plus', 'ui-icon')}</span>
         <span class="item-text">手动添加</span>
       </div>
       <div class="submenu-item" onclick="showImportModal(); closeActionMenu();">
-        <span class="item-icon">📥</span>
+        <span class="item-icon">${icon('download', 'ui-icon')}</span>
         <span class="item-text">批量导入</span>
       </div>
       <div class="submenu-item" onclick="exportAllSecrets(); closeActionMenu();">
-        <span class="item-icon">📤</span>
+        <span class="item-icon">${icon('upload', 'ui-icon')}</span>
         <span class="item-text">批量导出</span>
       </div>
       <div class="submenu-item" onclick="showRestoreModal(); closeActionMenu();">
-        <span class="item-icon">🔄</span>
+        <span class="item-icon">${icon('refresh', 'ui-icon')}</span>
         <span class="item-text">还原配置</span>
       </div>
       <div class="submenu-item" onclick="showToolsModal(); closeActionMenu();">
-        <span class="item-icon">🔧</span>
+        <span class="item-icon">${icon('wrench', 'ui-icon')}</span>
         <span class="item-text">实用工具</span>
       </div>
       <div class="submenu-item" onclick="showSettingsModal(); closeActionMenu();">
-        <span class="item-icon">⚙️</span>
+        <span class="item-icon">${icon('settings', 'ui-icon')}</span>
         <span class="item-text">系统设置</span>
       </div>
     </div>

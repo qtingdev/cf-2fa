@@ -128,7 +128,7 @@ export function getUtilsCode() {
           if (idx > 0) messageEl.appendChild(document.createElement('br'));
           messageEl.appendChild(document.createTextNode(line));
         });
-        iconEl.textContent = danger ? '⚠️' : '❓';
+        iconEl.innerHTML = renderIcon(danger ? 'alertTriangle' : 'info', 'ui-icon confirm-dialog-svg');
         cancelBtn.textContent = cancelText;
         confirmBtn.textContent = confirmText;
         confirmBtn.classList.toggle('btn-danger', danger);

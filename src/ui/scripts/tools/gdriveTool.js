@@ -39,7 +39,7 @@ export function getGoogleDriveToolCode() {
 
         _googleDriveExpectedCallbackOrigin = null;
         loadGoogleDriveDestinations();
-        const icon = data.severity === 'warning' ? '⚠️' : (data.success ? '✅' : '❌');
+        const icon = data.severity === 'warning' ? 'alertTriangle' : (data.success ? 'check' : 'x');
         showCenterToast(icon, data.message || (data.success ? 'Google Drive 授权成功' : 'Google Drive 授权失败'));
       });
     }
@@ -160,7 +160,7 @@ export function getGoogleDriveToolCode() {
         document.getElementById('googleDriveFolderPath').value = dest.config.folderPath || '/2FA-Backups';
         showGoogleDriveForm(id);
       } catch (error) {
-        showCenterToast('❌', '加载 Google Drive 配置失败: ' + error.message);
+        showCenterToast('x', '加载 Google Drive 配置失败: ' + error.message);
       }
     }
 
@@ -170,7 +170,7 @@ export function getGoogleDriveToolCode() {
       const folderPath = document.getElementById('googleDriveFolderPath').value.trim() || '/2FA-Backups';
 
       if (!name) {
-        showCenterToast('⚠️', '请填写目标名称');
+        showCenterToast('alertTriangle', '请填写目标名称');
         return null;
       }
 
@@ -189,7 +189,7 @@ export function getGoogleDriveToolCode() {
       }
 
       if (data.warning) {
-        showCenterToast('⚠️', data.warning);
+        showCenterToast('alertTriangle', data.warning);
       }
 
       return data;
@@ -205,10 +205,10 @@ export function getGoogleDriveToolCode() {
         const data = await _upsertGoogleDriveConfig();
         if (!data) return;
 
-        showCenterToast('✅', 'Google Drive 配置已保存');
+        showCenterToast('check', 'Google Drive 配置已保存');
         loadGoogleDriveDestinations();
       } catch (error) {
-        showCenterToast('❌', '保存失败: ' + error.message);
+        showCenterToast('x', '保存失败: ' + error.message);
       } finally {
         saveBtn.textContent = originalText;
         saveBtn.disabled = false;
@@ -255,11 +255,11 @@ export function getGoogleDriveToolCode() {
           window.location.href = data.authorizeUrl;
         }
 
-        showCenterToast('ℹ️', '请在弹出窗口中完成 Google Drive 授权');
+        showCenterToast('info', '请在弹出窗口中完成 Google Drive 授权');
         loadGoogleDriveDestinations();
       } catch (error) {
         _googleDriveExpectedCallbackOrigin = null;
-        showCenterToast('❌', '授权失败: ' + error.message);
+        showCenterToast('x', '授权失败: ' + error.message);
       } finally {
         if (hadFormButton) {
           authBtn.textContent = originalText;
@@ -296,13 +296,13 @@ export function getGoogleDriveToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', 'Google Drive 目标已删除');
+          showCenterToast('check', 'Google Drive 目标已删除');
           loadGoogleDriveDestinations();
         } else {
-          showCenterToast('❌', data.message || '删除失败');
+          showCenterToast('x', data.message || '删除失败');
         }
       } catch (error) {
-        showCenterToast('❌', '删除失败: ' + error.message);
+        showCenterToast('x', '删除失败: ' + error.message);
       }
     }
 
@@ -316,13 +316,13 @@ export function getGoogleDriveToolCode() {
         const data = await response.json();
 
         if (data.success) {
-          showCenterToast('✅', data.message);
+          showCenterToast('check', data.message);
         } else {
-          showCenterToast('❌', data.message || '操作失败');
+          showCenterToast('x', data.message || '操作失败');
         }
         loadGoogleDriveDestinations();
       } catch (error) {
-        showCenterToast('❌', '操作失败: ' + error.message);
+        showCenterToast('x', '操作失败: ' + error.message);
         loadGoogleDriveDestinations();
       }
     }

@@ -5,7 +5,7 @@ export function getComponentStyles() {
 	return `    .secrets-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
       margin: 0 auto;
     }
@@ -16,7 +16,7 @@ export function getComponentStyles() {
       padding: 16px;
       padding-top: 20px;
       border: 1px solid var(--card-border);
-      transition: all 0.3s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
       position: relative;
       width: 100%;
       box-shadow: var(--card-shadow);
@@ -32,6 +32,7 @@ export function getComponentStyles() {
     .secret-card:hover {
       border-color: var(--card-hover-border);
       box-shadow: var(--card-hover-shadow);
+      transform: translateY(-1px);
     }
 
     .secret-header {
@@ -67,7 +68,7 @@ export function getComponentStyles() {
     .service-icon {
       width: 40px;
       height: 40px;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -83,7 +84,7 @@ export function getComponentStyles() {
       width: 30px;
       height: 30px;
       object-fit: contain;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
     }
 
     .secret-text {
@@ -101,7 +102,7 @@ export function getComponentStyles() {
       cursor: pointer;
       padding: 8px;
       margin: -8px;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       transition: background 0.2s ease;
     }
 
@@ -121,10 +122,14 @@ export function getComponentStyles() {
     }
 
     .menu-dots {
-      font-size: 20px;
       color: var(--text-secondary);
       line-height: 1;
       user-select: none;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .card-menu-dropdown {
@@ -134,8 +139,8 @@ export function getComponentStyles() {
       right: -8px;
       background: var(--menu-bg);
       border: 1px solid var(--menu-border);
-      border-radius: var(--radius-sm);
-      min-width: 80px;
+      border-radius: var(--radius-md);
+      min-width: 136px;
       width: fit-content;
       box-shadow: var(--menu-shadow);
       z-index: 10000;
@@ -153,6 +158,9 @@ export function getComponentStyles() {
       transition: background 0.2s ease;
       font-size: 14px;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .menu-item:hover {
@@ -192,14 +200,19 @@ export function getComponentStyles() {
     }
 
     .action-btn {
-      background: none;
-      border: 2px solid;
-      border-radius: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
       padding: 8px 12px;
       font-size: 12px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
       min-width: 60px;
+    }
+
+    .action-btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     .qr-btn {
@@ -263,7 +276,7 @@ export function getComponentStyles() {
       font-size: 42px;
       font-weight: 300;
       color: var(--otp-text);
-      letter-spacing: 6px;
+      letter-spacing: 0;
       cursor: pointer;
       transition: all 0.2s ease;
       user-select: none;
@@ -290,7 +303,7 @@ export function getComponentStyles() {
       cursor: pointer;
       transition: all 0.2s ease;
       padding: 6px 10px;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       background: var(--otp-next-bg);
       flex-shrink: 0;
       min-width: 70px;
@@ -316,7 +329,7 @@ export function getComponentStyles() {
       font-size: 16px;
       font-weight: 600;
       color: var(--otp-next-text);
-      letter-spacing: 2px;
+      letter-spacing: 0;
       line-height: 1;
       display: block;
       white-space: nowrap;
@@ -362,7 +375,7 @@ export function getComponentStyles() {
     .dest-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-primary);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       padding: 12px;
       margin-bottom: 10px;
       transition: opacity 0.2s ease;
@@ -443,7 +456,7 @@ export function getComponentStyles() {
     .btn-sm {
       padding: 4px 12px;
       font-size: 12px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       border: 1px solid var(--border-primary);
       background: var(--bg-primary);
@@ -601,7 +614,11 @@ export function getComponentStyles() {
     }
 
     .offline-banner-icon {
-      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .offline-banner-text {

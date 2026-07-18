@@ -14,7 +14,7 @@ export function getExportUICode() {
     // 导出所有密钥 - 显示格式选择
     function exportAllSecrets() {
       if (secrets.length === 0) {
-        showCenterToast('❌', '没有密钥可以导出');
+        showCenterToast('x', '没有密钥可以导出');
         return;
       }
       showExportFormatModal();
@@ -53,7 +53,7 @@ export function getExportUICode() {
         optionDiv.className = 'format-option';
         optionDiv.onclick = () => selectSubFormat(opt.id);
         optionDiv.innerHTML =
-          '<div class="format-icon">' + opt.icon + '</div>' +
+          '<div class="format-icon">' + renderIcon(opt.icon, 'ui-icon') + '</div>' +
           '<div class="format-info">' +
           '  <div class="format-name">' + opt.name + ' <span class="format-ext">' + opt.ext + '</span></div>' +
           '  <div class="format-desc">' + opt.desc + '</div>' +
@@ -111,7 +111,7 @@ export function getExportUICode() {
 
     // 显示导出成功提示
     function showExportSuccess(count, format) {
-      showCenterToast('✅', '成功导出 ' + count + ' 个密钥 (' + format + ')');
+      showCenterToast('check', '成功导出 ' + count + ' 个密钥 (' + format + ')');
     }
 `;
 }

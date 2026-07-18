@@ -24,7 +24,7 @@ export function getKeyCheckerToolCode() {
     function checkSecret() {
       const secret = document.getElementById('keyCheckInput').value.trim().toUpperCase();
       if (!secret) {
-        showCenterToast('❌', '请输入要检查的密钥');
+        showCenterToast('x', '请输入要检查的密钥');
         return;
       }
 
@@ -80,7 +80,7 @@ export function getKeyCheckerToolCode() {
       const resultSection = document.getElementById('keyCheckResult');
 
       let html = '<div style="display: flex; align-items: center; margin-bottom: 15px;">' +
-        '<span style="font-size: 24px; margin-right: 10px;">' + (result.isValid ? '✅' : '❌') + '</span>' +
+        '<span style="display: inline-flex; width: 24px; height: 24px; margin-right: 10px;">' + renderIcon(result.isValid ? 'check' : 'x', 'ui-icon') + '</span>' +
         '<span style="font-size: 18px; font-weight: 600; color: ' + (result.isValid ? '#28a745' : '#e74c3c') + ';">' + (result.isValid ? '密钥有效' : '密钥无效') + '</span>' +
         '</div>' +
         '<div style="margin-bottom: 15px;">' +

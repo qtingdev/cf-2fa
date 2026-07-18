@@ -106,8 +106,12 @@ export function getQRCodeCode() {
 
       // 显示加载状态
       const loadingDiv = document.createElement('div');
-      loadingDiv.textContent = '🔄 生成中...';
+      loadingDiv.innerHTML = renderIcon('loader', 'ui-icon spin-icon') + '<span>生成中...</span>';
       loadingDiv.style.cssText =
+        'display: flex;' +
+        'align-items: center;' +
+        'justify-content: center;' +
+        'gap: 8px;' +
         'text-align: center;' +
         'padding: 80px 20px;' +
         'color: #7f8c8d;' +
@@ -150,7 +154,7 @@ export function getQRCodeCode() {
           console.error('二维码显示失败');
           container.innerHTML =
             '<div style="width: 200px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; text-align: center; font-size: 12px; color: #6c757d; line-height: 1.4;">' +
-            '<div style="font-size: 24px; margin-bottom: 10px;">❌</div>' +
+            '<div style="width: 24px; height: 24px; margin-bottom: 10px;">' + renderIcon('x', 'ui-icon') + '</div>' +
             '<div style="margin-bottom: 8px; font-weight: bold;">二维码生成失败</div>' +
             '<div style="margin-bottom: 8px;">请检查网络连接</div>' +
             '<div>或稍后重试</div>' +
@@ -161,7 +165,7 @@ export function getQRCodeCode() {
         console.error('二维码生成过程发生错误:', error);
         container.innerHTML =
           '<div style="width: 200px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; text-align: center; font-size: 12px; color: #6c757d; line-height: 1.4;">' +
-          '<div style="font-size: 24px; margin-bottom: 10px;">⚠️</div>' +
+          '<div style="width: 24px; height: 24px; margin-bottom: 10px;">' + renderIcon('alertTriangle', 'ui-icon') + '</div>' +
           '<div style="margin-bottom: 8px; font-weight: bold;">生成失败</div>' +
           '<div style="margin-bottom: 8px;">发生未知错误</div>' +
           '<div>' + error.message + '</div>' +
@@ -605,7 +609,7 @@ export function getQRCodeCode() {
       };
 
       try {
-        showCenterToast('⏳', '正在保存...');
+        showCenterToast('loader', '正在保存...');
 
         const response = await authenticatedFetch('/api/secrets', {
           method: 'POST',
@@ -618,7 +622,7 @@ export function getQRCodeCode() {
         if (response.ok) {
           const result = await response.json();
           console.log('密钥保存成功:', result);
-          showCenterToast('✅', '密钥添加成功：' + newSecret.name);
+          showCenterToast('check', '密钥添加成功：' + newSecret.name);
           // 刷新密钥列表
           loadSecrets();
 
@@ -652,7 +656,7 @@ export function getQRCodeCode() {
           } catch (e) {
             errorMsg = errorText;
           }
-          showCenterToast('❌', errorMsg);
+          showCenterToast('x', errorMsg);
           // 失败时也继续扫描（如果是连续模式）
           if (continuousScanMode && isScanning) {
             setTimeout(() => scanForQRCode(), 1000);
@@ -660,7 +664,7 @@ export function getQRCodeCode() {
         }
       } catch (error) {
         console.error('保存密钥出错:', error);
-        showCenterToast('❌', '保存出错：' + error.message);
+        showCenterToast('x', '保存出错：' + error.message);
         // 出错时也继续扫描（如果是连续模式）
         if (continuousScanMode && isScanning) {
           setTimeout(() => scanForQRCode(), 1000);
@@ -697,10 +701,10 @@ export function getQRCodeCode() {
                 hideQRScanner();
                 processScannedQRCode(code.data);
               } else {
-                showCenterToast('❌', '未在图片中找到二维码，请尝试其他图片');
+                showCenterToast('x', '未在图片中找到二维码，请尝试其他图片');
               }
             } else {
-              showCenterToast('❌', '二维码解析库未加载');
+              showCenterToast('x', '二维码解析库未加载');
             }
           };
           img.src = e.target.result;
@@ -886,16 +890,16 @@ export function getQRCodeCode() {
         }
 
         if (!imageBlob) {
-          showCenterToast('❌', '剪贴板中没有图片，请先截图或复制图片');
+          showCenterToast('x', '剪贴板中没有图片，请先截图或复制图片');
           return;
         }
 
         processImageBlobForScan(imageBlob);
       } catch (error) {
         if (error.name === 'NotAllowedError') {
-          showCenterToast('❌', '请允许浏览器访问剪贴板');
+          showCenterToast('x', '请允许浏览器访问剪贴板');
         } else {
-          showCenterToast('❌', '读取剪贴板失败: ' + error.message);
+          showCenterToast('x', '读取剪贴板失败: ' + error.message);
         }
       }
     }
@@ -924,7 +928,7 @@ export function getQRCodeCode() {
           const imageData = ctx.getImageData(0, 0, width, height);
 
           if (typeof jsQR === 'undefined') {
-            showCenterToast('❌', '二维码解析库未加载');
+            showCenterToast('x', '二维码解析库未加载');
             return;
           }
 
@@ -947,11 +951,11 @@ export function getQRCodeCode() {
           if (qrCode) {
             processScannedQRCode(qrCode);
           } else {
-            showCenterToast('❌', '未在图片中找到二维码，请尝试其他图片');
+            showCenterToast('x', '未在图片中找到二维码，请尝试其他图片');
           }
         };
         img.onerror = function() {
-          showCenterToast('❌', '图片加载失败');
+          showCenterToast('x', '图片加载失败');
         };
         img.src = e.target.result;
       };
@@ -990,7 +994,7 @@ export function getQRCodeCode() {
         if (files.length > 0 && files[0].type.startsWith('image/')) {
           processImageBlobForScan(files[0]);
         } else {
-          showCenterToast('❌', '请拖入图片文件');
+          showCenterToast('x', '请拖入图片文件');
         }
       });
     }
