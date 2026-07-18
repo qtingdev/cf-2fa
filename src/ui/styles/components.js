@@ -320,12 +320,11 @@ export function getComponentStyles() {
       --progress-deg: 360deg;
       --progress-color: var(--success);
       position: relative;
-      width: 30px;
-      height: 30px;
-      flex: 0 0 30px;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
       border-radius: 50%;
       background: conic-gradient(var(--progress-color) var(--progress-deg), var(--border-primary) 0deg);
-      box-shadow: inset 0 0 0 1px var(--border-primary);
       transition: background 1s linear;
       pointer-events: none;
     }
@@ -335,7 +334,6 @@ export function getComponentStyles() {
       inset: 4px;
       border-radius: 50%;
       background: var(--card-bg);
-      box-shadow: 0 0 0 1px var(--border-secondary);
     }
 
     .otp-code:hover {

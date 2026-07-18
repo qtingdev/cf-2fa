@@ -471,9 +471,9 @@ export function getResponsiveStyles() {
       }
 
       .otp-countdown-ring {
-        width: 26px;
-        height: 26px;
-        flex-basis: 26px;
+        width: 24px;
+        height: 24px;
+        flex-basis: 24px;
       }
 
       .otp-countdown-ring-inner {
@@ -872,9 +872,9 @@ export function getResponsiveStyles() {
       }
 
       .otp-countdown-ring {
-        width: 32px;
-        height: 32px;
-        flex-basis: 32px;
+        width: 30px;
+        height: 30px;
+        flex-basis: 30px;
       }
 
       .progress-mini {
