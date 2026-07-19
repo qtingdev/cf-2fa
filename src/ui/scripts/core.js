@@ -103,6 +103,7 @@ export function getCoreCode() {
         
         // 恢复用户的排序选择
         restoreSortPreference();
+        restoreViewPreference();
 
         // 排序 popover 外部点击 / Escape 关闭
         if (typeof initSortDropdownOutsideClose === 'function') {
@@ -352,7 +353,9 @@ export function getCoreCode() {
       }
 
       emptyState.style.display = 'none';
-      secretsList.style.display = 'grid';
+      secretsList.style.display = currentViewMode === 'list' ? 'flex' : 'grid';
+      secretsList.classList.toggle('view-grid', currentViewMode === 'grid');
+      secretsList.classList.toggle('view-list', currentViewMode === 'list');
       secretsList.classList.toggle('manual-sort-mode', currentSortType === 'manual-order');
 
       // 应用排序

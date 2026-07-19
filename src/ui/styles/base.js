@@ -220,6 +220,48 @@ export function getBaseStyles() {
       flex-shrink: 0;
     }
 
+    .view-controls {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 46px;
+      padding: 3px;
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
+      background: var(--input-bg-focus);
+      box-sizing: border-box;
+    }
+
+    .view-toggle-button {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .view-toggle-button:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .view-toggle-button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .view-toggle-button.active {
+      background: var(--bg-active);
+      color: var(--text-primary);
+    }
+
     .sort-select {
       padding: 10px 12px;
       border: 1px solid var(--border-primary);
@@ -533,6 +575,10 @@ export function getBaseStyles() {
         width: auto;
       }
 
+      .view-controls {
+        flex: 0 0 auto;
+      }
+
       /* menu 在手机上贴右对齐，不超过屏幕宽度 */
       .sort-menu {
         max-width: calc(100vw - 32px);
@@ -555,6 +601,17 @@ export function getBaseStyles() {
 
       .search-input-wrapper {
         border-radius: var(--radius-sm);
+      }
+
+      .view-controls {
+        height: 42px;
+        padding: 3px;
+        border-radius: var(--radius-sm);
+      }
+
+      .view-toggle-button {
+        width: 34px;
+        height: 34px;
       }
 
       .search-icon {
@@ -656,6 +713,16 @@ export function getBaseStyles() {
         padding: 8px 10px;
         font-size: 13px;
         height: 40px;
+      }
+
+      .view-controls {
+        height: 40px;
+        padding: 2px;
+      }
+
+      .view-toggle-button {
+        width: 34px;
+        height: 34px;
       }
 
       .action-menu-float {

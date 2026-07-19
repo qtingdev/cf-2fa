@@ -12,6 +12,7 @@ export function getSearchCode() {
 
     // 排序相关变量
     let currentSortType = 'oldest-first';
+    const VALID_VIEW_MODES = ['grid', 'list'];
     const VALID_SORT_TYPES = [
       'manual-order',
       'oldest-first',
@@ -28,6 +29,54 @@ export function getSearchCode() {
 
     function isManualSortMode() {
       return currentSortType === 'manual-order';
+    }
+
+    function normalizeViewMode(viewMode) {
+      return VALID_VIEW_MODES.includes(viewMode) ? viewMode : 'grid';
+    }
+
+    function markActiveViewOption(value) {
+      document.querySelectorAll('.view-toggle-button').forEach(button => {
+        const match = button.dataset.view === value;
+        button.classList.toggle('active', match);
+        button.setAttribute('aria-pressed', match ? 'true' : 'false');
+      });
+    }
+
+    function saveViewPreference(viewMode) {
+      try {
+        const normalizedViewMode = normalizeViewMode(viewMode);
+        localStorage.setItem('2fa-view-mode', normalizedViewMode);
+        console.log('💾 已保存视图设置:', normalizedViewMode);
+      } catch (e) {
+        console.warn('⚠️  保存视图设置失败:', e);
+      }
+    }
+
+    function restoreViewPreference() {
+      try {
+        const savedValue = localStorage.getItem('2fa-view-mode');
+        currentViewMode = normalizeViewMode(savedValue || currentViewMode);
+        markActiveViewOption(currentViewMode);
+        console.log('✅ 已恢复视图设置:', currentViewMode);
+      } catch (e) {
+        currentViewMode = 'grid';
+        markActiveViewOption(currentViewMode);
+        console.warn('⚠️  恢复视图设置失败:', e);
+      }
+    }
+
+    async function selectViewMode(value) {
+      const nextViewMode = normalizeViewMode(value);
+      if (currentViewMode === nextViewMode) {
+        markActiveViewOption(currentViewMode);
+        return;
+      }
+
+      currentViewMode = nextViewMode;
+      markActiveViewOption(currentViewMode);
+      saveViewPreference(currentViewMode);
+      await renderFilteredSecrets();
     }
 
     // 从 localStorage 恢复排序选择

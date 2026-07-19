@@ -10,4 +10,14 @@ describe('settings page copy', () => {
 		expect(html).toContain('也会用于新创建的手动备份、自动备份和远程自动备份文件');
 		expect(html).not.toContain('不会改变内部备份的完整格式');
 	});
+
+	it('renders grid/list view switch controls', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+
+		expect(html).toContain('class="view-controls"');
+		expect(html).toContain('onclick="selectViewMode(\'grid\')"');
+		expect(html).toContain('onclick="selectViewMode(\'list\')"');
+		expect(html).toContain('.secrets-list.view-list');
+	});
 });

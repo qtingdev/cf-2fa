@@ -54,6 +54,85 @@ export function getComponentStyles() {
       background: var(--bg-hover);
     }
 
+    .secrets-list.view-list {
+      flex-direction: column;
+      grid-template-columns: none;
+      justify-content: flex-start;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .secrets-list.view-list .secret-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, auto);
+      align-items: center;
+      gap: 18px;
+      padding: 12px 14px;
+      padding-top: 12px;
+    }
+
+    .secrets-list.view-list .secret-card:hover {
+      transform: none;
+    }
+
+    .secrets-list.view-list .card-header {
+      align-items: center;
+      margin-bottom: 0;
+      min-width: 0;
+    }
+
+    .secrets-list.view-list .secret-info {
+      align-items: center;
+    }
+
+    .secrets-list.view-list .service-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .secrets-list.view-list .service-icon img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .secrets-list.view-list .otp-preview {
+      margin-top: 0;
+      min-width: 0;
+    }
+
+    .secrets-list.view-list .otp-main {
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .secrets-list.view-list .otp-code-container {
+      flex: 0 1 auto;
+    }
+
+    .secrets-list.view-list .otp-code {
+      font-size: 32px;
+      margin: 0;
+    }
+
+    .secrets-list.view-list .otp-next-container {
+      padding: 5px 9px;
+    }
+
+    @media (max-width: 720px) {
+      .secrets-list.view-list .secret-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .secrets-list.view-list .otp-main {
+        justify-content: space-between;
+      }
+
+      .secrets-list.view-list .otp-code-container {
+        flex: 1;
+      }
+    }
+
     .secret-header {
       display: flex;
       justify-content: space-between;

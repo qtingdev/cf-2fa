@@ -142,6 +142,14 @@ function getHTMLBody() {
                    onfocus="this.removeAttribute('readonly')">
             <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display: none;" aria-label="清除搜索">${icon('x', 'ui-icon')}</button>
       </div>
+          <div class="view-controls" role="group" aria-label="视图切换">
+            <button type="button" class="view-toggle-button active" data-view="grid" onclick="selectViewMode('grid')" aria-label="网格视图" aria-pressed="true" title="网格视图">
+              ${icon('layoutGrid', 'ui-icon')}
+            </button>
+            <button type="button" class="view-toggle-button" data-view="list" onclick="selectViewMode('list')" aria-label="列表视图" aria-pressed="false" title="列表视图">
+              ${icon('list', 'ui-icon')}
+            </button>
+          </div>
           <div class="sort-controls">
             <details class="sort-dropdown" id="sortDropdown">
               <summary class="sort-trigger" aria-label="排序" aria-haspopup="menu" title="排序">
