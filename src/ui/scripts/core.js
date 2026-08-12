@@ -280,7 +280,7 @@ export function getCoreCode() {
           '<div class="secret-info">' +
             '<div class="service-icon">' +
               (logoUrl ?
-                '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" style="width: 30px; height: 30px; object-fit: contain; border-radius: 6px;" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
+                '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
                 '<span style="display: none;">' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>' :
                 '<span>' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>'
               ) +

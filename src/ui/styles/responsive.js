@@ -424,7 +424,7 @@ export function getResponsiveStyles() {
 
       .secret-card {
         padding: 12px;
-        padding-top: 16px;
+        padding-top: 12px;
         margin-bottom: 0;
         border-radius: var(--radius-surface);
         box-shadow: none;
@@ -451,19 +451,19 @@ export function getResponsiveStyles() {
       }
 
       .otp-code {
-        font-size: 24px;
+        font-size: 34px;
         letter-spacing: 0;
-        padding: 12px 16px;
+        padding: 0;
       }
 
       .otp-preview {
-        margin-top: 8px;
+        margin-top: 6px;
       }
 
       .otp-code {
-        font-size: 28px !important;
-        letter-spacing: 0 !important;
-        margin: 6px 0 !important;
+        font-size: 34px;
+        letter-spacing: 0;
+        margin: 2px 0;
       }
 
       .otp-code-row {
@@ -471,9 +471,9 @@ export function getResponsiveStyles() {
       }
 
       .otp-countdown-ring {
-        width: 24px;
-        height: 24px;
-        flex-basis: 24px;
+        width: 26px;
+        height: 26px;
+        flex-basis: 26px;
       }
 
       .otp-countdown-ring-inner {
@@ -481,7 +481,7 @@ export function getResponsiveStyles() {
       }
 
       .otp-main {
-        gap: 12px !important;
+        gap: 10px !important;
         /* Chrome兼容性修复 */
         display: -webkit-flex !important;
         -webkit-align-items: center !important;
@@ -489,8 +489,8 @@ export function getResponsiveStyles() {
       }
 
       .otp-next-container {
-        min-width: 70px !important;
-        padding: 6px 8px !important;
+        min-width: 64px !important;
+        padding: 5px 7px !important;
         /* Chrome兼容性修复 */
         display: -webkit-flex !important;
         -webkit-flex-direction: column !important;
@@ -571,8 +571,8 @@ export function getResponsiveStyles() {
       }
 
       .secrets-list {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 10px;
         justify-content: center;
         text-align: left;
       }
@@ -656,8 +656,8 @@ export function getResponsiveStyles() {
 
       /* iPad 和平板动态多列卡片布局 */
       .secrets-list {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 10px;
         justify-content: center;
         text-align: left;
       }
@@ -843,8 +843,8 @@ export function getResponsiveStyles() {
       }
 
       .secrets-list {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 10px;
         justify-content: center;
         text-align: left;
       }
@@ -854,27 +854,27 @@ export function getResponsiveStyles() {
       }
 
       .secret-card {
-        padding: 20px;
-        padding-top: 24px;
+        padding: 12px;
+        padding-top: 12px;
         margin-bottom: 0;
         border-radius: var(--radius-surface);
         box-shadow: none;
       }
 
       .otp-code {
-        font-size: 38px;
+        font-size: 34px;
         letter-spacing: 0;
-        margin: 6px 0;
+        margin: 2px 0;
       }
 
       .otp-preview {
-        margin-top: 14px;
+        margin-top: 6px;
       }
 
       .otp-countdown-ring {
-        width: 30px;
-        height: 30px;
-        flex-basis: 30px;
+        width: 26px;
+        height: 26px;
+        flex-basis: 26px;
       }
 
       .progress-mini {

@@ -189,10 +189,11 @@ export function getBaseStyles() {
     .search-meta-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       flex-wrap: wrap;
-      gap: 6px 12px;
-      min-height: 20px;
+      gap: 6px 10px;
+      min-width: 0;
+      min-height: 28px;
       margin-top: 8px;
     }
 
@@ -219,9 +220,9 @@ export function getBaseStyles() {
     }
 
     .search-stats {
-      flex: 1 1 auto;
+      flex: 1 0 100%;
       min-width: 0;
-      padding: 0 4px;
+      padding: 0;
       font-size: 12px;
       color: var(--text-secondary);
       line-height: 20px;
@@ -230,10 +231,12 @@ export function getBaseStyles() {
 
     .provider-filters {
       align-items: center;
-      gap: 6px;
-      width: 100%;
-      margin-top: 8px;
-      padding: 1px 0 3px;
+      gap: 5px;
+      flex: 1 1 0;
+      min-width: 0;
+      width: auto;
+      margin: 0;
+      padding: 0 0 1px;
       overflow-x: auto;
       overscroll-behavior-x: contain;
       scrollbar-width: none;
@@ -245,12 +248,12 @@ export function getBaseStyles() {
     }
 
     .provider-filter-option {
-      min-height: 30px;
+      min-height: 28px;
       flex: 0 0 auto;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 5px 10px;
+      padding: 4px 9px;
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-sm);
       background: var(--input-bg-focus);

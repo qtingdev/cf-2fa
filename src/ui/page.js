@@ -186,9 +186,9 @@ function getHTMLBody() {
               ${icon('key', 'ui-icon')}
               <span>共 <strong id="secretCountValue">0</strong> 个账号</span>
             </div>
+            <div class="provider-filters" id="providerFilters" role="group" aria-label="按提供商筛选" style="display: none;"></div>
             <div class="search-stats" id="searchStats" style="display: none;"></div>
           </div>
-          <div class="provider-filters" id="providerFilters" role="group" aria-label="按提供商筛选" style="display: none;"></div>
         </div>
       </div>
 

@@ -33,10 +33,22 @@ describe('settings page copy', () => {
 	it('renders a provider filter row without adding tags to cards', async () => {
 		const response = await createMainPage({ lazyLoad: false });
 		const html = await response.text();
+		const accountCountIndex = html.indexOf('id="secretCount"');
+		const providerFiltersIndex = html.indexOf('id="providerFilters"');
 
 		expect(html).toContain('id="providerFilters"');
 		expect(html).toContain('按提供商筛选');
 		expect(html).toContain('provider-filter-option');
 		expect(html).not.toContain('provider-filter-button');
+		expect(providerFiltersIndex).toBeGreaterThan(accountCountIndex);
+	});
+
+	it('uses compact spacing for grid and list account cards', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+
+		expect(html).toContain('grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));');
+		expect(html).toContain('.secrets-list.view-list .secret-card');
+		expect(html).toContain('padding: 8px 10px;');
 	});
 });

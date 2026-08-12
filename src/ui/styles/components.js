@@ -4,8 +4,8 @@
 export function getComponentStyles() {
 	return `    .secrets-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 10px;
       justify-content: center;
       margin: 0 auto;
     }
@@ -13,8 +13,7 @@ export function getComponentStyles() {
     .secret-card {
       background: var(--card-bg);
       border-radius: var(--radius-surface);
-      padding: 16px;
-      padding-top: 20px;
+      padding: 12px;
       border: 1px solid var(--card-border);
       transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
       position: relative;
@@ -66,9 +65,8 @@ export function getComponentStyles() {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(260px, auto);
       align-items: center;
-      gap: 18px;
-      padding: 12px 14px;
-      padding-top: 12px;
+      gap: 10px;
+      padding: 8px 10px;
     }
 
     .secrets-list.view-list .secret-card:hover {
@@ -86,13 +84,13 @@ export function getComponentStyles() {
     }
 
     .secrets-list.view-list .service-icon {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
     }
 
     .secrets-list.view-list .service-icon img {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
     }
 
     .secrets-list.view-list .otp-preview {
@@ -102,7 +100,7 @@ export function getComponentStyles() {
 
     .secrets-list.view-list .otp-main {
       justify-content: flex-end;
-      gap: 12px;
+      gap: 10px;
     }
 
     .secrets-list.view-list .otp-code-container {
@@ -110,18 +108,20 @@ export function getComponentStyles() {
     }
 
     .secrets-list.view-list .otp-code {
-      font-size: 32px;
+      font-size: 30px;
       margin: 0;
     }
 
     .secrets-list.view-list .otp-next-container {
-      padding: 5px 9px;
+      min-width: 62px;
+      padding: 4px 7px;
     }
 
     @media (max-width: 720px) {
       .secrets-list.view-list .secret-card {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 6px;
+        padding: 10px;
       }
 
       .secrets-list.view-list .otp-main {
@@ -152,28 +152,28 @@ export function getComponentStyles() {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .card-header-actions {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
+      gap: 4px;
       flex-shrink: 0;
-      margin-left: 8px;
+      margin-left: 6px;
     }
 
     .secret-info {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
       min-width: 0;
     }
 
     .service-icon {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
@@ -187,8 +187,8 @@ export function getComponentStyles() {
     }
 
     .service-icon img {
-      width: 30px;
-      height: 30px;
+      width: 26px;
+      height: 26px;
       object-fit: contain;
       border-radius: var(--radius-sm);
     }
@@ -206,8 +206,8 @@ export function getComponentStyles() {
     .card-menu {
       position: relative;
       cursor: pointer;
-      padding: 8px;
-      margin: -8px;
+      padding: 6px;
+      margin: -6px;
       border-radius: var(--radius-sm);
       transition: background 0.2s ease;
     }
@@ -217,8 +217,8 @@ export function getComponentStyles() {
     }
 
     .drag-handle {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -318,7 +318,7 @@ export function getComponentStyles() {
 
     .secret-text h3 {
       color: var(--text-primary);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       margin: 0 0 1px 0;
       line-height: 1.3;
@@ -336,11 +336,11 @@ export function getComponentStyles() {
     .secret-text .secret-account {
       display: block;
       max-width: 100%;
-      margin-top: 3px;
+      margin-top: 2px;
       color: var(--text-secondary);
       font-size: 13px;
       font-weight: 500;
-      line-height: 1.45;
+      line-height: 1.35;
       white-space: normal;
       overflow: visible;
       overflow-wrap: anywhere;
@@ -403,7 +403,7 @@ export function getComponentStyles() {
     }
 
     .otp-preview {
-      margin-top: 12px;
+      margin-top: 6px;
       padding: 0;
       background: none;
       border: none;
@@ -412,7 +412,7 @@ export function getComponentStyles() {
     .otp-main {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
       justify-content: space-between;
       /* Chrome兼容性修复 */
       display: -webkit-flex;
@@ -431,21 +431,21 @@ export function getComponentStyles() {
     .otp-code-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       min-width: 0;
       width: 100%;
     }
 
     .otp-code {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', 'SF Pro Display', monospace;
-      font-size: 42px;
+      font-size: 34px;
       font-weight: 300;
       color: var(--otp-text);
       letter-spacing: 0;
       cursor: pointer;
       transition: all 0.2s ease;
       user-select: none;
-      margin: 4px 0;
+      margin: 2px 0;
       line-height: 1.1;
       padding: 0;
       background: none;
@@ -461,9 +461,9 @@ export function getComponentStyles() {
       --progress-deg: 360deg;
       --progress-color: var(--success);
       position: relative;
-      width: 28px;
-      height: 28px;
-      flex: 0 0 28px;
+      width: 26px;
+      height: 26px;
+      flex: 0 0 26px;
       border-radius: 50%;
       background: conic-gradient(var(--progress-color) var(--progress-deg), var(--border-primary) 0deg);
       transition: background 1s linear;
@@ -489,11 +489,11 @@ export function getComponentStyles() {
       text-align: right;
       cursor: pointer;
       transition: all 0.2s ease;
-      padding: 6px 10px;
+      padding: 5px 8px;
       border-radius: var(--radius-md);
       background: var(--otp-next-bg);
       flex-shrink: 0;
-      min-width: 70px;
+      min-width: 64px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -513,7 +513,7 @@ export function getComponentStyles() {
 
     .otp-next-code {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', monospace;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--otp-next-text);
       letter-spacing: 0;
