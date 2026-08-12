@@ -147,68 +147,139 @@ export function getSearchCode() {
       }
     }
 
-    function getSecretsMatchingQuery(query) {
-      if (!query) {
-        return [...secrets];
+    function normalizeProviderName(value) {
+      return String(value || '').trim();
+    }
+
+    function getSecretProviderName(secret) {
+      if (!secret || typeof secret !== 'object') {
+        return '';
       }
 
+      return normalizeProviderName(secret.name || secret.issuer || '');
+    }
+
+    function providersMatch(left, right) {
+      const normalizedLeft = normalizeProviderName(left).toLocaleLowerCase('zh-CN');
+      const normalizedRight = normalizeProviderName(right).toLocaleLowerCase('zh-CN');
+      return Boolean(normalizedLeft) && normalizedLeft === normalizedRight;
+    }
+
+    function getSecretsMatchingFilters(query, providerName) {
+      const normalizedQuery = String(query || '').trim().toLocaleLowerCase('zh-CN');
+      const normalizedProvider = normalizeProviderName(providerName);
+
       return secrets.filter(secret => {
-        const serviceName = (secret.name || '').toLowerCase();
-        const accountName = (secret.account || '').toLowerCase();
-        return serviceName.includes(query) || accountName.includes(query);
+        const serviceName = getSecretProviderName(secret);
+        const accountName = String(secret.account || '');
+        const matchesQuery = !normalizedQuery ||
+          serviceName.toLocaleLowerCase('zh-CN').includes(normalizedQuery) ||
+          accountName.toLocaleLowerCase('zh-CN').includes(normalizedQuery);
+        const matchesProvider = !normalizedProvider || providersMatch(serviceName, normalizedProvider);
+
+        return matchesQuery && matchesProvider;
       });
     }
 
-    function syncFilteredSecretsWithCurrentSearch() {
-      filteredSecrets = getSecretsMatchingQuery(currentSearchQuery);
+    function syncFilteredSecretsWithCurrentFilters() {
+      filteredSecrets = getSecretsMatchingFilters(currentSearchQuery, currentProviderFilter);
+    }
+
+    function updateFilterFeedback() {
+      const searchClear = document.getElementById('searchClear');
+      const searchStats = document.getElementById('searchStats');
+      const providerFilterClear = document.getElementById('providerFilterClear');
+
+      if (searchClear) {
+        searchClear.style.display = currentSearchQuery ? 'block' : 'none';
+      }
+
+      if (providerFilterClear) {
+        providerFilterClear.style.display = currentProviderFilter ? 'inline-flex' : 'none';
+      }
+
+      if (!searchStats) {
+        return;
+      }
+
+      if (!currentSearchQuery && !currentProviderFilter) {
+        searchStats.style.display = 'none';
+        searchStats.textContent = '';
+        return;
+      }
+
+      const totalCount = secrets.length;
+      const foundCount = filteredSecrets.length;
+      const providerTotal = currentProviderFilter
+        ? getSecretsMatchingFilters('', currentProviderFilter).length
+        : totalCount;
+
+      if (foundCount === 0) {
+        searchStats.textContent = currentProviderFilter
+          ? currentProviderFilter + ' · 未找到匹配账号'
+          : '未找到匹配账号';
+        searchStats.style.color = 'var(--danger)';
+      } else if (currentProviderFilter && currentSearchQuery) {
+        searchStats.textContent = currentProviderFilter + ' · 找到 ' + foundCount + ' 个匹配账号（该提供商共 ' + providerTotal + ' 个）';
+        searchStats.style.color = 'var(--text-secondary)';
+      } else if (currentProviderFilter) {
+        searchStats.textContent = currentProviderFilter + ' · ' + foundCount + ' 个账号（共 ' + totalCount + ' 个）';
+        searchStats.style.color = 'var(--text-secondary)';
+      } else {
+        searchStats.textContent = '找到 ' + foundCount + ' 个匹配账号（共 ' + totalCount + ' 个）';
+        searchStats.style.color = 'var(--text-secondary)';
+      }
+
+      searchStats.style.display = 'block';
+    }
+
+    async function applySecretFilters() {
+      syncFilteredSecretsWithCurrentFilters();
+      updateFilterFeedback();
+      await renderFilteredSecrets();
     }
 
     // 搜索过滤功能
     async function filterSecrets(query) {
-      const trimmedQuery = query.trim().toLowerCase();
-      currentSearchQuery = trimmedQuery;
+      currentSearchQuery = String(query || '').trim().toLocaleLowerCase('zh-CN');
+      await applySecretFilters();
+    }
 
-      const searchClear = document.getElementById('searchClear');
-      const searchStats = document.getElementById('searchStats');
-
-      if (trimmedQuery) {
-        searchClear.style.display = 'block';
-      } else {
-        searchClear.style.display = 'none';
-      }
-
-      if (!trimmedQuery) {
-        filteredSecrets = [...secrets];
-        searchStats.style.display = 'none';
-        await renderFilteredSecrets();
+    async function toggleProviderFilterBySecretId(secretId) {
+      const secret = secrets.find(item => item.id === secretId);
+      const providerName = getSecretProviderName(secret);
+      if (!providerName) {
         return;
       }
 
-      filteredSecrets = getSecretsMatchingQuery(trimmedQuery);
-
-      const totalCount = secrets.length;
-      const foundCount = filteredSecrets.length;
-
-      if (foundCount === 0) {
-        searchStats.textContent = '未找到匹配的密钥';
-        searchStats.style.color = '#e74c3c';
-      } else if (foundCount === totalCount) {
-        searchStats.textContent = '显示所有 ' + totalCount + ' 个密钥';
-        searchStats.style.color = '#27ae60';
-      } else {
-        searchStats.textContent = '找到 ' + foundCount + ' 个匹配密钥（共 ' + totalCount + ' 个）';
-        searchStats.style.color = '#3498db';
-      }
-      searchStats.style.display = 'block';
-
-      await renderFilteredSecrets();
+      currentProviderFilter = providersMatch(currentProviderFilter, providerName) ? '' : providerName;
+      await applySecretFilters();
     }
 
-    // 清除搜索
-    function clearSearch() {
-      document.getElementById('searchInput').value = '';
-      filterSecrets('');
-      document.getElementById('searchInput').focus();
+    async function clearProviderFilter() {
+      currentProviderFilter = '';
+      await applySecretFilters();
+    }
+
+    async function clearSearch() {
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      await filterSecrets('');
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }
+
+    async function clearAllSecretFilters() {
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      currentSearchQuery = '';
+      currentProviderFilter = '';
+      await applySecretFilters();
     }
 
     // 应用排序
@@ -379,7 +450,7 @@ export function getSearchCode() {
         const updatedSecrets = result && result.data && Array.isArray(result.data.secrets) ? result.data.secrets : null;
         if (updatedSecrets) {
           secrets = updatedSecrets;
-          syncFilteredSecretsWithCurrentSearch();
+          syncFilteredSecretsWithCurrentFilters();
           await renderFilteredSecrets();
         }
 
@@ -387,7 +458,7 @@ export function getSearchCode() {
       }).catch(async error => {
         console.error('保存手动排序失败:', error);
         secrets = previousSecrets;
-        syncFilteredSecretsWithCurrentSearch();
+        syncFilteredSecretsWithCurrentFilters();
 
         try {
           await renderFilteredSecrets();
@@ -418,7 +489,7 @@ export function getSearchCode() {
       }
 
       secrets = nextSecrets;
-      syncFilteredSecretsWithCurrentSearch();
+      syncFilteredSecretsWithCurrentFilters();
       await renderFilteredSecrets();
       await persistManualSecretOrder(secrets.map(secret => secret.id), previousSecrets);
     }

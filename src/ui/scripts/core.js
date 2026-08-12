@@ -182,13 +182,8 @@ export function getCoreCode() {
 
     // 渲染密钥列表
     async function renderSecrets() {
-      filteredSecrets = [...secrets];
       const searchInput = document.getElementById('searchInput');
-      if (searchInput && searchInput.value.trim()) {
-        filterSecrets(searchInput.value);
-      } else {
-        await renderFilteredSecrets();
-      }
+      await filterSecrets(searchInput ? searchInput.value : currentSearchQuery);
     }
 
     function updateSecretCount() {
@@ -266,10 +261,13 @@ export function getCoreCode() {
 
     // 创建密钥卡片
     function createSecretCard(secret) {
-      const logoUrl = getServiceLogo(secret.name);
+      const providerName = getSecretProviderName(secret) || '未命名';
+      const logoUrl = getServiceLogo(providerName);
       const isHOTP = secret.type && secret.type.toUpperCase() === 'HOTP';
       const displayAccount = getDisplayAccount(secret);
-      const safeServiceName = escapeHTML(secret.name || '');
+      const safeServiceName = escapeHTML(providerName);
+      const providerTitle = escapeAttribute((providersMatch(currentProviderFilter, providerName) ? '清除 ' : '筛选 ') + providerName);
+      const providerButtonClass = 'provider-filter-button' + (providersMatch(currentProviderFilter, providerName) ? ' active' : '');
       const safeAccount = escapeHTML(displayAccount);
       const accountTitle = escapeAttribute(displayAccount);
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
@@ -284,13 +282,13 @@ export function getCoreCode() {
           '<div class="secret-info">' +
             '<div class="service-icon">' +
               (logoUrl ?
-                '<img src="' + logoUrl + '" alt="' + secret.name + '" style="width: 30px; height: 30px; object-fit: contain; border-radius: 6px;" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
-                '<span style="display: none;">' + secret.name.charAt(0).toUpperCase() + '</span>' :
-                '<span>' + secret.name.charAt(0).toUpperCase() + '</span>'
+                '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" style="width: 30px; height: 30px; object-fit: contain; border-radius: 6px;" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
+                '<span style="display: none;">' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>' :
+                '<span>' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>'
               ) +
             '</div>' +
             '<div class="secret-text">' +
-            '<h3>' + safeServiceName + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
+            '<h3><button type="button" class="' + providerButtonClass + '" onclick="event.stopPropagation(); toggleProviderFilterBySecretId(&quot;' + secret.id + '&quot;)" aria-pressed="' + (providersMatch(currentProviderFilter, providerName) ? 'true' : 'false') + '" title="' + providerTitle + '">' + safeServiceName + '</button>' + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
             (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
             (isHOTP ? '<p style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">计数器: ' + (secret.counter || 0) + '</p>' : '') +
             '</div>' +
@@ -337,13 +335,13 @@ export function getCoreCode() {
       updateSecretCount();
       loading.style.display = 'none';
 
-      if (currentSearchQuery && filteredSecrets.length === 0) {
+      if ((currentSearchQuery || currentProviderFilter) && filteredSecrets.length === 0) {
         secretsList.style.display = 'none';
         emptyState.innerHTML =
           '<div class="icon">' + renderIcon('search', 'ui-icon empty-icon-svg') + '</div>' +
-          '<h3>未找到匹配的密钥</h3>' +
-          '<p>尝试使用不同的关键字搜索</p>' +
-          '<button class="btn btn-primary empty-action-btn" onclick="clearSearch()">清除搜索</button>';
+          '<h3>未找到匹配的账号</h3>' +
+          '<p>当前筛选条件下没有可显示的账号</p>' +
+          '<button class="btn btn-primary empty-action-btn" onclick="clearAllSecretFilters()">清除筛选</button>';
         emptyState.style.display = 'block';
         return;
       }

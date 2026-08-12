@@ -29,4 +29,13 @@ describe('settings page copy', () => {
 		expect(html).toContain('id="secretCountValue"');
 		expect(html).toContain('个账号');
 	});
+
+	it('uses the existing provider name as a filter control', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+
+		expect(html).toContain('provider-filter-button');
+		expect(html).toContain('toggleProviderFilterBySecretId');
+		expect(html).toContain('id="providerFilterClear"');
+	});
 });

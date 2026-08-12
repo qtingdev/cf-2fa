@@ -325,6 +325,32 @@ export function getComponentStyles() {
       word-break: break-word;
     }
 
+    .provider-filter-button {
+      max-width: 100%;
+      padding: 0;
+      border: 0;
+      border-radius: 3px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      text-align: left;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .provider-filter-button:hover,
+    .provider-filter-button.active {
+      color: var(--primary);
+    }
+
+    .provider-filter-button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
     .secret-text p {
       color: var(--text-secondary);
       font-size: 13px;

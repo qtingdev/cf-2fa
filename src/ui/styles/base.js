@@ -228,6 +228,34 @@ export function getBaseStyles() {
       text-align: right;
     }
 
+    .provider-filter-clear {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+    }
+
+    .provider-filter-clear:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .provider-filter-clear:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .provider-filter-clear .ui-icon {
+      width: 15px;
+      height: 15px;
+    }
+
     /* 平板和中等屏幕优化 */
     @media (min-width: 481px) and (max-width: 768px) {
       .search-action-row {

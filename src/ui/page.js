@@ -187,6 +187,9 @@ function getHTMLBody() {
               <span>共 <strong id="secretCountValue">0</strong> 个账号</span>
             </div>
             <div class="search-stats" id="searchStats" style="display: none;"></div>
+            <button type="button" class="provider-filter-clear" id="providerFilterClear" onclick="clearProviderFilter()" aria-label="清除提供商筛选" title="清除提供商筛选" style="display: none;">
+              ${icon('x', 'ui-icon')}
+            </button>
           </div>
         </div>
       </div>

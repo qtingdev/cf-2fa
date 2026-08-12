@@ -274,9 +274,13 @@ export function getAuthCode() {
       secrets = [];
       filteredSecrets = [];
       currentSearchQuery = '';
+      currentProviderFilter = '';
 
       if (typeof updateSecretCount === 'function') {
         updateSecretCount();
+      }
+      if (typeof updateFilterFeedback === 'function') {
+        updateFilterFeedback();
       }
 
       const secretsList = document.getElementById('secretsList');
