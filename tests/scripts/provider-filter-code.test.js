@@ -9,7 +9,7 @@ function createProviderFilterApi(initialSecrets) {
 		'initialSecrets',
 		`${getStateCode()}${getSearchCode()}
       secrets = initialSecrets;
-      return { getSecretProviderName, getSecretsMatchingFilters };`,
+      return { getSecretProviderName, getProviderOptions, getSecretsMatchingFilters };`,
 	);
 
 	return factory(initialSecrets);
@@ -22,6 +22,16 @@ describe('provider filtering runtime code', () => {
 		expect(api.getSecretProviderName({ name: 'Google' })).toBe('Google');
 		expect(api.getSecretProviderName({ issuer: 'OpenAI' })).toBe('OpenAI');
 		expect(api.getSecretProviderName({ service: 'legacy-account@example.com' })).toBe('');
+	});
+
+	it('builds a unique sorted provider list from existing service names', () => {
+		const api = createProviderFilterApi([
+			{ id: '1', name: 'OpenAI', account: 'alice@example.com' },
+			{ id: '2', name: 'google', account: 'bob@example.com' },
+			{ id: '3', name: 'Google', account: 'carol@example.com' },
+		]);
+
+		expect(api.getProviderOptions()).toEqual(['google', 'OpenAI']);
 	});
 
 	it('filters exact providers case-insensitively and combines with search', () => {

@@ -30,12 +30,13 @@ describe('settings page copy', () => {
 		expect(html).toContain('个账号');
 	});
 
-	it('uses the existing provider name as a filter control', async () => {
+	it('renders a provider filter row without adding tags to cards', async () => {
 		const response = await createMainPage({ lazyLoad: false });
 		const html = await response.text();
 
-		expect(html).toContain('provider-filter-button');
-		expect(html).toContain('toggleProviderFilterBySecretId');
-		expect(html).toContain('id="providerFilterClear"');
+		expect(html).toContain('id="providerFilters"');
+		expect(html).toContain('按提供商筛选');
+		expect(html).toContain('provider-filter-option');
+		expect(html).not.toContain('provider-filter-button');
 	});
 });

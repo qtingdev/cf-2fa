@@ -282,6 +282,9 @@ export function getAuthCode() {
       if (typeof updateFilterFeedback === 'function') {
         updateFilterFeedback();
       }
+      if (typeof renderProviderFilters === 'function') {
+        renderProviderFilters();
+      }
 
       const secretsList = document.getElementById('secretsList');
       if (secretsList) {

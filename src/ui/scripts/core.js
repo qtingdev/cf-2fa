@@ -266,8 +266,6 @@ export function getCoreCode() {
       const isHOTP = secret.type && secret.type.toUpperCase() === 'HOTP';
       const displayAccount = getDisplayAccount(secret);
       const safeServiceName = escapeHTML(providerName);
-      const providerTitle = escapeAttribute((providersMatch(currentProviderFilter, providerName) ? '清除 ' : '筛选 ') + providerName);
-      const providerButtonClass = 'provider-filter-button' + (providersMatch(currentProviderFilter, providerName) ? ' active' : '');
       const safeAccount = escapeHTML(displayAccount);
       const accountTitle = escapeAttribute(displayAccount);
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
@@ -288,7 +286,7 @@ export function getCoreCode() {
               ) +
             '</div>' +
             '<div class="secret-text">' +
-            '<h3><button type="button" class="' + providerButtonClass + '" onclick="event.stopPropagation(); toggleProviderFilterBySecretId(&quot;' + secret.id + '&quot;)" aria-pressed="' + (providersMatch(currentProviderFilter, providerName) ? 'true' : 'false') + '" title="' + providerTitle + '">' + safeServiceName + '</button>' + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
+            '<h3>' + safeServiceName + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
             (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
             (isHOTP ? '<p style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">计数器: ' + (secret.counter || 0) + '</p>' : '') +
             '</div>' +

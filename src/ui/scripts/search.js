@@ -165,6 +165,22 @@ export function getSearchCode() {
       return Boolean(normalizedLeft) && normalizedLeft === normalizedRight;
     }
 
+    function getProviderOptions() {
+      const providerByKey = new Map();
+
+      secrets.forEach(secret => {
+        const providerName = getSecretProviderName(secret);
+        const providerKey = providerName.toLocaleLowerCase('zh-CN');
+        if (providerName && !providerByKey.has(providerKey)) {
+          providerByKey.set(providerKey, providerName);
+        }
+      });
+
+      return Array.from(providerByKey.values()).sort((left, right) =>
+        left.localeCompare(right, 'zh-CN', { sensitivity: 'base' })
+      );
+    }
+
     function getSecretsMatchingFilters(query, providerName) {
       const normalizedQuery = String(query || '').trim().toLocaleLowerCase('zh-CN');
       const normalizedProvider = normalizeProviderName(providerName);
@@ -185,17 +201,56 @@ export function getSearchCode() {
       filteredSecrets = getSecretsMatchingFilters(currentSearchQuery, currentProviderFilter);
     }
 
+    function createProviderFilterOption(label, providerName, accountCount) {
+      const button = document.createElement('button');
+      const isActive = providerName
+        ? providersMatch(currentProviderFilter, providerName)
+        : !currentProviderFilter;
+
+      button.type = 'button';
+      button.className = 'provider-filter-option' + (isActive ? ' active' : '');
+      button.textContent = label;
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      button.setAttribute('aria-label', providerName
+        ? '筛选 ' + providerName + '，' + accountCount + ' 个账号'
+        : '显示全部账号，' + accountCount + ' 个账号');
+      button.title = providerName ? '筛选 ' + providerName : '显示全部账号';
+      button.addEventListener('click', () => selectProviderFilter(providerName));
+
+      return button;
+    }
+
+    function renderProviderFilters() {
+      const container = document.getElementById('providerFilters');
+      if (!container) {
+        return;
+      }
+
+      const providerOptions = getProviderOptions();
+      if (providerOptions.length === 0) {
+        container.replaceChildren();
+        container.style.display = 'none';
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(createProviderFilterOption('全部', '', secrets.length));
+
+      providerOptions.forEach(providerName => {
+        const accountCount = getSecretsMatchingFilters('', providerName).length;
+        fragment.appendChild(createProviderFilterOption(providerName, providerName, accountCount));
+      });
+
+      container.replaceChildren(fragment);
+      container.style.display = 'flex';
+    }
+
     function updateFilterFeedback() {
       const searchClear = document.getElementById('searchClear');
       const searchStats = document.getElementById('searchStats');
-      const providerFilterClear = document.getElementById('providerFilterClear');
 
       if (searchClear) {
         searchClear.style.display = currentSearchQuery ? 'block' : 'none';
-      }
-
-      if (providerFilterClear) {
-        providerFilterClear.style.display = currentProviderFilter ? 'inline-flex' : 'none';
       }
 
       if (!searchStats) {
@@ -234,7 +289,11 @@ export function getSearchCode() {
     }
 
     async function applySecretFilters() {
+      if (currentProviderFilter && getSecretsMatchingFilters('', currentProviderFilter).length === 0) {
+        currentProviderFilter = '';
+      }
       syncFilteredSecretsWithCurrentFilters();
+      renderProviderFilters();
       updateFilterFeedback();
       await renderFilteredSecrets();
     }
@@ -245,19 +304,11 @@ export function getSearchCode() {
       await applySecretFilters();
     }
 
-    async function toggleProviderFilterBySecretId(secretId) {
-      const secret = secrets.find(item => item.id === secretId);
-      const providerName = getSecretProviderName(secret);
-      if (!providerName) {
-        return;
-      }
-
-      currentProviderFilter = providersMatch(currentProviderFilter, providerName) ? '' : providerName;
-      await applySecretFilters();
-    }
-
-    async function clearProviderFilter() {
-      currentProviderFilter = '';
+    async function selectProviderFilter(providerName) {
+      const normalizedProvider = normalizeProviderName(providerName);
+      currentProviderFilter = providersMatch(currentProviderFilter, normalizedProvider)
+        ? ''
+        : normalizedProvider;
       await applySecretFilters();
     }
 

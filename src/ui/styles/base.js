@@ -228,32 +228,56 @@ export function getBaseStyles() {
       text-align: right;
     }
 
-    .provider-filter-clear {
-      width: 24px;
-      height: 24px;
-      flex: 0 0 24px;
+    .provider-filters {
       align-items: center;
-      justify-content: center;
-      border: 0;
-      border-radius: var(--radius-sm);
-      background: transparent;
-      color: var(--text-tertiary);
-      cursor: pointer;
+      gap: 6px;
+      width: 100%;
+      margin-top: 8px;
+      padding: 1px 0 3px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .provider-filter-clear:hover {
+    .provider-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .provider-filter-option {
+      min-height: 30px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 10px;
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      background: var(--input-bg-focus);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 18px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .provider-filter-option:hover {
+      border-color: var(--border-focus);
       background: var(--bg-hover);
       color: var(--text-primary);
     }
 
-    .provider-filter-clear:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px var(--ring);
+    .provider-filter-option.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: var(--bg-primary);
     }
 
-    .provider-filter-clear .ui-icon {
-      width: 15px;
-      height: 15px;
+    .provider-filter-option:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
     }
 
     /* 平板和中等屏幕优化 */
