@@ -20,4 +20,13 @@ describe('settings page copy', () => {
 		expect(html).toContain('onclick="selectViewMode(\'list\')"');
 		expect(html).toContain('.secrets-list.view-list');
 	});
+
+	it('renders the total account count', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+
+		expect(html).toContain('id="secretCount"');
+		expect(html).toContain('id="secretCountValue"');
+		expect(html).toContain('个账号');
+	});
 });

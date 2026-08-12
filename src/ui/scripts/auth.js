@@ -275,6 +275,10 @@ export function getAuthCode() {
       filteredSecrets = [];
       currentSearchQuery = '';
 
+      if (typeof updateSecretCount === 'function') {
+        updateSecretCount();
+      }
+
       const secretsList = document.getElementById('secretsList');
       if (secretsList) {
         secretsList.innerHTML = '';

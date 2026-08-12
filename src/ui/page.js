@@ -181,7 +181,13 @@ function getHTMLBody() {
             </select>
       </div>
           </div>
-          <div class="search-stats" id="searchStats" style="display: none;"></div>
+          <div class="search-meta-row">
+            <div class="secret-count" id="secretCount" aria-live="polite" aria-atomic="true">
+              ${icon('key', 'ui-icon')}
+              <span>共 <strong id="secretCountValue">0</strong> 个账号</span>
+            </div>
+            <div class="search-stats" id="searchStats" style="display: none;"></div>
+          </div>
         </div>
       </div>
 

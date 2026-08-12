@@ -186,12 +186,46 @@ export function getBaseStyles() {
       color: var(--danger);
     }
 
-    .search-stats {
+    .search-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      min-height: 20px;
       margin-top: 8px;
+    }
+
+    .secret-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0 0 auto;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .secret-count .ui-icon {
+      width: 15px;
+      height: 15px;
+      color: var(--text-tertiary);
+    }
+
+    .secret-count strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .search-stats {
+      flex: 1 1 auto;
+      min-width: 0;
       padding: 0 4px;
       font-size: 12px;
       color: var(--text-secondary);
-      text-align: left;
+      line-height: 20px;
+      text-align: right;
     }
 
     /* 平板和中等屏幕优化 */

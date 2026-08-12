@@ -174,6 +174,7 @@ export function getCoreCode() {
         }
 
         // 既没有网络数据也没有缓存数据，显示空状态
+        updateSecretCount();
         document.getElementById('loading').style.display = 'none';
         document.getElementById('emptyState').style.display = 'block';
       }
@@ -188,6 +189,14 @@ export function getCoreCode() {
       } else {
         await renderFilteredSecrets();
       }
+    }
+
+    function updateSecretCount() {
+      const countElement = document.getElementById('secretCountValue');
+      if (!countElement) return;
+
+      const totalCount = Array.isArray(secrets) ? secrets.length : 0;
+      countElement.textContent = String(totalCount);
     }
 
     // 获取服务商颜色
@@ -325,6 +334,7 @@ export function getCoreCode() {
       const secretsList = document.getElementById('secretsList');
       const emptyState = document.getElementById('emptyState');
 
+      updateSecretCount();
       loading.style.display = 'none';
 
       if (currentSearchQuery && filteredSecrets.length === 0) {
