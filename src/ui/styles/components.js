@@ -34,6 +34,10 @@ export function getComponentStyles() {
       transform: translateY(-1px);
     }
 
+    .secret-card.menu-open {
+      z-index: 10001;
+    }
+
     .secret-card-draggable {
       cursor: grab;
     }

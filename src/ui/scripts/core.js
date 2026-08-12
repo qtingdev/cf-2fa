@@ -542,27 +542,31 @@ export function getCoreCode() {
     function toggleCardMenu(secretId) {
       const dropdown = document.getElementById('menu-' + secretId);
       if (!dropdown) return;
-      
-      document.querySelectorAll('.card-menu-dropdown').forEach(menu => {
-        if (menu.id !== 'menu-' + secretId) {
-          menu.classList.remove('show');
+
+      const card = dropdown.closest('.secret-card');
+      const shouldOpen = !dropdown.classList.contains('show');
+      closeAllCardMenus();
+
+      if (shouldOpen) {
+        dropdown.classList.add('show');
+        if (card) {
+          card.classList.add('menu-open');
         }
-      });
-      
-      dropdown.classList.toggle('show');
+      }
     }
-    
+
     function closeAllCardMenus() {
       document.querySelectorAll('.card-menu-dropdown').forEach(menu => {
         menu.classList.remove('show');
+      });
+      document.querySelectorAll('.secret-card.menu-open').forEach(card => {
+        card.classList.remove('menu-open');
       });
     }
 
     document.addEventListener('click', function(event) {
       if (!event.target.closest('.card-menu')) {
-        document.querySelectorAll('.card-menu-dropdown').forEach(menu => {
-          menu.classList.remove('show');
-        });
+        closeAllCardMenus();
       }
     });
 
