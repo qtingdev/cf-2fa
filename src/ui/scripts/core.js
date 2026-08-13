@@ -225,7 +225,7 @@ export function getCoreCode() {
     function formatSecretCreatedAt(value) {
       const date = typeof value === 'string' && value ? new Date(value) : null;
       if (!date || Number.isNaN(date.getTime())) {
-        return '未知';
+        return '';
       }
 
       const pad = number => String(number).padStart(2, '0');
@@ -246,7 +246,7 @@ export function getCoreCode() {
       const safeAccount = escapeHTML(displayAccount);
       const accountTitle = escapeAttribute(displayAccount);
       const createdAtText = formatSecretCreatedAt(secret.createdAt);
-      const createdAtTitle = createdAtText === '未知' ? '创建时间未知' : '创建时间：' + createdAtText;
+      const createdAtTitle = createdAtText ? '创建时间：' + createdAtText : '';
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
       const cardClass = 'secret-card' + (isManualSort ? ' secret-card-draggable' : '');
       const cardTitle = isManualSort ? '拖拽调整排序，点击卡片复制验证码' : '点击卡片复制验证码';
@@ -271,7 +271,7 @@ export function getCoreCode() {
               '</div>' +
               '<div class="secret-details">' +
                 (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
-                '<p class="secret-created-at" title="' + escapeAttribute(createdAtTitle) + '">创建时间 ' + escapeHTML(createdAtText) + '</p>' +
+                (createdAtText ? '<p class="secret-created-at" title="' + escapeAttribute(createdAtTitle) + '">创建时间 ' + escapeHTML(createdAtText) + '</p>' : '') +
                 (isHOTP ? '<p class="secret-counter">计数器: ' + (secret.counter || 0) + '</p>' : '') +
               '</div>' +
             '</div>' +

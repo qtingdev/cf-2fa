@@ -87,6 +87,8 @@ describe('settings page copy', () => {
 
 		expect(html).toContain('class="secret-created-at"');
 		expect(html).toContain('创建时间 ');
+		expect(html).not.toContain('创建时间未知');
+		expect(html).toContain("createdAtText ? '<p class=\"secret-created-at\"");
 		expect(html).toContain('duplicate-account-filter');
 		expect(html).toContain("renderIcon('copy', 'ui-icon')");
 	});
