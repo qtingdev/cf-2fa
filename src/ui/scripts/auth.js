@@ -275,6 +275,7 @@ export function getAuthCode() {
       filteredSecrets = [];
       currentSearchQuery = '';
       currentProviderFilter = '';
+      currentDuplicateFilter = false;
 
       if (typeof updateSecretCount === 'function') {
         updateSecretCount();

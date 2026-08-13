@@ -80,4 +80,14 @@ describe('settings page copy', () => {
 		expect(html).toContain('class="otp-next-code"');
 		expect(html).not.toContain('class="otp-next-label"');
 	});
+
+	it('renders creation time and a duplicate account filter', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+
+		expect(html).toContain('class="secret-created-at"');
+		expect(html).toContain('创建时间 ');
+		expect(html).toContain('duplicate-account-filter');
+		expect(html).toContain("renderIcon('copy', 'ui-icon')");
+	});
 });

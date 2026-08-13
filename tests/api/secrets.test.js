@@ -279,6 +279,8 @@ describe('API Secrets Module', () => {
       expect(data.data.secret.name).toBe('GitHub');
       expect(data.data.secret.account).toBe('user@example.com');
       expect(data.data.secret.secret).toBe('JBSWY3DPEHPK3PXP');
+      expect(data.data.secret.createdAt).toBeDefined();
+      expect(Number.isNaN(Date.parse(data.data.secret.createdAt))).toBe(false);
     });
 
     it('应该拒绝空服务名称', async () => {
@@ -465,6 +467,7 @@ describe('API Secrets Module', () => {
       expect(data.data.secret.secret).toBe('MFRGGZDFMZTWQ2LK');
       expect(data.data.secret.digits).toBe(8);
       expect(data.data.secret.id).toBe(secretId); // ID 不变
+      expect(data.data.secret.createdAt).toBe(addData.data.secret.createdAt);
     });
 
     it('应该拒绝更新不存在的密钥', async () => {

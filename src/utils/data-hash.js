@@ -51,6 +51,7 @@ export async function generateDataHash(secrets, env = null) {
 
 	const hashData = secrets.map((secret) => ({
 		id: secret.id,
+		createdAt: secret.createdAt,
 		name: secret.name,
 		secret: secret.secret,
 		account: secret.account,

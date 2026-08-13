@@ -112,6 +112,7 @@ export async function handleAddSecret(request, env, ctx) {
 		// 创建密钥对象（数据已经通过验证和转换）
 		const newSecret = {
 			id: crypto.randomUUID(),
+			createdAt: new Date().toISOString(),
 			name: secretData.name,
 			account: secretData.account,
 			secret: secretData.secret,
@@ -230,6 +231,7 @@ export async function handleUpdateSecret(request, env, ctx) {
 		// 更新密钥对象
 		const updatedSecret = {
 			id: secretId, // 保留原 ID
+			createdAt: existingSecret.createdAt,
 			name: secretData.name,
 			account: secretData.account,
 			secret: secretData.secret,

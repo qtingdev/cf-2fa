@@ -20,6 +20,7 @@ export function getStateCode() {
     let debugMode = false;
     let currentSearchQuery = '';
     let currentProviderFilter = '';
+    let currentDuplicateFilter = false;
     let filteredSecrets = [];
     let saveQueue = Promise.resolve(); // 保存操作队列，确保串行执行避免并发覆盖
     let draggingSecretId = null;

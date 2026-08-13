@@ -10,6 +10,29 @@ import {
 import { encryptData } from '../../src/utils/encryption.js';
 
 describe('backup format HTML decoding', () => {
+	it('does not treat the legacy QR column as a creation time', () => {
+		const legacyHtml = `<!DOCTYPE html>
+<html>
+<body>
+  <table>
+    <thead>
+      <tr><th>服务名称</th><th>账户信息</th><th>密钥</th><th>类型</th><th>位数</th><th>周期(秒)</th><th>算法</th><th>计数器</th><th>二维码</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>GitHub</td><td>user@example.com</td><td>JBSWY3DPEHPK3PXP</td><td>TOTP</td><td>6</td><td>30</td><td>SHA1</td><td>0</td><td>2026-04-16T03:30:00.000Z</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>`;
+
+		const decoded = decodeBackupContent(legacyHtml, 'html', {
+			timestamp: '2026-04-17T03:30:00.000Z',
+			strict: true,
+		});
+
+		expect(decoded.secrets[0]).not.toHaveProperty('createdAt');
+	});
+
 	it('restores legacy frontend HTML exports without embedded JSON', () => {
 		const legacyHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -370,6 +393,36 @@ describe('backup format JSON decoding', () => {
 });
 
 describe('backup format partial metadata portability', () => {
+	it.each(['json', 'csv', 'html', 'txt'])('preserves secret creation time through %s backups', async format => {
+		const createdAt = '2026-04-16T03:30:00.000Z';
+		const encoded = await encodeBackupContent(
+			[
+				{
+					id: '1',
+					createdAt,
+					name: 'GitHub',
+					account: 'user@example.com',
+					secret: 'JBSWY3DPEHPK3PXP',
+					type: 'TOTP',
+					digits: 6,
+					period: 30,
+					algorithm: 'SHA1',
+				},
+			],
+			{
+				format,
+				timestamp: '2026-04-17T03:30:00.000Z',
+				includeQRCodes: false,
+			},
+		);
+		const decoded = decodeBackupContent(encoded.content, format, {
+			timestamp: encoded.timestamp,
+			strict: true,
+		});
+
+		expect(decoded.secrets[0].createdAt).toBe(createdAt);
+	});
+
 	it('marks invalid Base32 secrets as partial data during encoding', async () => {
 		const encoded = await encodeBackupContent(
 			[

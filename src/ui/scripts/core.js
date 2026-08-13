@@ -222,41 +222,18 @@ export function getCoreCode() {
       });
     }
 
-    function getDisplayAccount(secret) {
-      const rawAccount = String(secret && secret.account ? secret.account : '').trim();
-      if (!rawAccount) {
-        return '';
+    function formatSecretCreatedAt(value) {
+      const date = typeof value === 'string' && value ? new Date(value) : null;
+      if (!date || Number.isNaN(date.getTime())) {
+        return '未知';
       }
 
-      let account = rawAccount;
-
-      if (/^otpauth:\\/\\//i.test(account)) {
-        try {
-          const url = new URL(account);
-          account = decodeURIComponent(url.pathname.replace(/^\\/+/, ''));
-        } catch (error) {
-          account = account.replace(/^otpauth:\\/\\/(totp|hotp)\\//i, '');
-        }
-      }
-
-      account = account
-        .replace(/^\\/+/, '')
-        .replace(/^(totp|hotp)\\//i, '')
-        .split('?')[0]
-        .trim();
-
-      const colonIndex = account.indexOf(':');
-      if (colonIndex !== -1) {
-        account = account.slice(colonIndex + 1).trim();
-      }
-
-      try {
-        account = decodeURIComponent(account);
-      } catch {
-        // 保留原始账号文本
-      }
-
-      return account.trim();
+      const pad = number => String(number).padStart(2, '0');
+      return date.getFullYear() + '-' +
+        pad(date.getMonth() + 1) + '-' +
+        pad(date.getDate()) + ' ' +
+        pad(date.getHours()) + ':' +
+        pad(date.getMinutes());
     }
 
     // 创建密钥卡片
@@ -268,6 +245,8 @@ export function getCoreCode() {
       const safeServiceName = escapeHTML(providerName);
       const safeAccount = escapeHTML(displayAccount);
       const accountTitle = escapeAttribute(displayAccount);
+      const createdAtText = formatSecretCreatedAt(secret.createdAt);
+      const createdAtTitle = createdAtText === '未知' ? '创建时间未知' : '创建时间：' + createdAtText;
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
       const cardClass = 'secret-card' + (isManualSort ? ' secret-card-draggable' : '');
       const cardTitle = isManualSort ? '拖拽调整排序，点击卡片复制验证码' : '点击卡片复制验证码';
@@ -290,8 +269,11 @@ export function getCoreCode() {
                 '<h3>' + safeServiceName + '</h3>' +
                 (isHOTP ? '<span class="secret-badge hotp-badge">HOTP</span>' : '') +
               '</div>' +
-              (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
-              (isHOTP ? '<p class="secret-counter">计数器: ' + (secret.counter || 0) + '</p>' : '') +
+              '<div class="secret-details">' +
+                (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
+                '<p class="secret-created-at" title="' + escapeAttribute(createdAtTitle) + '">创建时间 ' + escapeHTML(createdAtText) + '</p>' +
+                (isHOTP ? '<p class="secret-counter">计数器: ' + (secret.counter || 0) + '</p>' : '') +
+              '</div>' +
             '</div>' +
           '</div>' +
           '<div class="card-header-actions">' +
@@ -335,7 +317,7 @@ export function getCoreCode() {
       updateSecretCount();
       loading.style.display = 'none';
 
-      if ((currentSearchQuery || currentProviderFilter) && filteredSecrets.length === 0) {
+      if ((currentSearchQuery || currentProviderFilter || currentDuplicateFilter) && filteredSecrets.length === 0) {
         secretsList.style.display = 'none';
         emptyState.innerHTML =
           '<div class="icon">' + renderIcon('search', 'ui-icon empty-icon-svg') + '</div>' +

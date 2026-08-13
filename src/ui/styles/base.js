@@ -283,6 +283,18 @@ export function getBaseStyles() {
       box-shadow: 0 0 0 3px var(--ring);
     }
 
+    .provider-filter-option .ui-icon {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+      margin-right: 4px;
+    }
+
+    .provider-filter-option:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     /* 平板和中等屏幕优化 */
     @media (min-width: 481px) and (max-width: 768px) {
       .search-action-row {

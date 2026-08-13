@@ -12,7 +12,7 @@ import { validateBase32 } from './validation.js';
 export const BACKUP_FILE_FORMATS = ['txt', 'json', 'csv', 'html'];
 export const DOWNLOAD_CONTENT_PROFILES = ['backup'];
 const BACKUP_KEY_EXTENSION_PATTERN = 'txt|json|csv|html';
-const BACKUP_CSV_HEADERS = ['服务名称', '账户信息', '密钥', '类型', '位数', '周期(秒)', '算法', '计数器'];
+const BACKUP_CSV_HEADERS = ['服务名称', '账户信息', '密钥', '类型', '位数', '周期(秒)', '算法', '计数器', '创建时间'];
 const BACKUP_KEY_REGEX = new RegExp(`^backup_\\d{4}-\\d{2}-\\d{2}(?:_[\\w-]+)?\\.(${BACKUP_KEY_EXTENSION_PATTERN})$`);
 const BACKUP_TIME_REGEX = new RegExp(
 	`backup_(\\d{4}-\\d{2}-\\d{2})_(\\d{2}-\\d{2}-\\d{2})(?:-(\\d{3}))?(?:-UTC)?(?:-[a-z0-9]{2,6})?\\.(${BACKUP_KEY_EXTENSION_PATTERN})$`,
@@ -40,6 +40,15 @@ function sanitizeBackupSecretValue(value) {
 function isValidBackupSecretValue(value) {
 	const cleanSecret = sanitizeBackupSecretValue(value);
 	return Boolean(cleanSecret) && validateBase32(cleanSecret).valid === true;
+}
+
+function sanitizeCreatedAt(value) {
+	if (typeof value !== 'string' || !value.trim()) {
+		return undefined;
+	}
+
+	const parsed = new Date(value);
+	return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
 }
 
 export function sanitizeBackupFormat(value) {
@@ -151,8 +160,10 @@ export function normalizeBackupSecrets(secrets = [], _timestamp = new Date().toI
 				return null;
 			}
 
+			const createdAt = sanitizeCreatedAt(secret.createdAt);
 			return {
 				id: typeof secret.id === 'string' && secret.id ? secret.id : crypto.randomUUID(),
+				...(createdAt ? { createdAt } : {}),
 				name: normalizedName,
 				account: String(secret.account || secret.label || '').trim(),
 				secret: cleanSecret,
@@ -537,6 +548,7 @@ function decodeCsvBackupContent(content, options = {}) {
 	const periodIndex = findHeaderIndex(headers, ['周期(秒)', '周期', 'period']);
 	const algorithmIndex = findHeaderIndex(headers, ['算法', 'algorithm']);
 	const counterIndex = findHeaderIndex(headers, ['计数器', 'counter']);
+	const createdAtIndex = findHeaderIndex(headers, ['创建时间', 'createdAt', 'created_at']);
 
 	if (secretIndex === -1) {
 		throw new Error('解析失败：备份 CSV 数据格式不正确');
@@ -554,8 +566,10 @@ function decodeCsvBackupContent(content, options = {}) {
 			continue;
 		}
 
+		const createdAt = sanitizeCreatedAt(fields[createdAtIndex]);
 		secrets.push({
 			id: crypto.randomUUID(),
+			...(createdAt ? { createdAt } : {}),
 			name: String(fields[serviceIndex] || 'Unknown').trim() || 'Unknown',
 			account: String(fields[accountIndex] || '').trim(),
 			secret: cleanSecret,
@@ -652,9 +666,12 @@ function decodeHtmlTableBackupContent(content, options = {}) {
 		}
 
 		const hasCounterColumn = cells.length >= 9;
+		// 旧版 HTML 的第 9 列是二维码；只有新版 10 列布局才包含创建时间。
+		const createdAt = cells.length >= 10 ? sanitizeCreatedAt(cells[8]) : undefined;
 		const account = normalizeLegacyHtmlAccount(cells[1]);
 		secrets.push({
 			id: crypto.randomUUID(),
+			...(createdAt ? { createdAt } : {}),
 			name: String(cells[0] || 'Unknown').trim() || 'Unknown',
 			account,
 			secret: cleanSecret,
@@ -706,6 +723,7 @@ function buildCSVContent(secrets) {
 				secret.period || 30,
 				escapeCSV(secret.algorithm || 'SHA1'),
 				secret.counter || 0,
+				escapeCSV(secret.createdAt || ''),
 			].join(','),
 		);
 	});
@@ -796,6 +814,7 @@ async function buildHTMLContent(payload, options = {}) {
   <td>${secret.period || 30}</td>
   <td>${escapeHtml(secret.algorithm || 'SHA1')}</td>
   <td>${secret.counter || 0}</td>
+  <td>${escapeHtml(secret.createdAt || '')}</td>
   <td class="qr-cell qr-cell-placeholder">${qrPlaceholder}</td>
 </tr>`;
 			});
@@ -852,6 +871,7 @@ async function buildHTMLContent(payload, options = {}) {
         <th>周期(秒)</th>
         <th>算法</th>
         <th>计数器</th>
+        <th>创建时间</th>
         <th>二维码</th>
       </tr>
     </thead>
@@ -893,6 +913,7 @@ async function buildHtmlQrRows(secrets) {
   <td>${secret.period || 30}</td>
   <td>${escapeHtml(secret.algorithm || 'SHA1')}</td>
   <td>${secret.counter || 0}</td>
+  <td>${escapeHtml(secret.createdAt || '')}</td>
   <td class="qr-cell"><img src="${qrDataUrl}" alt="QR for ${escapeHtml(secret.name)}"></td>
 </tr>`;
 			}),
@@ -942,6 +963,9 @@ function buildOTPAuthUrl(secret) {
 			.toUpperCase(),
 	);
 	params.set('digits', String(secret.digits || 6));
+	if (secret.createdAt) {
+		params.set('createdAt', secret.createdAt);
+	}
 
 	if (String(secret.type || 'TOTP').toUpperCase() === 'HOTP') {
 		params.set('counter', String(secret.counter || 0));
@@ -985,8 +1009,10 @@ function parseOTPAuthUrl(uri) {
 		return null;
 	}
 
+	const createdAt = sanitizeCreatedAt(url.searchParams.get('createdAt') || url.searchParams.get('created_at'));
 	return {
 		id: crypto.randomUUID(),
+		...(createdAt ? { createdAt } : {}),
 		name: issuer || 'Unknown',
 		account: account || '',
 		secret: cleanSecret,

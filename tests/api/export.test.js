@@ -234,9 +234,10 @@ describe('handleExportSecrets', () => {
 
 		const content = await response.text();
 		const rows = content.replace(/^\uFEFF/, '').split(/\r?\n/);
-		expect(rows[0].split(',')).toHaveLength(8);
+		expect(rows[0].split(',')).toHaveLength(9);
+		expect(rows[0]).toContain('创建时间');
 		expect(rows[1]).toContain('GitHub');
-		expect(rows[1].split(',')).toHaveLength(8);
+		expect(rows[1].split(',')).toHaveLength(9);
 		expect(rows[2]).toContain('Acme');
 		expect(rows[2]).toContain(',12');
 	});

@@ -142,6 +142,14 @@ export function getComponentStyles() {
       min-width: 0;
     }
 
+    .secrets-list.view-list .secret-details {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
     .secrets-list.view-list .service-name-row {
       display: flex;
       align-items: center;
@@ -170,6 +178,17 @@ export function getComponentStyles() {
     }
 
     .secrets-list.view-list .secret-text .secret-account::before {
+      content: '·';
+      margin-right: 6px;
+      color: var(--text-tertiary);
+    }
+
+    .secrets-list.view-list .secret-created-at {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .secrets-list.view-list .secret-created-at::before {
       content: '·';
       margin-right: 6px;
       color: var(--text-tertiary);
@@ -245,7 +264,17 @@ export function getComponentStyles() {
         align-items: flex-start;
       }
 
+      .secrets-list.view-list .secret-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1px;
+      }
+
       .secrets-list.view-list .secret-text .secret-account::before {
+        display: none;
+      }
+
+      .secrets-list.view-list .secret-created-at::before {
         display: none;
       }
 
@@ -364,6 +393,24 @@ export function getComponentStyles() {
       white-space: normal;
       overflow-wrap: anywhere;
       word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .secret-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .secret-created-at {
+      margin: 0;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.35;
+      white-space: nowrap;
       font-variant-numeric: tabular-nums;
     }
 

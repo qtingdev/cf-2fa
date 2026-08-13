@@ -112,6 +112,8 @@ describe('Batch Import API Module', () => {
       expect(data.results[0].success).toBe(true);
       expect(data.results[0].secret).toBeDefined();
       expect(data.results[0].secret.id).toBeDefined();
+      expect(data.results.every(result => Number.isNaN(Date.parse(result.secret.createdAt)) === false)).toBe(true);
+      expect(new Set(data.results.map(result => result.secret.createdAt))).toHaveLength(1);
     });
 
     it('should accept deferred backup flag for chunked imports', async () => {

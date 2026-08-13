@@ -72,6 +72,7 @@ export async function handleBatchAddSecrets(request, env, ctx) {
 		const results = [];
 		let successCount = 0;
 		let failCount = 0;
+		const createdAt = new Date().toISOString();
 
 		// 批量处理所有密钥（逐个验证）
 		for (let i = 0; i < secrets.length; i++) {
@@ -106,6 +107,7 @@ export async function handleBatchAddSecrets(request, env, ctx) {
 				// 创建新密钥对象（数据已经通过验证和规范化）
 				const newSecret = {
 					id: crypto.randomUUID(),
+					createdAt,
 					name: validated.name,
 					account: validated.account,
 					secret: validated.secret,

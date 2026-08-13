@@ -7,9 +7,9 @@ function createProviderFilterApi(initialSecrets) {
 	// eslint-disable-next-line no-new-func
 	const factory = new Function(
 		'initialSecrets',
-		`${getStateCode()}${getSearchCode()}
+      `${getStateCode()}${getSearchCode()}
       secrets = initialSecrets;
-      return { getSecretProviderName, getProviderOptions, getSecretsMatchingFilters };`,
+      return { getSecretProviderName, getProviderOptions, getSecretsMatchingFilters, getDuplicateAccountKeys, isDuplicateAccountSecret };`,
 	);
 
 	return factory(initialSecrets);
@@ -44,5 +44,21 @@ describe('provider filtering runtime code', () => {
 		expect(api.getSecretsMatchingFilters('', 'GOOGLE')).toHaveLength(2);
 		expect(api.getSecretsMatchingFilters('alice', 'google')).toEqual([{ id: '1', name: 'Google', account: 'alice@example.com' }]);
 		expect(api.getSecretsMatchingFilters('', 'OpenAI')).toEqual([{ id: '3', name: 'OpenAI', account: 'alice@example.com' }]);
+	});
+
+	it('filters duplicate account names only within the same provider', () => {
+		const api = createProviderFilterApi([
+			{ id: '1', name: 'Google', account: 'Alice@example.com' },
+			{ id: '2', name: 'google', account: '/totp/Google:alice%40example.com' },
+			{ id: '3', name: 'OpenAI', account: 'alice@example.com' },
+			{ id: '4', name: 'Google', account: 'bob@example.com' },
+			{ id: '5', name: 'Google', account: '' },
+		]);
+
+		expect(api.getDuplicateAccountKeys()).toHaveLength(1);
+		expect(api.getSecretsMatchingFilters('', '', true).map(secret => secret.id)).toEqual(['1', '2']);
+		expect(api.getSecretsMatchingFilters('', 'GOOGLE', true).map(secret => secret.id)).toEqual(['1', '2']);
+		expect(api.getSecretsMatchingFilters('alice', '', true).map(secret => secret.id)).toEqual(['1', '2']);
+		expect(api.isDuplicateAccountSecret({ id: '3', name: 'OpenAI', account: 'alice@example.com' })).toBe(false);
 	});
 });

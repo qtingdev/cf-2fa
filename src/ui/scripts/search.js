@@ -159,6 +159,43 @@ export function getSearchCode() {
       return normalizeProviderName(secret.name || secret.issuer || '');
     }
 
+    function getDisplayAccount(secret) {
+      const rawAccount = String(secret && secret.account ? secret.account : '').trim();
+      if (!rawAccount) {
+        return '';
+      }
+
+      let account = rawAccount;
+
+      if (/^otpauth:\\/\\//i.test(account)) {
+        try {
+          const url = new URL(account);
+          account = decodeURIComponent(url.pathname.replace(/^\\/+/, ''));
+        } catch (error) {
+          account = account.replace(/^otpauth:\\/\\/(totp|hotp)\\//i, '');
+        }
+      }
+
+      account = account
+        .replace(/^\\/+/, '')
+        .replace(/^(totp|hotp)\\//i, '')
+        .split('?')[0]
+        .trim();
+
+      const colonIndex = account.indexOf(':');
+      if (colonIndex !== -1) {
+        account = account.slice(colonIndex + 1).trim();
+      }
+
+      try {
+        account = decodeURIComponent(account);
+      } catch {
+        // 保留原始账号文本
+      }
+
+      return account.trim();
+    }
+
     function providersMatch(left, right) {
       const normalizedLeft = normalizeProviderName(left).toLocaleLowerCase('zh-CN');
       const normalizedRight = normalizeProviderName(right).toLocaleLowerCase('zh-CN');
@@ -181,31 +218,60 @@ export function getSearchCode() {
       );
     }
 
-    function getSecretsMatchingFilters(query, providerName) {
+    function getDuplicateAccountKeys() {
+      const accountCounts = new Map();
+
+      secrets.forEach(secret => {
+        const providerKey = getSecretProviderName(secret).toLocaleLowerCase('zh-CN');
+        const accountKey = getDisplayAccount(secret).toLocaleLowerCase('zh-CN');
+        if (!providerKey || !accountKey) {
+          return;
+        }
+
+        const duplicateKey = JSON.stringify([providerKey, accountKey]);
+        accountCounts.set(duplicateKey, (accountCounts.get(duplicateKey) || 0) + 1);
+      });
+
+      return new Set(
+        Array.from(accountCounts.entries())
+          .filter(([, count]) => count > 1)
+          .map(([key]) => key)
+      );
+    }
+
+    function isDuplicateAccountSecret(secret, duplicateKeys = getDuplicateAccountKeys()) {
+      const providerKey = getSecretProviderName(secret).toLocaleLowerCase('zh-CN');
+      const accountKey = getDisplayAccount(secret).toLocaleLowerCase('zh-CN');
+      return Boolean(providerKey && accountKey && duplicateKeys.has(JSON.stringify([providerKey, accountKey])));
+    }
+
+    function getSecretsMatchingFilters(query, providerName, duplicateOnly = false) {
       const normalizedQuery = String(query || '').trim().toLocaleLowerCase('zh-CN');
       const normalizedProvider = normalizeProviderName(providerName);
+      const duplicateKeys = duplicateOnly ? getDuplicateAccountKeys() : null;
 
       return secrets.filter(secret => {
         const serviceName = getSecretProviderName(secret);
-        const accountName = String(secret.account || '');
+        const accountName = getDisplayAccount(secret);
         const matchesQuery = !normalizedQuery ||
           serviceName.toLocaleLowerCase('zh-CN').includes(normalizedQuery) ||
           accountName.toLocaleLowerCase('zh-CN').includes(normalizedQuery);
         const matchesProvider = !normalizedProvider || providersMatch(serviceName, normalizedProvider);
+        const matchesDuplicate = !duplicateOnly || isDuplicateAccountSecret(secret, duplicateKeys);
 
-        return matchesQuery && matchesProvider;
+        return matchesQuery && matchesProvider && matchesDuplicate;
       });
     }
 
     function syncFilteredSecretsWithCurrentFilters() {
-      filteredSecrets = getSecretsMatchingFilters(currentSearchQuery, currentProviderFilter);
+      filteredSecrets = getSecretsMatchingFilters(currentSearchQuery, currentProviderFilter, currentDuplicateFilter);
     }
 
     function createProviderFilterOption(label, providerName, accountCount) {
       const button = document.createElement('button');
       const isActive = providerName
         ? providersMatch(currentProviderFilter, providerName)
-        : !currentProviderFilter;
+        : !currentProviderFilter && !currentDuplicateFilter;
 
       button.type = 'button';
       button.className = 'provider-filter-option' + (isActive ? ' active' : '');
@@ -215,7 +281,23 @@ export function getSearchCode() {
         ? '筛选 ' + providerName + '，' + accountCount + ' 个账号'
         : '显示全部账号，' + accountCount + ' 个账号');
       button.title = providerName ? '筛选 ' + providerName : '显示全部账号';
-      button.addEventListener('click', () => selectProviderFilter(providerName));
+      button.addEventListener('click', () => providerName ? selectProviderFilter(providerName) : clearAccountScopeFilters());
+
+      return button;
+    }
+
+    function createDuplicateFilterOption(accountCount) {
+      const button = document.createElement('button');
+      const isActive = currentDuplicateFilter;
+
+      button.type = 'button';
+      button.className = 'provider-filter-option duplicate-account-filter' + (isActive ? ' active' : '');
+      button.innerHTML = renderIcon('copy', 'ui-icon') + '<span>重复 ' + accountCount + '</span>';
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      button.setAttribute('aria-label', '筛选同一提供商下重复的账号，共 ' + accountCount + ' 个');
+      button.title = '筛选同一提供商下账号名称相同的项目';
+      button.disabled = accountCount === 0 && !isActive;
+      button.addEventListener('click', toggleDuplicateAccountFilter);
 
       return button;
     }
@@ -235,6 +317,7 @@ export function getSearchCode() {
 
       const fragment = document.createDocumentFragment();
       fragment.appendChild(createProviderFilterOption('全部', '', secrets.length));
+      fragment.appendChild(createDuplicateFilterOption(getSecretsMatchingFilters('', '', true).length));
 
       providerOptions.forEach(providerName => {
         const accountCount = getSecretsMatchingFilters('', providerName).length;
@@ -257,7 +340,7 @@ export function getSearchCode() {
         return;
       }
 
-      if (!currentSearchQuery && !currentProviderFilter) {
+      if (!currentSearchQuery && !currentProviderFilter && !currentDuplicateFilter) {
         searchStats.style.display = 'none';
         searchStats.textContent = '';
         return;
@@ -265,20 +348,23 @@ export function getSearchCode() {
 
       const totalCount = secrets.length;
       const foundCount = filteredSecrets.length;
-      const providerTotal = currentProviderFilter
-        ? getSecretsMatchingFilters('', currentProviderFilter).length
-        : totalCount;
+      const filterLabels = [];
+      if (currentProviderFilter) {
+        filterLabels.push(currentProviderFilter);
+      }
+      if (currentDuplicateFilter) {
+        filterLabels.push('重复账号');
+      }
+      const filterLabel = filterLabels.join(' · ');
 
       if (foundCount === 0) {
-        searchStats.textContent = currentProviderFilter
-          ? currentProviderFilter + ' · 未找到匹配账号'
-          : '未找到匹配账号';
+        searchStats.textContent = filterLabel ? filterLabel + ' · 未找到匹配账号' : '未找到匹配账号';
         searchStats.style.color = 'var(--danger)';
-      } else if (currentProviderFilter && currentSearchQuery) {
-        searchStats.textContent = currentProviderFilter + ' · 找到 ' + foundCount + ' 个匹配账号（该提供商共 ' + providerTotal + ' 个）';
+      } else if (currentSearchQuery) {
+        searchStats.textContent = (filterLabel ? filterLabel + ' · ' : '') + '找到 ' + foundCount + ' 个匹配账号（共 ' + totalCount + ' 个）';
         searchStats.style.color = 'var(--text-secondary)';
-      } else if (currentProviderFilter) {
-        searchStats.textContent = currentProviderFilter + ' · ' + foundCount + ' 个账号（共 ' + totalCount + ' 个）';
+      } else if (filterLabel) {
+        searchStats.textContent = filterLabel + ' · ' + foundCount + ' 个账号（共 ' + totalCount + ' 个）';
         searchStats.style.color = 'var(--text-secondary)';
       } else {
         searchStats.textContent = '找到 ' + foundCount + ' 个匹配账号（共 ' + totalCount + ' 个）';
@@ -291,6 +377,9 @@ export function getSearchCode() {
     async function applySecretFilters() {
       if (currentProviderFilter && getSecretsMatchingFilters('', currentProviderFilter).length === 0) {
         currentProviderFilter = '';
+      }
+      if (currentDuplicateFilter && getSecretsMatchingFilters('', '', true).length === 0) {
+        currentDuplicateFilter = false;
       }
       syncFilteredSecretsWithCurrentFilters();
       renderProviderFilters();
@@ -312,6 +401,17 @@ export function getSearchCode() {
       await applySecretFilters();
     }
 
+    async function toggleDuplicateAccountFilter() {
+      currentDuplicateFilter = !currentDuplicateFilter;
+      await applySecretFilters();
+    }
+
+    async function clearAccountScopeFilters() {
+      currentProviderFilter = '';
+      currentDuplicateFilter = false;
+      await applySecretFilters();
+    }
+
     async function clearSearch() {
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
@@ -330,6 +430,7 @@ export function getSearchCode() {
       }
       currentSearchQuery = '';
       currentProviderFilter = '';
+      currentDuplicateFilter = false;
       await applySecretFilters();
     }
 
