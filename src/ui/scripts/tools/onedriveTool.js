@@ -120,9 +120,9 @@ export function getOneDriveToolCode() {
         + '<span class="dest-status-text">' + _escapeOneDriveHtml(statusText) + '</span>'
         + '</div>'
         + '<div class="dest-card-actions">'
-        + '<button class="btn btn-sm btn-info" onclick="event.stopPropagation(); authorizeOneDriveDest(\\'' + dest.id + '\\')" style="font-size: 12px; padding: 4px 12px;">' + (dest.authorized ? '重新授权' : '授权') + '</button>'
-        + '<button class="btn btn-sm" onclick="event.stopPropagation(); editOneDriveDest(\\'' + dest.id + '\\')" style="font-size: 12px; padding: 4px 12px;">编辑</button>'
-        + '<button class="btn btn-sm btn-danger-outline" onclick="event.stopPropagation(); deleteOneDriveDest(\\'' + dest.id + '\\', \\'' + _escapeOneDriveHtml(dest.name).replace(/'/g, "\\\\'") + '\\')" style="font-size: 12px; padding: 4px 12px;">删除</button>'
+        + '<button class="btn btn-sm btn-info" onclick="event.stopPropagation(); authorizeOneDriveDest(\\'' + dest.id + '\\')">' + (dest.authorized ? '重新授权' : '授权') + '</button>'
+        + '<button class="btn btn-sm" onclick="event.stopPropagation(); editOneDriveDest(\\'' + dest.id + '\\')">编辑</button>'
+        + '<button class="btn btn-sm btn-danger-outline" onclick="event.stopPropagation(); deleteOneDriveDest(\\'' + dest.id + '\\', \\'' + _escapeOneDriveHtml(dest.name).replace(/'/g, "\\\\'") + '\\')">删除</button>'
         + '</div>'
         + '</div>';
     }

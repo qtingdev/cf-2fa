@@ -554,9 +554,6 @@ export function getResponsiveStyles() {
         min-width: auto;
       }
 
-      .btn {
-        width: 100%;
-      }
     }
 
     /* 大屏幕手机和小平板适配 */

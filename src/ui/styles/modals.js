@@ -140,22 +140,158 @@ export function getModalStyles() {
       border-top: 1px solid var(--modal-header-border);
     }
 
-    /* 按钮样式 - 添加outline和active状态支持 */
+    /* 按钮基础与尺寸层级规范 */
+    .btn {
+      height: var(--control-height-md, 40px);
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      line-height: 1;
+      box-sizing: border-box;
+      white-space: nowrap;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .btn:disabled,
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* 按钮尺寸修饰词 */
+    .btn-sm {
+      height: var(--control-height-sm, 32px);
+      padding: 0 12px;
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-md {
+      height: var(--control-height-md, 40px);
+      padding: 0 18px;
+      font-size: 14px;
+      border-radius: var(--radius-md);
+    }
+
+    .btn-lg {
+      height: var(--control-height-lg, 44px);
+      padding: 0 22px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+    }
+
+    .btn-compact {
+      height: var(--control-height-sm, 32px);
+      padding: 0 12px;
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* 按钮布局修饰词 */
+    .btn-block,
+    .btn-full {
+      width: 100%;
+      display: flex;
+    }
+
+    .btn-flex {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-group > .btn {
+      flex: 1;
+    }
+
+    /* 按钮变体样式 */
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: transparent;
+    }
+
+    .btn-primary:hover {
+      background: var(--btn-primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--btn-secondary-bg);
+      color: var(--btn-secondary-text);
+      border-color: var(--border-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--btn-secondary-hover);
+    }
+
     .btn-outline {
-      background: transparent !important;
-      border: 1px solid var(--border-primary) !important;
-      color: var(--text-primary) !important;
+      background: transparent;
+      border: 1px solid var(--border-primary);
+      color: var(--text-primary);
     }
 
     .btn-outline:hover {
-      background: var(--bg-hover) !important;
-      border-color: var(--border-focus) !important;
+      background: var(--bg-hover);
+      border-color: var(--border-focus);
     }
 
     .btn-outline.active {
-      background: var(--btn-primary-bg) !important;
-      border-color: var(--btn-primary-bg) !important;
-      color: var(--btn-primary-text) !important;
+      background: var(--btn-primary-bg);
+      border-color: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+    }
+
+    .btn-danger {
+      background: var(--btn-danger-bg, #dc2626);
+      color: var(--btn-danger-text, #ffffff);
+      border-color: transparent;
+    }
+
+    .btn-danger:hover {
+      background: var(--btn-danger-hover, #b91c1c);
+    }
+
+    .btn-danger-outline {
+      background: transparent;
+      border: 1px solid var(--danger, #ef4444);
+      color: var(--danger, #ef4444);
+    }
+
+    .btn-danger-outline:hover {
+      background: var(--danger-light, rgba(239, 68, 68, 0.1));
+    }
+
+    .btn-info {
+      background: var(--btn-info-bg);
+      color: var(--btn-info-text);
+      border-color: transparent;
+    }
+
+    .btn-info:hover {
+      background: var(--btn-info-hover);
     }
 
     .close-btn {
@@ -199,36 +335,24 @@ export function getModalStyles() {
       font-size: 15px;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select,
+    .secret-input {
       width: 100%;
-      padding: 14px 16px;
+      height: var(--control-height-md, 40px);
+      padding: 0 14px;
       border: 1px solid var(--input-border);
       border-radius: var(--radius-md);
-      font-size: 16px;
-      transition: all 0.3s ease;
-      background: var(--input-bg);
-      color: var(--input-text);
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--input-border-focus);
-      background: var(--input-bg-focus);
-      box-shadow: 0 0 0 3px var(--ring);
-    }
-
-    .form-group select {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid var(--input-border);
-      border-radius: var(--radius-md);
-      font-size: 16px;
+      font-size: 14px;
+      transition: all 0.2s ease;
       background: var(--input-bg-focus);
       color: var(--input-text);
-      transition: all 0.3s ease;
+      box-sizing: border-box;
     }
 
-    .form-group select:focus {
+    .form-group input:focus,
+    .form-group select:focus,
+    .secret-input:focus {
       outline: none;
       border-color: var(--input-border-focus);
       background: var(--input-bg-focus);
@@ -393,54 +517,6 @@ export function getModalStyles() {
       margin-top: 30px;
       padding-top: 20px;
       border-top: 1px solid var(--modal-header-border);
-    }
-
-    .btn {
-      padding: 14px 24px;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-      min-width: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: var(--btn-primary-bg);
-      color: var(--btn-primary-text);
-    }
-
-    .btn-primary:hover {
-      background: var(--btn-primary-hover);
-    }
-
-    .btn:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px var(--ring);
-    }
-
-    .btn-secondary {
-      background: var(--btn-secondary-bg);
-      color: var(--btn-secondary-text);
-      border-color: var(--border-primary);
-    }
-
-    .btn-secondary:hover {
-      background: var(--btn-secondary-hover);
-    }
-
-    .btn-danger {
-      background: #dc2626;
-      color: #ffffff;
-    }
-
-    .btn-danger:hover {
-      background: #b91c1c;
     }
 
     /* ========== 扫码 Modal 溢出修复 ========== */

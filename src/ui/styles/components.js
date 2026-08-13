@@ -547,9 +547,14 @@ export function getComponentStyles() {
       background: var(--bg-secondary);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-surface);
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 10px;
-      transition: opacity 0.2s ease;
+      transition: all 0.2s ease;
+    }
+
+    .dest-card:hover {
+      border-color: var(--border-focus);
+      box-shadow: var(--shadow-sm);
     }
 
     .dest-card-disabled {

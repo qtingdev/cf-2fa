@@ -48,7 +48,7 @@ export function getWebdavToolCode() {
         hideWebdavForm();
       } catch (error) {
         console.error('加载 WebDAV 配置失败:', error);
-        listEl.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger-color); font-size: 13px;">加载失败，请稍后重试</div>';
+        listEl.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger); font-size: 13px;">加载失败，请稍后重试</div>';
       }
     }
 
@@ -82,8 +82,8 @@ export function getWebdavToolCode() {
         + '<span class="dest-status-text">' + _escapeHtml(statusText) + '</span>'
         + '</div>'
         + '<div class="dest-card-actions">'
-        + '<button class="btn btn-sm" onclick="event.stopPropagation(); editWebdavDest(\\'' + dest.id + '\\')" style="font-size: 12px; padding: 4px 12px;">编辑</button>'
-        + '<button class="btn btn-sm btn-danger-outline" onclick="event.stopPropagation(); deleteWebdavDest(\\'' + dest.id + '\\', \\'' + _escapeHtml(dest.name).replace(/'/g, "\\\\'") + '\\')" style="font-size: 12px; padding: 4px 12px;">删除</button>'
+        + '<button class="btn btn-sm" onclick="event.stopPropagation(); editWebdavDest(\\'' + dest.id + '\\')">编辑</button>'
+        + '<button class="btn btn-sm btn-danger-outline" onclick="event.stopPropagation(); deleteWebdavDest(\\'' + dest.id + '\\', \\'' + _escapeHtml(dest.name).replace(/'/g, "\\\\'") + '\\')">删除</button>'
         + '</div>'
         + '</div>';
     }

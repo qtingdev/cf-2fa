@@ -482,18 +482,18 @@ function getHTMLBody() {
             </select>
           </div>
           <div class="backup-actions">
-            <button type="button" class="btn btn-outline" onclick="loadBackupList()" style="padding: 8px 16px; font-size: 12px;">${icon('refresh', 'ui-icon')}刷新</button>
-            <button type="button" class="btn btn-outline" onclick="exportSelectedBackup()" id="exportBackupBtn" disabled style="padding: 8px 16px; font-size: 12px;">${icon('download', 'ui-icon')}导出备份</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="loadBackupList()">${icon('refresh', 'ui-icon')}刷新</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="exportSelectedBackup()" id="exportBackupBtn" disabled>${icon('download', 'ui-icon')}导出备份</button>
             <input type="file" id="restoreBackupFileInput" accept=".txt,.csv,.json,.html" style="display: none;" onchange="handleRestoreBackupFile(event)">
-            <button type="button" class="btn btn-outline" onclick="document.getElementById('restoreBackupFileInput').click()" style="padding: 8px 16px; font-size: 12px;">${icon('upload', 'ui-icon')}上传备份文件</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('restoreBackupFileInput').click()">${icon('upload', 'ui-icon')}上传备份文件</button>
           </div>
           <div id="restoreUploadStatus" style="display: none; margin-top: 8px; font-size: 12px; color: var(--text-secondary);"></div>
           <div class="backup-pagination" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 10px;">
             <span id="backupListStatus" style="font-size: 12px; color: var(--text-secondary);"></span>
-            <button type="button" class="btn btn-outline" id="backupLoadMoreBtn" onclick="loadMoreBackupList()" style="display: none; padding: 8px 16px; font-size: 12px;">加载更多</button>
+            <button type="button" class="btn btn-outline btn-sm" id="backupLoadMoreBtn" onclick="loadMoreBackupList()" style="display: none;">加载更多</button>
           </div>
         </div>
-        
+
         <div class="restore-preview" id="restorePreview" style="display: none;">
           <div class="preview-header">
             <span>${icon('clipboard', 'ui-icon')}备份预览</span>
@@ -503,10 +503,10 @@ function getHTMLBody() {
           </div>
         </div>
       </div>
-      
+
       <div class="modal-actions">
-        <button type="button" class="btn btn-outline" onclick="hideRestoreModal()" style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">取消</button>
-        <button type="button" class="btn btn-danger" onclick="confirmRestore()" id="confirmRestoreBtn" disabled style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">${icon('refresh', 'ui-icon')}确认还原</button>
+        <button type="button" class="btn btn-secondary" onclick="hideRestoreModal()">取消</button>
+        <button type="button" class="btn btn-danger" onclick="confirmRestore()" id="confirmRestoreBtn" disabled>${icon('refresh', 'ui-icon')}确认还原</button>
       </div>
     </div>
   </div>
@@ -602,11 +602,11 @@ function getHTMLBody() {
       </div>
       
       <div class="form-actions" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-primary); display: flex; justify-content: center;">
-        <button type="button" class="btn btn-primary" onclick="generateQRCode()" style="padding: 12px 20px; border-radius: 8px; font-size: 14px;">${icon('qrCode', 'ui-icon')}生成二维码</button>
+        <button type="button" class="btn btn-primary" onclick="generateQRCode()">${icon('qrCode', 'ui-icon')}生成二维码</button>
       </div>
     </div>
   </div>
-  
+
   <!-- Base32编解码工具模态框 -->
   <div id="base32Modal" class="modal fab-modal">
     <div class="modal-content">
@@ -614,7 +614,7 @@ function getHTMLBody() {
         <h2>${icon('lock', 'modal-title-icon')}Base32 编解码</h2>
         <button class="close-btn" onclick="hideBase32Modal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
-      
+
       <div class="tool-section">
         <div class="section-title">Base32 编码</div>
         <div class="input-area">
@@ -622,19 +622,18 @@ function getHTMLBody() {
             id="plainTextInput"
             placeholder="输入普通文本"
             rows="4"
-            style="width: 100%; padding: 12px; border: 2px solid var(--border-primary); border-radius: 8px; font-size: 14px; font-family: monospace; resize: vertical; background: var(--input-bg); color: var(--text-primary);"
             autocomplete="off"
           ></textarea>
           <div class="button-area" style="margin-top: 10px; display: flex; gap: 10px;">
-            <button class="btn btn-primary" onclick="encodeBase32()" style="padding: 8px 16px; font-size: 13px;">编码</button>
-            <button class="btn btn-info" onclick="copyEncodedText()" style="padding: 8px 16px; font-size: 13px;">复制</button>
+            <button class="btn btn-primary btn-sm" onclick="encodeBase32()">编码</button>
+            <button class="btn btn-info btn-sm" onclick="copyEncodedText()">复制</button>
           </div>
           <div id="encodedResult" class="result-text" style="margin-top: 10px; padding: 10px; background: var(--bg-secondary); border-radius: 6px; font-family: monospace; font-size: 13px; min-height: 0; word-break: break-all; display: none; color: var(--text-primary);"></div>
         </div>
       </div>
-      
+
       <div class="divider" style="height: 1px; background: var(--border-primary); margin: 20px 0;"></div>
-      
+
       <div class="tool-section">
         <div class="section-title">Base32 解码</div>
         <div class="input-area">
@@ -642,21 +641,20 @@ function getHTMLBody() {
             id="base32TextInput"
             placeholder="输入Base32文本"
             rows="4"
-            style="width: 100%; padding: 12px; border: 2px solid var(--border-primary); border-radius: 8px; font-size: 14px; font-family: monospace; resize: vertical; background: var(--input-bg); color: var(--text-primary);"
             autocomplete="off"
           ></textarea>
           <div class="button-area" style="margin-top: 10px; display: flex; gap: 10px;">
-            <button class="btn btn-primary" onclick="decodeBase32()" style="padding: 8px 16px; font-size: 13px;">解码</button>
-            <button class="btn btn-info" onclick="copyDecodedText()" style="padding: 8px 16px; font-size: 13px;">复制</button>
+            <button class="btn btn-primary btn-sm" onclick="decodeBase32()">解码</button>
+            <button class="btn btn-info btn-sm" onclick="copyDecodedText()">复制</button>
           </div>
           <div id="decodedResult" class="result-text" style="margin-top: 10px; padding: 10px; background: var(--bg-secondary); border-radius: 6px; font-family: monospace; font-size: 13px; min-height: 0; word-break: break-all; display: none; color: var(--text-primary);"></div>
         </div>
       </div>
-      
+
 
     </div>
   </div>
-  
+
   <!-- 时间戳工具模态框 -->
   <div id="timestampModal" class="modal fab-modal">
     <div class="modal-content">
@@ -664,7 +662,7 @@ function getHTMLBody() {
         <h2>${icon('activity', 'modal-title-icon')}时间戳工具</h2>
         <button class="close-btn" onclick="hideTimestampModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
-      
+
       <div class="tool-section">
         <div class="section-title">TOTP 时间信息</div>
         <div class="time-info" style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -689,13 +687,13 @@ function getHTMLBody() {
           <div id="progressBar" class="progress" style="height: 100%; background: var(--progress-fill); transition: width 0.3s ease;"></div>
         </div>
       </div>
-      
+
       <div class="tool-section">
         <div class="section-title">时间周期设置</div>
-        <div class="period-selector" style="display: flex; justify-content: space-between; gap: 10px;">
-          <button class="btn btn-outline" id="period30Btn" onclick="setPeriod(30)" style="padding: 8px 16px; font-size: 13px; border: 2px solid var(--border-primary); background: transparent; border-radius: 6px; color: var(--text-primary);">30秒</button>
-          <button class="btn btn-outline" id="period60Btn" onclick="setPeriod(60)" style="padding: 8px 16px; font-size: 13px; border: 2px solid var(--border-primary); background: transparent; border-radius: 6px; color: var(--text-primary);">60秒</button>
-          <button class="btn btn-outline" id="period120Btn" onclick="setPeriod(120)" style="padding: 8px 16px; font-size: 13px; border: 2px solid var(--border-primary); background: transparent; border-radius: 6px; color: var(--text-primary);">120秒</button>
+        <div class="period-selector btn-group">
+          <button class="btn btn-outline btn-sm" id="period30Btn" onclick="setPeriod(30)">30秒</button>
+          <button class="btn btn-outline btn-sm" id="period60Btn" onclick="setPeriod(60)">60秒</button>
+          <button class="btn btn-outline btn-sm" id="period120Btn" onclick="setPeriod(120)">120秒</button>
         </div>
       </div>
       
@@ -718,24 +716,23 @@ function getHTMLBody() {
             id="keyCheckInput"
             placeholder="请输入要检查的密钥"
             rows="4"
-            style="width: 100%; padding: 12px; border: 2px solid var(--border-primary); border-radius: 8px; font-size: 14px; font-family: monospace; resize: vertical; background: var(--input-bg); color: var(--text-primary);"
             autocomplete="off"
           ></textarea>
-          <button class="btn btn-primary" onclick="checkSecret()" style="margin-top: 10px; padding: 10px 20px; font-size: 14px;">检查密钥</button>
+          <button class="btn btn-primary btn-block" onclick="checkSecret()" style="margin-top: 10px;">检查密钥</button>
         </div>
       </div>
-      
+
       <div class="tool-section" id="keyCheckResult" style="display: none;">
         <div class="section-title">检查结果</div>
         <div id="checkResultContent" class="check-result" style="padding: 15px; border-radius: 8px; margin-bottom: 15px;">
           <!-- 结果内容将在这里动态生成 -->
         </div>
       </div>
-      
+
 
     </div>
   </div>
-  
+
   <!-- 二维码解析工具模态框 -->
   <div id="qrDecodeModal" class="modal fab-modal">
     <div class="modal-content">
@@ -743,16 +740,16 @@ function getHTMLBody() {
         <h2>${icon('search', 'modal-title-icon')}二维码解析</h2>
         <button class="close-btn" onclick="hideQRDecodeModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
-      
+
       <div class="tool-section">
         <div class="section-title">扫描二维码</div>
         <div class="scan-options" style="display: flex; gap: 10px; margin-bottom: 10px;">
-          <button class="btn btn-primary" onclick="startQRDecodeScanner()" style="flex: 1; padding: 12px; font-size: 14px;">${icon('camera', 'ui-icon')}摄像头扫描</button>
-          <button class="btn btn-info" onclick="uploadImageForDecode()" style="flex: 1; padding: 12px; font-size: 14px;">${icon('image', 'ui-icon')}选择图片</button>
-          <button class="btn btn-info" onclick="pasteImageForDecode()" style="flex: 1; padding: 12px; font-size: 14px;">${icon('clipboard', 'ui-icon')}粘贴截图</button>
+          <button class="btn btn-primary btn-flex" onclick="startQRDecodeScanner()">${icon('camera', 'ui-icon')}摄像头扫描</button>
+          <button class="btn btn-info btn-flex" onclick="uploadImageForDecode()">${icon('image', 'ui-icon')}选择图片</button>
+          <button class="btn btn-info btn-flex" onclick="pasteImageForDecode()">${icon('clipboard', 'ui-icon')}粘贴截图</button>
         </div>
         <div class="scanner-hint" style="margin-bottom: 15px;">${icon('info', 'ui-icon hint-icon')}支持拖拽图片到此处或 Ctrl+V 粘贴截图</div>
-        
+
         <div id="decodeScannerContainer" style="display: none;">
           <div class="scanner-container" style="position: relative; margin: 15px 0;">
             <div class="video-wrapper">
@@ -765,18 +762,18 @@ function getHTMLBody() {
           <div id="decodeScannerStatus" class="scanner-status" style="text-align: center; margin: 10px 0; font-size: 14px; color: var(--text-secondary);">正在启动摄像头...</div>
           <div id="decodeScannerError" class="scanner-error" style="display: none; text-align: center; margin: 10px 0; padding: 10px; background: var(--danger-light); border: 1px solid var(--border-error); border-radius: 6px; color: var(--danger-dark);">
             <div id="decodeErrorMessage"></div>
-            <button class="btn btn-primary" onclick="retryDecodeCamera()" style="margin-top: 10px; padding: 8px 16px; font-size: 13px;">重试</button>
+            <button class="btn btn-primary btn-sm" onclick="retryDecodeCamera()" style="margin-top: 10px;">重试</button>
           </div>
         </div>
       </div>
-      
+
       <div class="tool-section" id="decodeResultSection" style="display: none;">
         <div class="section-title">解析结果</div>
         <div class="decode-result" style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
           <div class="result-content" id="decodeResultContent" style="font-family: monospace; font-size: 14px; word-break: break-all; line-height: 1.5; max-height: 200px; overflow-y: auto; color: var(--text-primary);"></div>
           <div class="result-actions" style="display: flex; gap: 10px; margin-top: 15px;">
-            <button class="btn btn-info" onclick="copyDecodeResult()" style="flex: 1; padding: 8px 16px; font-size: 13px;">复制内容</button>
-            <button class="btn btn-primary" onclick="generateDecodeQRCode()" style="flex: 1; padding: 8px 16px; font-size: 13px;">生成二维码</button>
+            <button class="btn btn-info btn-flex" onclick="copyDecodeResult()">复制内容</button>
+            <button class="btn btn-primary btn-flex" onclick="generateDecodeQRCode()">生成二维码</button>
           </div>
         </div>
         <div class="qr-section" id="decodeQRSection" style="display: none; text-align: center;">
@@ -785,11 +782,11 @@ function getHTMLBody() {
           <div class="qr-tip" style="margin-top: 8px; font-size: 12px; color: var(--text-tertiary);">点击二维码可以预览</div>
         </div>
       </div>
-      
+
 
     </div>
   </div>
-  
+
   <!-- 密钥生成器模态框 -->
   <div id="keyGeneratorModal" class="modal fab-modal">
     <div class="modal-content">
@@ -797,31 +794,31 @@ function getHTMLBody() {
         <h2>${icon('sparkles', 'modal-title-icon')}密钥生成器</h2>
         <button class="close-btn" onclick="hideKeyGeneratorModal()" aria-label="关闭">${icon('x', 'ui-icon')}</button>
       </div>
-      
+
       <div class="tool-section">
         <div class="options" style="margin-bottom: 15px;">
           <div class="option-item" style="margin-bottom: 10px;">
             <div class="option-label" style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">密钥长度:</div>
-            <div class="radio-group" style="display: flex; justify-content: space-between; gap: 10px;">
-              <button class="btn btn-outline" id="length16Btn" onclick="setKeyLength(16)" style="padding: 8px 16px; font-size: 13px; border: 2px solid var(--border-primary); background: transparent; border-radius: 6px; color: var(--text-primary);">16位</button>
-              <button class="btn btn-outline" id="length26Btn" onclick="setKeyLength(26)" style="padding: 8px 16px; font-size: 13px; border: 2px solid var(--border-primary); background: transparent; border-radius: 6px; color: var(--text-primary);">26位</button>
-              <button class="btn btn-outline" id="length32Btn" onclick="setKeyLength(32)" style="padding: 8px 16px; font-size: 13px; border: 2px solid var(--border-primary); background: transparent; border-radius: 6px; color: var(--text-primary);">32位</button>
+            <div class="radio-group btn-group">
+              <button class="btn btn-outline btn-sm" id="length16Btn" onclick="setKeyLength(16)">16位</button>
+              <button class="btn btn-outline btn-sm" id="length26Btn" onclick="setKeyLength(26)">26位</button>
+              <button class="btn btn-outline btn-sm" id="length32Btn" onclick="setKeyLength(32)">32位</button>
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="generateKey()" style="width: 100%; padding: 12px; font-size: 14px;">生成密钥</button>
+        <button class="btn btn-primary btn-block" onclick="generateKey()">生成密钥</button>
       </div>
-      
+
       <div class="tool-section" id="keyResultSection" style="display: none;">
         <div class="section-title">生成结果</div>
         <div class="key-result" style="padding: 15px; border-radius: 8px; margin-bottom: 15px; background: var(--bg-secondary);">
           <div class="key-text" id="generatedKeyText" style="font-family: monospace; font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 15px; word-break: break-all; color: var(--text-primary);"></div>
           <div class="key-actions" style="display: flex; justify-content: center;">
-            <button class="btn btn-info" onclick="copyGeneratedKey()" style="padding: 8px 24px; font-size: 13px;">复制密钥</button>
+            <button class="btn btn-info btn-sm" onclick="copyGeneratedKey()">复制密钥</button>
           </div>
         </div>
       </div>
-      
+
 
     </div>
   </div>
@@ -839,7 +836,7 @@ function getHTMLBody() {
         <div id="webdavDestinationList" style="margin-bottom: 15px;"></div>
 
         <!-- 添加按钮 -->
-        <button class="btn btn-primary" id="webdavAddBtn" onclick="showWebdavForm()" style="width: 100%; padding: 10px; font-size: 13px; margin-bottom: 15px;">+ 添加 WebDAV 目标</button>
+        <button class="btn btn-primary btn-block" id="webdavAddBtn" onclick="showWebdavForm()" style="margin-bottom: 15px;">+ 添加 WebDAV 目标</button>
 
         <!-- 配置表单（默认隐藏） -->
         <div id="webdavFormArea" style="display: none;">
@@ -848,35 +845,35 @@ function getHTMLBody() {
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">目标名称</label>
-              <input type="text" id="webdavName" class="secret-input" placeholder="例如：家庭NAS、云盘" maxlength="30" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="webdavName" class="secret-input" placeholder="例如：家庭NAS、云盘" maxlength="30" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">服务器地址</label>
-              <input type="url" id="webdavUrl" class="secret-input" placeholder="https://your-server.com/dav/" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="url" id="webdavUrl" class="secret-input" placeholder="https://your-server.com/dav/" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">用户名</label>
-              <input type="text" id="webdavUsername" class="secret-input" placeholder="请输入用户名" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="webdavUsername" class="secret-input" placeholder="请输入用户名" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">密码</label>
-              <input type="password" id="webdavPassword" class="secret-input" placeholder="请输入密码" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="password" id="webdavPassword" class="secret-input" placeholder="请输入密码" />
             </div>
 
             <div style="margin-bottom: 15px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">远程基础路径</label>
-              <input type="text" id="webdavPath" class="secret-input" value="/" placeholder="/" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="webdavPath" class="secret-input" value="/" placeholder="/" />
               <div style="margin-top: 6px; color: var(--text-tertiary); font-size: 12px; line-height: 1.5;">备份会自动写入此路径下的 cf-2fa-backup 目录，并保留最近 7 天的远端备份。</div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-              <button class="btn btn-info" id="webdavTestBtn" onclick="testWebdavConnection()" style="flex: 1; padding: 10px; font-size: 13px;">测试连接</button>
-              <button class="btn btn-primary" id="webdavSaveBtn" onclick="saveWebdavConfig()" style="flex: 1; padding: 10px; font-size: 13px;">保存</button>
+              <button class="btn btn-info btn-flex" id="webdavTestBtn" onclick="testWebdavConnection()">测试连接</button>
+              <button class="btn btn-primary btn-flex" id="webdavSaveBtn" onclick="saveWebdavConfig()">保存</button>
             </div>
-            <button class="btn" onclick="hideWebdavForm()" style="width: 100%; padding: 10px; font-size: 13px; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-primary);">取消</button>
+            <button class="btn btn-secondary btn-block" onclick="hideWebdavForm()">取消</button>
           </div>
         </div>
 
@@ -901,7 +898,7 @@ function getHTMLBody() {
         <div id="s3DestinationList" style="margin-bottom: 15px;"></div>
 
         <!-- 添加按钮 -->
-        <button class="btn btn-primary" id="s3AddBtn" onclick="showS3Form()" style="width: 100%; padding: 10px; font-size: 13px; margin-bottom: 15px;">+ 添加 S3 目标</button>
+        <button class="btn btn-primary btn-block" id="s3AddBtn" onclick="showS3Form()" style="margin-bottom: 15px;">+ 添加 S3 目标</button>
 
         <!-- 配置表单（默认隐藏） -->
         <div id="s3FormArea" style="display: none;">
@@ -910,44 +907,44 @@ function getHTMLBody() {
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">目标名称</label>
-              <input type="text" id="s3Name" class="secret-input" placeholder="例如：R2备份、MinIO" maxlength="30" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="s3Name" class="secret-input" placeholder="例如：R2备份、MinIO" maxlength="30" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">Endpoint</label>
-              <input type="url" id="s3Endpoint" class="secret-input" placeholder="https://s3.amazonaws.com" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="url" id="s3Endpoint" class="secret-input" placeholder="https://s3.amazonaws.com" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">Bucket</label>
-              <input type="text" id="s3Bucket" class="secret-input" placeholder="my-backup-bucket" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="s3Bucket" class="secret-input" placeholder="my-backup-bucket" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">Region</label>
-              <input type="text" id="s3Region" class="secret-input" value="auto" placeholder="auto" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="s3Region" class="secret-input" value="auto" placeholder="auto" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">Access Key ID</label>
-              <input type="text" id="s3AccessKeyId" class="secret-input" placeholder="请输入 Access Key ID" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="s3AccessKeyId" class="secret-input" placeholder="请输入 Access Key ID" />
             </div>
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">Secret Access Key</label>
-              <input type="password" id="s3SecretAccessKey" class="secret-input" placeholder="请输入 Secret Access Key" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="password" id="s3SecretAccessKey" class="secret-input" placeholder="请输入 Secret Access Key" />
             </div>
 
             <div style="margin-bottom: 15px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">存储路径前缀</label>
-              <input type="text" id="s3Prefix" class="secret-input" value="" placeholder="2fa-backup/（可选）" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="s3Prefix" class="secret-input" value="" placeholder="2fa-backup/（可选）" />
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-              <button class="btn btn-info" id="s3TestBtn" onclick="testS3Connection()" style="flex: 1; padding: 10px; font-size: 13px;">测试连接</button>
-              <button class="btn btn-primary" id="s3SaveBtn" onclick="saveS3Config()" style="flex: 1; padding: 10px; font-size: 13px;">保存</button>
+              <button class="btn btn-info btn-flex" id="s3TestBtn" onclick="testS3Connection()">测试连接</button>
+              <button class="btn btn-primary btn-flex" id="s3SaveBtn" onclick="saveS3Config()">保存</button>
             </div>
-            <button class="btn" onclick="hideS3Form()" style="width: 100%; padding: 10px; font-size: 13px; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-primary);">取消</button>
+            <button class="btn btn-secondary btn-block" onclick="hideS3Form()">取消</button>
           </div>
         </div>
 
@@ -972,7 +969,7 @@ function getHTMLBody() {
 
         <div id="oneDriveDestinationList" style="margin-bottom: 15px;"></div>
 
-        <button class="btn btn-primary" id="oneDriveAddBtn" onclick="showOneDriveForm()" style="width: 100%; padding: 10px; font-size: 13px; margin-bottom: 15px;">+ 添加 OneDrive 目标</button>
+        <button class="btn btn-primary btn-block" id="oneDriveAddBtn" onclick="showOneDriveForm()" style="margin-bottom: 15px;">+ 添加 OneDrive 目标</button>
 
         <div id="oneDriveFormArea" style="display: none;">
           <div style="padding: 15px; border-radius: 8px; border: 1px solid var(--border-primary); background: var(--bg-secondary); margin-bottom: 12px;">
@@ -980,19 +977,19 @@ function getHTMLBody() {
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">目标名称</label>
-              <input type="text" id="oneDriveName" class="secret-input" placeholder="例如：工作账户、个人账户" maxlength="30" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="oneDriveName" class="secret-input" placeholder="例如：工作账户、个人账户" maxlength="30" />
             </div>
 
             <div style="margin-bottom: 15px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">应用目录子路径</label>
-              <input type="text" id="oneDriveFolderPath" class="secret-input" value="/2FA-Backups" placeholder="/2FA-Backups" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="oneDriveFolderPath" class="secret-input" value="/2FA-Backups" placeholder="/2FA-Backups" />
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-              <button class="btn btn-info" id="oneDriveAuthorizeBtn" onclick="authorizeOneDriveDest(document.getElementById('oneDriveEditId').value)" style="flex: 1; padding: 10px; font-size: 13px;">保存并授权</button>
-              <button class="btn btn-primary" id="oneDriveSaveBtn" onclick="saveOneDriveConfig()" style="flex: 1; padding: 10px; font-size: 13px;">保存</button>
+              <button class="btn btn-info btn-flex" id="oneDriveAuthorizeBtn" onclick="authorizeOneDriveDest(document.getElementById('oneDriveEditId').value)">保存并授权</button>
+              <button class="btn btn-primary btn-flex" id="oneDriveSaveBtn" onclick="saveOneDriveConfig()">保存</button>
             </div>
-            <button class="btn" onclick="hideOneDriveForm()" style="width: 100%; padding: 10px; font-size: 13px; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-primary);">取消</button>
+            <button class="btn btn-secondary btn-block" onclick="hideOneDriveForm()">取消</button>
           </div>
         </div>
 
@@ -1017,7 +1014,7 @@ function getHTMLBody() {
 
         <div id="googleDriveDestinationList" style="margin-bottom: 15px;"></div>
 
-        <button class="btn btn-primary" id="googleDriveAddBtn" onclick="showGoogleDriveForm()" style="width: 100%; padding: 10px; font-size: 13px; margin-bottom: 15px;">+ 添加 Google Drive 目标</button>
+        <button class="btn btn-primary btn-block" id="googleDriveAddBtn" onclick="showGoogleDriveForm()" style="margin-bottom: 15px;">+ 添加 Google Drive 目标</button>
 
         <div id="googleDriveFormArea" style="display: none;">
           <div style="padding: 15px; border-radius: 8px; border: 1px solid var(--border-primary); background: var(--bg-secondary); margin-bottom: 12px;">
@@ -1025,19 +1022,19 @@ function getHTMLBody() {
 
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">目标名称</label>
-              <input type="text" id="googleDriveName" class="secret-input" placeholder="例如：主备份盘、个人盘" maxlength="30" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="googleDriveName" class="secret-input" placeholder="例如：主备份盘、个人盘" maxlength="30" />
             </div>
 
             <div style="margin-bottom: 15px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); font-size: 13px;">备份目录</label>
-              <input type="text" id="googleDriveFolderPath" class="secret-input" value="/2FA-Backups" placeholder="/2FA-Backups" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-primary); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;" />
+              <input type="text" id="googleDriveFolderPath" class="secret-input" value="/2FA-Backups" placeholder="/2FA-Backups" />
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-              <button class="btn btn-info" id="googleDriveAuthorizeBtn" onclick="authorizeGoogleDriveDest(document.getElementById('googleDriveEditId').value)" style="flex: 1; padding: 10px; font-size: 13px;">保存并授权</button>
-              <button class="btn btn-primary" id="googleDriveSaveBtn" onclick="saveGoogleDriveConfig()" style="flex: 1; padding: 10px; font-size: 13px;">保存</button>
+              <button class="btn btn-info btn-flex" id="googleDriveAuthorizeBtn" onclick="authorizeGoogleDriveDest(document.getElementById('googleDriveEditId').value)">保存并授权</button>
+              <button class="btn btn-primary btn-flex" id="googleDriveSaveBtn" onclick="saveGoogleDriveConfig()">保存</button>
             </div>
-            <button class="btn" onclick="hideGoogleDriveForm()" style="width: 100%; padding: 10px; font-size: 13px; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-primary);">取消</button>
+            <button class="btn btn-secondary btn-block" onclick="hideGoogleDriveForm()">取消</button>
           </div>
         </div>
 
@@ -1090,14 +1087,14 @@ function getHTMLBody() {
                   <input type="password" id="settingsConfirmPassword" placeholder="请再次输入新密码" autocomplete="new-password" />
                 </div>
                 <div id="changePasswordResult" class="change-password-result" style="display: none;"></div>
-                <button class="btn btn-primary" id="changePasswordBtn" onclick="changePassword()" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px;">修改密码</button>
+                <button class="btn btn-primary btn-block" id="changePasswordBtn" onclick="changePassword()">修改密码</button>
               </div>
             </div>
             <div class="settings-divider"></div>
             <div class="settings-section">
               <h3 class="settings-section-title">退出登录</h3>
               <p class="settings-desc">退出当前账户，需要重新输入密码登录。</p>
-              <button class="btn btn-danger" onclick="logout()" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px;">退出登录</button>
+              <button class="btn btn-danger btn-block" onclick="logout()">退出登录</button>
             </div>
           </div>
 

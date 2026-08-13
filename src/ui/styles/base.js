@@ -100,9 +100,9 @@ export function getBaseStyles() {
     }
 
     .search-scan-button {
-      width: 46px;
-      height: 46px;
-      flex: 0 0 46px;
+      width: var(--control-height-lg, 44px);
+      height: var(--control-height-lg, 44px);
+      flex: 0 0 var(--control-height-lg, 44px);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -134,7 +134,7 @@ export function getBaseStyles() {
       padding: 0 14px;
       color: var(--search-icon);
       user-select: none;
-      height: 46px;
+      height: var(--control-height-lg, 44px);
       box-sizing: border-box;
       display: flex;
       align-items: center;
@@ -144,11 +144,11 @@ export function getBaseStyles() {
       flex: 1;
       border: none;
       outline: none;
-      padding: 11px 40px 11px 0;
-      font-size: 16px;
+      padding: 0 40px 0 0;
+      font-size: 15px;
       background: transparent;
       color: var(--input-text);
-      height: 46px;
+      height: var(--control-height-lg, 44px);
       box-sizing: border-box;
     }
 
@@ -174,7 +174,7 @@ export function getBaseStyles() {
       cursor: pointer;
       transition: color 0.2s ease;
       user-select: none;
-      height: 46px;
+      height: var(--control-height-lg, 44px);
       box-sizing: border-box;
       display: flex;
       align-items: center;
@@ -314,7 +314,7 @@ export function getBaseStyles() {
       display: inline-flex;
       align-items: center;
       gap: 2px;
-      height: 46px;
+      height: var(--control-height-lg, 44px);
       padding: 3px;
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-md);
@@ -323,8 +323,8 @@ export function getBaseStyles() {
     }
 
     .view-toggle-button {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -397,7 +397,7 @@ export function getBaseStyles() {
       background: var(--input-bg-focus);
       color: var(--text-primary);
       font-size: 14px;
-      height: 46px;
+      height: var(--control-height-lg, 44px);
       box-sizing: border-box;
       transition: all 0.2s ease;
       user-select: none;

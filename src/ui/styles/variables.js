@@ -51,6 +51,11 @@ export function getVariables() {
       --radius-lg: 12px;
       --radius-surface: 12px;
 
+      /* 控件标高与尺寸 */
+      --control-height-sm: 32px;
+      --control-height-md: 40px;
+      --control-height-lg: 44px;
+
       /* 品牌映射 */
       --primary: var(--primary-500);
       --primary-rgb: 33, 150, 243;
