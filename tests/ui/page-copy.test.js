@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { createMainPage } from '../../src/ui/page.js';
+import { getComponentStyles } from '../../src/ui/styles/components.js';
+import { getResponsiveStyles } from '../../src/ui/styles/responsive.js';
 
 describe('settings page copy', () => {
 	it('explains that the default export format also applies to newly created backups', async () => {
@@ -50,5 +52,21 @@ describe('settings page copy', () => {
 		expect(html).toContain('grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));');
 		expect(html).toContain('.secrets-list.view-list .secret-card');
 		expect(html).toContain('padding: 8px 10px;');
+	});
+
+	it('keeps full account names visible without legacy responsive card overrides', () => {
+		const componentStyles = getComponentStyles();
+		const responsiveStyles = getResponsiveStyles();
+		const accountStyle = componentStyles.match(/\.secret-text \.secret-account \{([^}]*)\}/)?.[1] || '';
+		const listAccountStyle = componentStyles.match(/\.secrets-list\.view-list \.secret-text \.secret-account \{([^}]*)\}/)?.[1] || '';
+
+		expect(accountStyle).toContain('white-space: normal;');
+		expect(accountStyle).toContain('overflow-wrap: anywhere;');
+		expect(accountStyle).not.toContain('text-overflow: ellipsis;');
+		expect(listAccountStyle).toContain('white-space: normal;');
+		expect(listAccountStyle).toContain('overflow-wrap: anywhere;');
+		expect(responsiveStyles).not.toMatch(/\.secret-card\s*\{[^}]*box-shadow:\s*none;/s);
+		expect(responsiveStyles).not.toMatch(/\.otp-code\s*\{[^}]*font-size:\s*34px;/s);
+		expect(responsiveStyles).not.toMatch(/\.otp-countdown-ring\s*\{[^}]*width:\s*26px;/s);
 	});
 });

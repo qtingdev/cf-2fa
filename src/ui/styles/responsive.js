@@ -422,94 +422,6 @@ export function getResponsiveStyles() {
         min-width: 160px;
       }
 
-      .secret-card {
-        padding: 12px;
-        padding-top: 12px;
-        margin-bottom: 0;
-        border-radius: var(--radius-surface);
-        box-shadow: none;
-      }
-
-      .secret-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-
-      .secret-actions {
-        justify-content: center;
-        width: 100%;
-        gap: 8px;
-      }
-
-      .action-btn {
-        flex: 1;
-        max-width: 90px;
-        min-width: 60px;
-        font-size: 11px;
-        padding: 6px 8px;
-      }
-
-      .otp-code {
-        font-size: 34px;
-        letter-spacing: 0;
-        padding: 0;
-      }
-
-      .otp-preview {
-        margin-top: 6px;
-      }
-
-      .otp-code {
-        font-size: 34px;
-        letter-spacing: 0;
-        margin: 2px 0;
-      }
-
-      .otp-code-row {
-        gap: 8px !important;
-      }
-
-      .otp-countdown-ring {
-        width: 26px;
-        height: 26px;
-        flex-basis: 26px;
-      }
-
-      .otp-countdown-ring-inner {
-        inset: 4px;
-      }
-
-      .otp-main {
-        gap: 10px !important;
-        /* Chrome兼容性修复 */
-        display: -webkit-flex !important;
-        -webkit-align-items: center !important;
-        -webkit-justify-content: space-between !important;
-      }
-
-      .otp-next-container {
-        min-width: 64px !important;
-        padding: 5px 7px !important;
-        /* Chrome兼容性修复 */
-        display: -webkit-flex !important;
-        -webkit-flex-direction: column !important;
-        -webkit-justify-content: center !important;
-        -webkit-align-items: flex-end !important;
-        -webkit-flex-shrink: 0 !important;
-        -webkit-box-flex: 0 !important;
-      }
-
-      .otp-next-code {
-        font-size: 14px !important;
-        letter-spacing: 0 !important;
-      }
-
-      .progress-mini {
-        width: 60px;
-        height: 5px;
-      }
-
       .modal {
         padding: 10px;
       }
@@ -569,7 +481,7 @@ export function getResponsiveStyles() {
 
       .secrets-list {
         grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 10px;
+        gap: 12px;
         justify-content: center;
         text-align: left;
       }
@@ -654,7 +566,7 @@ export function getResponsiveStyles() {
       /* iPad 和平板动态多列卡片布局 */
       .secrets-list {
         grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 10px;
+        gap: 12px;
         justify-content: center;
         text-align: left;
       }
@@ -839,39 +751,8 @@ export function getResponsiveStyles() {
         max-width: 1400px;
       }
 
-      .secrets-list {
-        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 10px;
-        justify-content: center;
-        text-align: left;
-      }
-
       .content {
         text-align: center;
-      }
-
-      .secret-card {
-        padding: 12px;
-        padding-top: 12px;
-        margin-bottom: 0;
-        border-radius: var(--radius-surface);
-        box-shadow: none;
-      }
-
-      .otp-code {
-        font-size: 34px;
-        letter-spacing: 0;
-        margin: 2px 0;
-      }
-
-      .otp-preview {
-        margin-top: 6px;
-      }
-
-      .otp-countdown-ring {
-        width: 26px;
-        height: 26px;
-        flex-basis: 26px;
       }
 
       .progress-mini {

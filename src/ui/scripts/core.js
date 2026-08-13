@@ -286,14 +286,17 @@ export function getCoreCode() {
               ) +
             '</div>' +
             '<div class="secret-text">' +
-            '<h3>' + safeServiceName + (isHOTP ? ' <span style="font-size: 11px; color: var(--text-tertiary); font-weight: 500;">[HOTP]</span>' : '') + '</h3>' +
-            (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
-            (isHOTP ? '<p style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">计数器: ' + (secret.counter || 0) + '</p>' : '') +
+              '<div class="service-name-row">' +
+                '<h3>' + safeServiceName + '</h3>' +
+                (isHOTP ? '<span class="secret-badge hotp-badge">HOTP</span>' : '') +
+              '</div>' +
+              (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
+              (isHOTP ? '<p class="secret-counter">计数器: ' + (secret.counter || 0) + '</p>' : '') +
             '</div>' +
           '</div>' +
           '<div class="card-header-actions">' +
             dragHandle +
-            '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)">' +
+            '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)" aria-label="更多操作" title="更多操作">' +
               '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
               '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
                 '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
@@ -315,8 +318,8 @@ export function getCoreCode() {
             // HOTP 不显示"下一个"验证码（因为不是时间基准）
             (isHOTP ? '' :
               '<div class="otp-next-container" onclick="event.stopPropagation(); copyNextOTP(&quot;' + secret.id + '&quot;)" title="点击复制下一个验证码">' +
-                '<div class="otp-next-label">下一个</div>' +
-                '<div class="otp-next-code" id="next-otp-' + secret.id + '">------</div>' +
+                '<span class="otp-next-label">下一个</span>' +
+                '<span class="otp-next-code" id="next-otp-' + secret.id + '">------</span>' +
               '</div>'
             ) +
           '</div>' +
