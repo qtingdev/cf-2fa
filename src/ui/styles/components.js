@@ -159,6 +159,7 @@ export function getComponentStyles() {
       font-size: 13px;
       color: var(--text-secondary);
       margin: 0;
+      text-align: left;
       overflow: visible;
       text-overflow: clip;
       white-space: normal;
@@ -218,12 +219,6 @@ export function getComponentStyles() {
       padding: 3px 8px;
       min-width: auto;
       height: 26px;
-    }
-
-    .secrets-list.view-list .otp-next-label {
-      font-size: 10px;
-      margin-bottom: 0;
-      display: inline-block;
     }
 
     .secrets-list.view-list .otp-next-code {
@@ -363,6 +358,7 @@ export function getComponentStyles() {
       font-size: 12.5px;
       font-weight: 500;
       line-height: 1.35;
+      text-align: left;
       overflow: visible;
       text-overflow: clip;
       white-space: normal;
@@ -589,16 +585,6 @@ export function getComponentStyles() {
       background: var(--otp-next-bg-hover);
       border-color: var(--border-focus);
       transform: translateY(-1px);
-    }
-
-    .otp-next-label {
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      line-height: 1;
-      margin-bottom: 2px;
     }
 
     .otp-next-code {

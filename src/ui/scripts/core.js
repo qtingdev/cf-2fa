@@ -318,7 +318,6 @@ export function getCoreCode() {
             // HOTP 不显示"下一个"验证码（因为不是时间基准）
             (isHOTP ? '' :
               '<div class="otp-next-container" onclick="event.stopPropagation(); copyNextOTP(&quot;' + secret.id + '&quot;)" title="点击复制下一个验证码">' +
-                '<span class="otp-next-label">下一个</span>' +
                 '<span class="otp-next-code" id="next-otp-' + secret.id + '">------</span>' +
               '</div>'
             ) +

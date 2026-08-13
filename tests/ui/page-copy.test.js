@@ -62,11 +62,22 @@ describe('settings page copy', () => {
 
 		expect(accountStyle).toContain('white-space: normal;');
 		expect(accountStyle).toContain('overflow-wrap: anywhere;');
+		expect(accountStyle).toContain('text-align: left;');
 		expect(accountStyle).not.toContain('text-overflow: ellipsis;');
 		expect(listAccountStyle).toContain('white-space: normal;');
 		expect(listAccountStyle).toContain('overflow-wrap: anywhere;');
+		expect(listAccountStyle).toContain('text-align: left;');
 		expect(responsiveStyles).not.toMatch(/\.secret-card\s*\{[^}]*box-shadow:\s*none;/s);
 		expect(responsiveStyles).not.toMatch(/\.otp-code\s*\{[^}]*font-size:\s*34px;/s);
 		expect(responsiveStyles).not.toMatch(/\.otp-countdown-ring\s*\{[^}]*width:\s*26px;/s);
+	});
+
+	it('shows the next OTP without a visible next label', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+
+		expect(html).toContain('class="otp-next-container"');
+		expect(html).toContain('class="otp-next-code"');
+		expect(html).not.toContain('class="otp-next-label"');
 	});
 });
