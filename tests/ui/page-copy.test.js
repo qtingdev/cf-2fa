@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { icon } from '../../src/ui/icons.js';
 import { createMainPage } from '../../src/ui/page.js';
 import { getBaseStyles } from '../../src/ui/styles/base.js';
 import { getComponentStyles } from '../../src/ui/styles/components.js';
@@ -27,20 +28,33 @@ describe('settings page copy', () => {
 		expect(html).toContain('class="classic-table"');
 	});
 
-	it('renders the total account count', async () => {
+	it('uses QR scanning as the primary add-secret action', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+		const primaryAction = html.match(/<button[^>]*class="btn-stripe-primary stripe-btn-primary"[^>]*>[\s\S]*?<\/button>/)?.[0] || '';
+
+		expect(primaryAction).toContain('onclick="showQRScanner()"');
+		expect(primaryAction).toContain('aria-label="扫描二维码添加密钥"');
+		expect(primaryAction).toContain('<span>扫码添加</span>');
+		expect(primaryAction).toContain(icon('qrCode', 'ui-icon'));
+		expect(primaryAction).not.toContain('showAddModal()');
+	});
+
+	it('renders the account count only in the top summary', async () => {
 		const response = await createMainPage({ lazyLoad: false });
 		const html = await response.text();
 
-		expect(html).toContain('id="secretCount"');
-		expect(html).toContain('id="secretCountValue"');
-		expect(html).toContain('个账号');
-		expect(html).not.toMatch(/id="secretCount"[^>]*display:\s*none/);
+		expect(html).toContain('id="metricSecretCount"');
+		expect(html).toContain('受保护账号 (Protected Accounts)');
+		expect(html).not.toContain('id="secretCount"');
+		expect(html).not.toContain('id="secretCountValue"');
+		expect(html).not.toContain("document.getElementById('secretCount')");
 	});
 
 	it('renders a provider filter row without adding tags to cards', async () => {
 		const response = await createMainPage({ lazyLoad: false });
 		const html = await response.text();
-		const accountCountIndex = html.indexOf('id="secretCount"');
+		const accountCountIndex = html.indexOf('id="metricSecretCount"');
 		const providerFiltersIndex = html.indexOf('id="providerFilters"');
 
 		expect(html).toContain('id="providerFilters"');

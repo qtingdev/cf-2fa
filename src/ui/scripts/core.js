@@ -188,14 +188,6 @@ export function getCoreCode() {
 
     function updateSecretCount() {
       const totalCount = Array.isArray(secrets) ? secrets.length : 0;
-      const countContainer = document.getElementById('secretCount');
-      const countElement = document.getElementById('secretCountValue');
-      if (countContainer) {
-        countContainer.style.display = 'inline-flex';
-      }
-      if (countElement) {
-        countElement.textContent = String(totalCount);
-      }
       const metricCountElement = document.getElementById('metricSecretCount');
       if (metricCountElement) {
         metricCountElement.textContent = String(totalCount);

@@ -613,28 +613,6 @@ export function getBaseStyles() {
       margin-top: 4px;
     }
 
-    .secret-count {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--stripe-slate);
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      min-height: 34px;
-      padding: 5px 10px;
-      border: 1px solid var(--stripe-border);
-      border-radius: 7px;
-      background: var(--stripe-canvas);
-      flex-shrink: 0;
-    }
-
-    .secret-count .ui-icon {
-      width: 15px;
-      height: 15px;
-      color: var(--stripe-blurple);
-    }
-
     /* ========== 悬浮操作菜单 (FAB) ========== */
     .action-menu-float {
       position: fixed;
@@ -820,12 +798,8 @@ export function getBaseStyles() {
         min-width: 0;
       }
 
-      .secret-count {
-        grid-column: 1;
-      }
-
       .classic-filter-chips, .provider-filters {
-        grid-column: 2;
+        grid-column: 1 / 3;
         width: 100%;
       }
 
@@ -914,12 +888,8 @@ export function getBaseStyles() {
         padding: 12px;
       }
 
-      .secret-count {
-        padding-inline: 8px;
-      }
-
       .classic-filter-chips, .provider-filters {
-        grid-column: 2 / -1;
+        grid-column: 1 / -1;
         grid-row: 2;
       }
 

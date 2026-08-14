@@ -134,9 +134,9 @@ function getHTMLBody() {
         <button type="button" class="stripe-nav-btn" onclick="showSettingsModal()" aria-label="系统设置" title="系统设置">
           ${icon('settings', 'ui-icon')}
         </button>
-        <button type="button" class="btn-stripe-primary stripe-btn-primary" onclick="showAddModal()" title="添加新密钥">
-          ${icon('plus', 'ui-icon')}
-          <span>添加密钥</span>
+        <button type="button" class="btn-stripe-primary stripe-btn-primary" onclick="showQRScanner()" aria-label="扫描二维码添加密钥" title="扫描二维码添加密钥">
+          ${icon('qrCode', 'ui-icon')}
+          <span>扫码添加</span>
         </button>
       </div>
     </div>
@@ -216,11 +216,6 @@ function getHTMLBody() {
                  readonly
                  onfocus="this.removeAttribute('readonly')">
           <button type="button" class="search-clear" id="searchClear" onclick="clearSearch()" style="display: none;" aria-label="清除搜索" title="清除搜索">${icon('x', 'ui-icon')}</button>
-        </div>
-
-        <div class="secret-count" id="secretCount" aria-live="polite" aria-atomic="true">
-          ${icon('key', 'ui-icon')}
-          <span>共 <strong id="secretCountValue">0</strong> 个账号</span>
         </div>
 
         <!-- 过滤芯片列表 (中间) -->
