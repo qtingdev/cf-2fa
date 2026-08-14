@@ -53,7 +53,7 @@ PWA (Progressive Web App) 是一种结合网页和原生应用优点的应用技
 - **智能缓存策略**: Cache First 优先
 - **自动更新**: 检测新版本并自动应用
 - **清理旧缓存**: 保持存储空间整洁
-- **📴 离线数据修改**: 支持离线添加、修改、删除密钥（v2.1 新功能）
+- **📴 离线数据修改**: 支持离线添加、修改、批量导入和手动排序；删除操作需要在线重新鉴权
 - **🔄 后台同步**: 网络恢复时自动同步离线操作（Background Sync API）
 
 #### 3. PWA 体验优化（v2.2 新功能）
@@ -77,7 +77,7 @@ PWA (Progressive Web App) 是一种结合网页和原生应用优点的应用技
 - ✅ **生成 OTP 验证码**（本地计算，无需网络）
 - ✅ **添加新密钥**（离线时保存，网络恢复后自动同步）
 - ✅ **修改现有密钥**（离线时保存，网络恢复后自动同步）
-- ✅ **删除密钥**（离线时保存，网络恢复后自动同步）
+- ❌ **删除密钥**（必须联网并重新输入当前鉴权密码，不进入离线队列）
 - ✅ **批量导入**（离线时保存，网络恢复后自动同步）
 
 #### 离线操作流程
@@ -121,6 +121,7 @@ PWA (Progressive Web App) 是一种结合网页和原生应用优点的应用技
 ⚠️ **离线限制**：
 
 - 离线时无法获取最新的服务器数据（密钥列表不会更新）
+- 删除、登录、备份和还原必须联网完成
 - 如果多设备同时离线修改同一密钥，后同步的操作会覆盖先同步的
 - 建议单设备使用，或避免在离线时修改相同的密钥
 
@@ -156,7 +157,7 @@ PWA (Progressive Web App) 是一种结合网页和原生应用优点的应用技
 1. **访问应用**
 
    ```
-   https://2fa-dev.guts.eu.org/
+   https://your-worker.workers.dev/
    ```
 
 2. **安装方式**：
@@ -192,7 +193,7 @@ PWA (Progressive Web App) 是一种结合网页和原生应用优点的应用技
 1. **访问应用**
 
    ```
-   https://2fa-dev.guts.eu.org/
+   https://your-worker.workers.dev/
    ```
 
 2. **安装步骤**：
@@ -219,7 +220,7 @@ PWA (Progressive Web App) 是一种结合网页和原生应用优点的应用技
 1. **访问应用**
 
    ```
-   https://2fa-dev.guts.eu.org/
+   https://your-worker.workers.dev/
    ```
 
 2. **安装方式**：
@@ -361,7 +362,7 @@ Service Worker 会自动检测并应用新版本：
 
 2. **检查 Service Worker**:
    - Chrome: `chrome://serviceworker-internals/`
-   - 查找 `2fa-dev.guts.eu.org`
+   - 查找自己的 Workers 域名，例如 `your-worker.workers.dev`
    - 确认状态为「ACTIVATED and is running」
 
 3. **清除缓存并重新访问**:
@@ -420,7 +421,7 @@ Service Worker 会自动检测并应用新版本：
 
 **需要网络的功能**:
 
-- ❌ 添加/编辑/删除密钥（需要 API）
+- ⚠️ 添加、编辑、批量导入和手动排序可进入离线队列；删除必须联网并重新鉴权
 - ❌ 备份和恢复（需要 API）
 - ❌ 登录认证（需要 API）
 
@@ -443,7 +444,7 @@ Service Worker 会自动检测并应用新版本：
 3. **清除 Service Worker**:
    ```
    chrome://serviceworker-internals/
-   找到 2fa-dev.guts.eu.org
+   找到自己的 Workers 域名
    点击「Unregister」
    刷新页面重新注册
    ```

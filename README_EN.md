@@ -1,219 +1,203 @@
-# 🔐 2FA
+# CF 2FA
 
-A two-factor authentication key management system built on Cloudflare Workers. Free to deploy, globally accelerated, with PWA offline support.
+A two-factor authentication key manager built on Cloudflare Workers. Your data stays in your own Cloudflare KV namespace, with PWA support, encrypted storage, responsive views, and remote backups.
+
+**[中文](README.md)**
 
 ![Version](https://img.shields.io/badge/version-1.5.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Platform](https://img.shields.io/badge/platform-Cloudflare%20Workers-orange)
 
-**[中文文档](README.md)**
+> Based on [wuzf/2fa](https://github.com/wuzf/2fa) and currently maintained at [qtingdev/cf-2fa](https://github.com/qtingdev/cf-2fa).
 
-**Key Features:** TOTP/HOTP code auto-generation · QR code scanning/image recognition/paste screenshot/drag & drop image to add keys · AES-GCM 256-bit encrypted storage · Bulk import from Google Authenticator, Aegis, 2FAS, Bitwarden, etc. · Multi-format export (TXT/JSON/CSV/HTML/Google migration QR codes) · Auto backup & restore · WebDAV/S3/OneDrive/Google Drive remote backup sync · Settings panel (password change/sync settings) · Dark/Light theme · Responsive design for mobile/tablet/desktop
+## New Interface
 
-## 📸 Screenshots
+### Desktop Grid View
 
-|                    Desktop                     |                    Tablet                    |                    Mobile                    |
-| :--------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-| ![Desktop](docs/images/screenshot-desktop.png) | ![Tablet](docs/images/screenshot-tablet.png) | ![Mobile](docs/images/screenshot-mobile.png) |
+![Desktop grid view](docs/images/screenshot-desktop.png)
 
-## 🚀 Quick Deployment
+<table>
+  <tr>
+    <th width="72%">List view</th>
+    <th width="28%">Mobile</th>
+  </tr>
+  <tr>
+    <td><img src="docs/images/screenshot-tablet.png" alt="List view"></td>
+    <td><img src="docs/images/screenshot-mobile.png" alt="Mobile view"></td>
+  </tr>
+</table>
 
-### Live Demo
+## Highlights
 
-Visit the demo site (password `2fa-Demo.`): **[https://2fa-dev.wzf.workers.dev](https://2fa-dev.wzf.workers.dev)**
+- **Dashboard-style UI** with a fixed header, account count, sync status, and TOTP cadence
+- **Grid and list views** optimized for desktop, tablet, and mobile screens
+- **Fast filtering** by service or account, plus direct provider filters for Google, OpenAI, GitHub, and more
+- **Duplicate account check** for matching account names under the same provider
+- **Flexible sorting** by creation order, service, account, or manual drag and drop
+- **Complete OTP details** including current code, circular countdown, next code, and creation time
+- **Multiple add flows** through camera scan, image upload, clipboard paste, drag and drop, or manual entry
+- **Broad import/export support** for TXT, JSON, CSV, HTML, migration QR codes, and authenticator backups
+- **Encryption and re-authentication** with optional AES-GCM 256-bit storage and password confirmation before deletion
+- **Automatic and remote backups** through WebDAV, S3, OneDrive, and Google Drive
 
-### One-Click Deploy (Recommended)
+## Quick Deployment
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/wuzf/2fa)
+There is no public demo account. Two-factor authentication data is sensitive, so deploy the project to your own Cloudflare account instead.
 
-> One-click deploy is recommended. All users should upgrade in-place via the **Sync Upstream** workflow. Do not upgrade by deleting the Worker, deleting the repository, or reinstalling.
+### One-Click Deploy
 
-1. Click the button above, log in with GitHub and authorize
-2. Log in to your Cloudflare account, click **Deploy** and wait for deployment to complete (KV storage is created automatically)
-3. Open the Workers URL provided by Cloudflare, **set your admin password** and start using
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/qtingdev/cf-2fa)
 
-> Git auto-build uses the `wrangler.toml` from the repository directly. The current config explicitly declares `SECRETS_KV`, and Wrangler will automatically create the required KV on first deploy and continue reusing the resource bound to the current Worker on subsequent deploys.
-> If you manually configure Git build commands in the Cloudflare Dashboard, **use `npm run deploy` as the deploy command, not `npx wrangler deploy` directly**, to preserve the version injection flow and stay consistent with the repository's default deploy entry.
+1. Click the button and authorize with GitHub
+2. Sign in to Cloudflare, confirm the project, and wait for the first deployment
+3. Open the generated Workers URL and create the admin password
+4. Configure and securely store `ENCRYPTION_KEY`
 
-#### Recommended: Enable Data Encryption
+The repository's `wrangler.toml` declares `SECRETS_KV`. Wrangler creates or binds KV during the first deployment and reuses the same Worker and storage on later deployments.
 
-After deployment, add a Secret `ENCRYPTION_KEY` in **Cloudflare Dashboard → Worker → Settings → Variables**:
+If you configure the Git build command manually in Cloudflare Dashboard, use:
 
 ```bash
-# Generate encryption key (choose one)
+npm run deploy
+```
+
+Do not replace it with a direct `npx wrangler deploy` command, because that bypasses the project's version injection flow.
+
+### Enable Data Encryption
+
+Add this Secret under **Cloudflare Dashboard → Worker → Settings → Variables**:
+
+```text
+ENCRYPTION_KEY=<Base64 string containing 32 random bytes>
+```
+
+Generate one with either command:
+
+```bash
 openssl rand -base64 32
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
 
-> `ENCRYPTION_KEY` is the master key for decrypting existing data. **Recommended to set up**, provided you immediately save the original value to a password manager, offline backup, or other secure location.
->
-> If you cannot ensure the original value is saved, **it's better to not set it at all than to set it and lose it**:
->
-> - Once set: Secret list, auto backups, and WebDAV/S3/OneDrive/Google Drive credentials are all encrypted
-> - If lost: Cloudflare will not show the original value again; existing encrypted data and encrypted backups cannot be read or restored
-> - Current behavior: When encrypted data is detected but `ENCRYPTION_KEY` is missing, the system locks reads and writes to prevent accidental overwriting of old data
+`ENCRYPTION_KEY` is the master key for existing secrets, backups, and remote storage credentials. Cloudflare will not reveal a Secret after it is saved. Losing the value makes existing encrypted data unrecoverable.
 
-#### Version Updates
+### Update an Existing Deployment
 
-One-click deploy creates an independent repository (not a Fork). Upgrades are done in-place using the **Sync Upstream** workflow.
+One-click deployment usually creates an independent repository. Before upgrading, save a local backup through **Bulk Export** or **Restore Config → Export Backup**, then:
 
-> ⚠️ **Always back up your data before upgrading**: Before performing a version update, export your current data via **Bulk Export** or **Restore Config → Export Backup** to prevent data loss in case of failure.
+1. Open your GitHub repository
+2. Go to **Actions → Sync Upstream**
+3. Select **Run workflow** and keep the default `main` branch
+4. Wait for the sync and review the `wrangler.toml` diff in the run summary
+5. Cloudflare Git integration redeploys the same Worker from the new commit
 
-> ⚠️ **First-time upgrade requires adding the workflow file**: The repository created by one-click deploy may not include the `.github/workflows/` directory. Please first add the file `.github/workflows/sync-upstream.yml` to your repository, copying the content from the upstream repository file: <https://github.com/wuzf/2fa/blob/main/.github/workflows/sync-upstream.yml>, and commit it once. After that, follow the steps below for in-place upgrades.
+If the workflow is missing, add [`.github/workflows/sync-upstream.yml`](https://github.com/qtingdev/cf-2fa/blob/main/.github/workflows/sync-upstream.yml) and commit it once. It pulls updates from `qtingdev/cf-2fa` while preserving the current Worker name, KV IDs, routes, and common deployment settings.
 
-1. Open the 2fa repository generated on your GitHub account during one-click deploy
-2. Go to **Actions** → **Sync Upstream**
-3. Click **Run workflow**
-4. Wait for the workflow to sync the latest upstream code to your repository
-5. The workflow will automatically merge your current repository's Worker name, KV bindings, and common deployment config based on the latest upstream configuration
-6. Cloudflare will redeploy **the same Worker** based on your current repository
+Normal updates do not remove KV or Secrets and do not require recreating `ENCRYPTION_KEY`.
 
-This approach does not affect existing Workers, KV bindings, or Secrets. **If you've already set `ENCRYPTION_KEY`, you don't need to re-enter it during upgrades; if you haven't set it, you can still use this upgrade process.**
+## Usage
 
-> ⚠️ `ENCRYPTION_KEY` is the master key for decrypting existing data. Please make sure to save it to a password manager when first created. Cloudflare Secrets cannot be viewed after saving; normal upgrades don't require re-entry, but if you delete it without saving the original value, existing encrypted data cannot be recovered.
+### Add Accounts
 
-#### Checking the Merge Result
+- Click **Scan to add** in the header or the scan icon beside the search field
+- Scan with the camera, or upload, paste, or drag a QR code image
+- Use the floating action menu for **Manual Add** and **Bulk Import**
+- Manual entries can configure TOTP/HOTP, digits, period, algorithm, and counter
 
-The `Sync Upstream` workflow is designed to always complete upgrades on **the same repository and the same Worker**. The workflow now automatically merges `wrangler.toml` and shows the diff with upstream in the summary, so you can confirm which values come from your local deployment config:
+### Browse and Filter
 
-1. Check the `wrangler.toml` diff in the GitHub Actions run summary
-2. Open `wrangler.toml` in your repository
-3. Confirm that the Worker name, KV bindings, routes, and existing deployment settings are still correct
-4. If you maintain very specific `wrangler.toml` configurations, make additional commits as needed
+- Click a code or card to copy the current OTP
+- Cards and rows show the full account, creation time, remaining seconds, and next code
+- Click a provider chip to display only accounts from that service
+- Click **Duplicates** to find repeated account names under the same provider
+- Switch between grid and list views; choose **Manual order** to enable drag sorting
 
-> If Cloudflare doesn't automatically start redeployment, go to the **Deployments** page and redeploy the latest commit of your current repository — do not delete and reinstall.
+### Manage Accounts
 
-## 📖 User Guide
+Use the overflow menu on a card or list row to view its QR code, copy the `otpauth://` URI, edit it, or delete it.
 
-### Adding Keys
-
-Click the **➕** floating button in the bottom right:
-
-- **Scan QR Code** — Camera scan of 2FA QR codes, auto-fill
-- **Select Image** — Upload a QR code screenshot, auto-recognize
-- **Paste Screenshot** — Ctrl+V to paste QR code screenshots from clipboard (great for PC users without cameras)
-- **Drag & Drop Image** — Drag QR code images directly into the dialog, auto-recognize
-- **Manual Add** — Enter service name and Base32 secret (expand advanced settings to adjust digits/period/algorithm)
-
-### Daily Use
-
-- **Copy Code**: Click the code digits directly
-- **Manage Keys**: Click **⋯** on the top right of a card → Edit / Delete / View QR Code
-- **Search**: Real-time search by service name or account name in the top search bar
-- **Sort**: Sort by add time or name
-- **Theme**: Toggle light/dark/follow system with 🌓 in the bottom right
+Deletion requires confirmation and the current admin password. Delete requests must be completed online and are never placed in the PWA offline queue.
 
 ### Bulk Import
 
-Click the floating button → **📥 Bulk Import**, supports file import or text paste.
+File upload and text paste support:
 
-**Compatible Formats:**
+| Source                                | Supported format                         |
+| ------------------------------------- | ---------------------------------------- |
+| Generic                               | `otpauth://` URI, TXT, CSV, HTML         |
+| Google Authenticator                  | `otpauth-migration://` migration QR code |
+| Aegis / Bitwarden / LastPass / andOTP | JSON                                     |
+| 2FAS                                  | `.2fas`                                  |
+| Ente Auth / AuthPro and others        | Their exported backup files              |
 
-| Source                 | Format                                     |
-| ---------------------- | ------------------------------------------ |
-| Universal              | `otpauth://` URI text (TXT), CSV, HTML     |
-| Google Authenticator   | Migration QR code (`otpauth-migration://`) |
-| Aegis                  | JSON export file                           |
-| 2FAS                   | `.2fas` export file                        |
-| Bitwarden              | JSON export file                           |
-| LastPass Authenticator | JSON export file                           |
-| andOTP                 | JSON export file                           |
-| Ente Auth              | Export file                                |
+### Export, Backup, and Restore
 
-### Bulk Export
+- Bulk export supports TXT, JSON, CSV, HTML, and Google Authenticator migration QR codes
+- Data changes trigger automatic backups, with a daily scheduled check as a fallback
+- Local automatic backups retain the latest 100 copies by default; `0` disables the count limit
+- Upload `backup_*.(txt|json|csv|html)` files to preview and restore them
+- Configure multiple WebDAV, S3, OneDrive, and Google Drive targets
+- WebDAV automatically uses a `cf-2fa-backup` subdirectory and removes remote backup files older than seven days
 
-Click the floating button → **📤 Bulk Export**, supports TXT, JSON, CSV, HTML formats, as well as generating **Google Authenticator migration QR codes** (can be scanned to import directly).
-Standard TXT / JSON / CSV / HTML exports prefer the unified backend format while online, and automatically fall back to a compatible local export when offline or when the request body is too large.
+Remote targets receive the same backup payload generated by the app. If a backup was created with `ENCRYPTION_KEY`, restoring it requires the same key.
 
-### Backup & Restore
+See [Cloud Drive Setup](docs/CLOUD_DRIVE_SETUP.md) for configuration details.
 
-The system backs up automatically (triggered on data changes + daily scheduled check), keeping the latest 100 backups (adjustable in settings).
-New backup files follow **Settings → Default Export Format**. Remote auto-backups use the same extension (`txt`, `json`, `csv`, or `html`).
+### PWA and Offline Use
 
-Click the floating button → **🔄 Restore Config** to view backup list, preview content, restore, or export; you can also upload a `backup_*.(txt|json|csv|html)` file downloaded from WebDAV/S3/OneDrive/Google Drive to preview and restore it.
+- iOS: Safari → Share → Add to Home Screen
+- Android: Chrome → Menu → Install app or Add to Home Screen
+- Desktop Chrome / Edge: use the install control in the address bar
 
-#### Remote Backup
+Offline mode can display cached accounts and generate OTPs in the browser. Deletion, login, backup, and operations requiring server confirmation must be completed online.
 
-Supports syncing backups to remote storage, automatically pushing on data changes, with multiple backup targets configurable:
+## Security
 
-- **WebDAV** — Supports standard WebDAV protocol cloud drives or self-hosted services (⚠️ Does not support Cloudflare-proxied services like Nutstore/jianguoyun, which trigger 520 loop errors)
-- **S3-Compatible Storage** — Supports AWS S3, Cloudflare R2, MinIO, Alibaba Cloud OSS, and other S3-compatible services
-- **OneDrive** — After Microsoft OAuth authorization, backups are written into a subfolder inside the app-specific OneDrive folder
-- **Google Drive** — After Google OAuth authorization, backups are written into the configured Google Drive folder
+- **Password storage**: salted PBKDF2-SHA256 with 100,000 iterations
+- **Session**: JWT stored in an `HttpOnly + Secure + SameSite=Strict` cookie
+- **Data encryption**: AES-GCM 256-bit for secrets, backups, and remote credentials when `ENCRYPTION_KEY` is configured
+- **Transport**: HTTPS through Cloudflare Workers
+- **Privacy**: OTPs are generated client-side and no usage analytics are collected
+- **Sensitive actions**: account deletion requires the admin password again
 
-Add and manage remote backup targets in **Settings → Sync Settings**.
+## Public OTP API
 
-Remote backups store the same backup content generated by the app. If `ENCRYPTION_KEY` was configured when the backup was created, the remote file is encrypted ciphertext too; restoring it requires keeping the same `ENCRYPTION_KEY` in the Worker.
+Generate an OTP directly from a URL without signing in:
 
-Detailed setup steps: [Cloud Drive Setup](docs/CLOUD_DRIVE_SETUP.md) (currently Chinese).
-
-### Settings
-
-Click the floating button → **⚙️ Settings**:
-
-- **Change Password** — Change the admin password
-- **Login Validity** — Customize JWT expiration time
-- **Default Export Format** — Controls the default export choice and the extension used for newly created backups and remote auto-backups
-- **Backup Retention Count** — Adjust auto backup retention count
-- **Remote Backup** — Configure WebDAV/S3/OneDrive/Google Drive backup targets
-- **Sign Out** — One-click clear of the current session cookie and local cache; still works locally when the server is unreachable
-
-### Install as Mobile App (PWA)
-
-- **iOS**: Open in Safari → Share button → Add to Home Screen
-- **Android**: Open in Chrome → Menu (⋮) → Add to Home Screen
-
-After installation, use it like a native app in full screen with offline access support.
-
-## 🔒 Security
-
-- **Password**: PBKDF2-SHA256 (100,000 iterations) salted hash, JWT stored in HttpOnly + Secure + SameSite=Strict cookies
-- **Data Encryption**: With `ENCRYPTION_KEY` configured, all secrets, backups, and WebDAV/S3/OneDrive/Google Drive credentials are encrypted with AES-GCM 256-bit; make sure to save the original key — encrypted data cannot be decrypted if lost
-- **Transport**: HTTPS throughout, TLS 1.2+
-- **Privacy**: OTP generated client-side, no usage data collected, fully open source
-- **Login Validity**: Default 30 days, customizable in settings, auto-renewed on active use (auto-extended when < 7 days remaining)
-
-## 🔗 Public OTP API
-
-Generate verification codes directly via URL without logging in:
-
-```
+```text
 https://your-worker.workers.dev/otp/YOUR_SECRET_KEY
 https://your-worker.workers.dev/otp/YOUR_SECRET_KEY?digits=8&period=60
 https://your-worker.workers.dev/otp/YOUR_SECRET_KEY?type=hotp&counter=5
 ```
 
-Parameters: `type` (totp/hotp), `digits` (6/8), `period` (30/60/120), `algorithm` (sha1/sha256/sha512), `counter` (for HOTP)
+Supported parameters: `type`, `digits`, `period`, `algorithm`, and `counter`.
 
-## 📚 More Documentation
+## Documentation
 
-| Document                                       | Description                                   |
-| ---------------------------------------------- | --------------------------------------------- |
-| [Deployment Guide](docs/DEPLOYMENT.md)         | Manual deployment, KV config, Secrets         |
-| [Cloud Drive Setup](docs/CLOUD_DRIVE_SETUP.md) | OneDrive / Google Drive setup steps (Chinese) |
-| [API Reference](docs/API_REFERENCE.md)         | Complete API endpoint documentation           |
-| [Architecture](docs/ARCHITECTURE.md)           | System architecture & technical design        |
-| [Development Guide](docs/DEVELOPMENT.md)       | Local development, testing, code style        |
-| [PWA Guide](docs/PWA_GUIDE.md)                 | PWA installation & offline features           |
+| Document                                       | Contents                                           |
+| ---------------------------------------------- | -------------------------------------------------- |
+| [Deployment Guide](docs/DEPLOYMENT.md)         | Manual deployment, KV, Secrets, and updates        |
+| [Cloud Drive Setup](docs/CLOUD_DRIVE_SETUP.md) | WebDAV, OneDrive, Google Drive, and remote backups |
+| [API Reference](docs/API_REFERENCE.md)         | API endpoints, requests, and responses             |
+| [Architecture](docs/ARCHITECTURE.md)           | System design and implementation                   |
+| [Development Guide](docs/DEVELOPMENT.md)       | Local development, testing, and conventions        |
+| [PWA Guide](docs/PWA_GUIDE.md)                 | Installation, caching, and offline behavior        |
 
-## 🤝 Contributing
+## Contributing
 
-Welcome to submit [Issues](https://github.com/wuzf/2fa/issues) and [Pull Requests](https://github.com/wuzf/2fa/pulls). For development details, see the [Development Guide](docs/DEVELOPMENT.md).
+Issues and pull requests are welcome at [qtingdev/cf-2fa](https://github.com/qtingdev/cf-2fa). See the [Contributing Guide](.github/CONTRIBUTING.md) for the development workflow.
 
-## 📄 License
+## License
 
 [MIT License](LICENSE)
 
-## 🌟 Star History
+## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=wuzf/2fa&type=date&legend=top-left)](https://www.star-history.com/#wuzf/2fa&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=qtingdev/cf-2fa&type=date&legend=top-left)](https://www.star-history.com/#qtingdev/cf-2fa&type=date&legend=top-left)
 
 ---
 
 <div align="center">
 
-**If this project helps you, please give it a ⭐**
-
-Made with ❤️ by [wuzf](https://github.com/wuzf)
+Based on [wuzf/2fa](https://github.com/wuzf/2fa), maintained at [qtingdev/cf-2fa](https://github.com/qtingdev/cf-2fa).
 
 </div>

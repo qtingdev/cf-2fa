@@ -30,7 +30,7 @@
 
 ### 第 1 步：点击一键部署
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/wuzf/2fa)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/qtingdev/cf-2fa)
 
 1. 点击上面的部署按钮
 2. 如果未登录 Cloudflare，会提示登录
@@ -319,24 +319,24 @@ node --version
 3. 克隆项目：
 
    ```bash
-   git clone https://github.com/wuzf/2fa.git
+   git clone https://github.com/qtingdev/cf-2fa.git
    ```
 
 4. 进入项目目录：
    ```bash
-   cd 2fa
+   cd cf-2fa
    ```
 
 **方法 2：直接下载 ZIP（无需 Git）**
 
-1. 访问 [项目页面](https://github.com/wuzf/2fa)
+1. 访问 [项目页面](https://github.com/qtingdev/cf-2fa)
 2. 点击绿色的"Code"按钮
 3. 点击"Download ZIP"
 4. 下载完成后，解压到任意文件夹
 5. 打开命令行，进入解压后的文件夹：
    ```bash
    # 例如解压到桌面
-   cd Desktop/2fa-main
+   cd Desktop/cf-2fa-main
    ```
 
 ✅ **完成标志**：命令行显示的路径包含 `2fa` 文件夹
@@ -651,7 +651,7 @@ Current Version ID: 63b40cd3-91de-421b-bd97-f556cc27fa83
 
 如果你是 **一键部署** 用户，统一使用 GitHub 仓库中的 **Sync Upstream** 工作流原地升级。无论有没有设置 `ENCRYPTION_KEY`，都是同一套流程：
 
-一键部署创建的仓库不包含 `.github/workflows/` 目录。如果你的仓库里还没有 **Actions → Sync Upstream**，先在自己的仓库中新增文件 `.github/workflows/sync-upstream.yml`，内容复制自上游仓库文件：<https://github.com/wuzf/2fa/blob/main/.github/workflows/sync-upstream.yml>，并提交一次；之后再按下面步骤升级。
+一键部署创建的仓库不包含 `.github/workflows/` 目录。如果你的仓库里还没有 **Actions → Sync Upstream**，先在自己的仓库中新增文件 `.github/workflows/sync-upstream.yml`，内容复制自上游仓库文件：<https://github.com/qtingdev/cf-2fa/blob/main/.github/workflows/sync-upstream.yml>，并提交一次；之后再按下面步骤升级。
 
 1. 打开一键部署生成的 GitHub 仓库
 2. 进入 **Actions** → **Sync Upstream**
@@ -673,7 +673,7 @@ Current Version ID: 63b40cd3-91de-421b-bd97-f556cc27fa83
 
 ```bash
 # 1. 在项目文件夹中打开命令行
-cd path/to/2fa
+cd path/to/cf-2fa
 
 # 2. 拉取最新代码
 git pull origin main
@@ -704,11 +704,11 @@ npm run deploy
    - 浏览器控制台（按 `F12` 打开）
 
 2. **搜索已知问题**：
-   - 查看 [GitHub Issues](https://github.com/wuzf/2fa/issues)
+   - 查看 [GitHub Issues](https://github.com/qtingdev/cf-2fa/issues)
    - 搜索错误关键词
 
 3. **提交问题**：
-   - [创建新 Issue](https://github.com/wuzf/2fa/issues/new)
+   - [创建新 Issue](https://github.com/qtingdev/cf-2fa/issues/new)
    - 描述问题和错误信息
    - 附上命令行输出截图
 
@@ -723,8 +723,8 @@ npm run deploy
 ### 步骤 1: 克隆项目
 
 ```bash
-git clone https://github.com/wuzf/2fa.git
-cd 2fa
+git clone https://github.com/qtingdev/cf-2fa.git
+cd cf-2fa
 ```
 
 ### 步骤 2: 安装依赖
@@ -1321,7 +1321,7 @@ npx wrangler kv:key delete "user_password" --namespace-id=your-kv-id
 
 适用于通过 Deploy 按钮创建 GitHub 仓库并连接 Cloudflare 的用户。
 
-一键部署创建的仓库不包含 `.github/workflows/` 目录。如果你的仓库里还没有 **Actions → Sync Upstream**，先在自己的仓库中新增文件 `.github/workflows/sync-upstream.yml`，内容复制自上游仓库文件：<https://github.com/wuzf/2fa/blob/main/.github/workflows/sync-upstream.yml>，并提交一次；之后就都按下面步骤升级。
+一键部署创建的仓库不包含 `.github/workflows/` 目录。如果你的仓库里还没有 **Actions → Sync Upstream**，先在自己的仓库中新增文件 `.github/workflows/sync-upstream.yml`，内容复制自上游仓库文件：<https://github.com/qtingdev/cf-2fa/blob/main/.github/workflows/sync-upstream.yml>，并提交一次；之后就都按下面步骤升级。
 
 1. 打开自己的 GitHub 仓库
 2. 进入 **Actions** → **Sync Upstream**
@@ -1442,4 +1442,4 @@ npx wrangler secret delete SENTRY_DSN
 
 ---
 
-**支持**: 如有问题，请提交 [GitHub Issue](https://github.com/wuzf/2fa/issues)
+**支持**: 如有问题，请提交 [GitHub Issue](https://github.com/qtingdev/cf-2fa/issues)

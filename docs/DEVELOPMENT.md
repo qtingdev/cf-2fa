@@ -362,7 +362,7 @@ const otp = binary % 1000000;
 
 ```bash
 git clone <repository-url>
-cd 2fa
+cd cf-2fa
 ```
 
 2. **安装依赖**:

@@ -41,9 +41,9 @@
 ## 🔗 其他资源
 
 - [项目主 README](../README.md) - 项目介绍和特性
-- [GitHub Issues](https://github.com/wuzf/2fa/issues) - 问题反馈
+- [GitHub Issues](https://github.com/qtingdev/cf-2fa/issues) - 问题反馈
 
 ---
 
-**维护者**: wuzf
+**维护者**: qtingdev/cf-2fa
 **许可证**: MIT

@@ -19,7 +19,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     env:
-      UPSTREAM_REPO: wuzf/2fa
+      UPSTREAM_REPO: qtingdev/cf-2fa
       UPSTREAM_REF: ${{ inputs.upstream_ref }}
 
     steps:

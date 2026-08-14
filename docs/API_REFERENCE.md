@@ -335,11 +335,19 @@ Cookie: auth_token=<JWT_TOKEN>
 
 **认证**: ✅ 需要
 
-**描述**: 删除指定 ID 的密钥
+**描述**: 删除指定 ID 的密钥。除现有登录会话外，还必须在请求体中再次提供当前鉴权密码。
 
 **URL 参数**:
 
 - `id` (UUID): 密钥的唯一标识符
+
+**请求体**:
+
+```json
+{
+	"password": "当前鉴权密码"
+}
+```
 
 **成功响应** (200 OK):
 
@@ -354,6 +362,26 @@ Cookie: auth_token=<JWT_TOKEN>
 ```
 
 **错误响应**:
+
+**400 Bad Request** - 未提供鉴权密码:
+
+```json
+{
+	"error": "ValidationError",
+	"message": "请输入鉴权密码",
+	"statusCode": 400
+}
+```
+
+**403 Forbidden** - 鉴权密码错误:
+
+```json
+{
+	"error": "AuthorizationError",
+	"message": "鉴权密码错误",
+	"statusCode": 403
+}
+```
 
 **404 Not Found** - 密钥不存在:
 
