@@ -493,7 +493,7 @@ export function getCoreCode() {
       const otpElement = document.getElementById('otp-' + secretId);
       if (!otpElement) return;
 
-      const otpText = otpElement.textContent;
+      const otpText = otpElement.textContent.replace(/\\s+/g, '');
       if (otpText === '------') return;
 
       try {
@@ -525,7 +525,7 @@ export function getCoreCode() {
       const nextOtpElement = document.getElementById('next-otp-' + secretId);
       if (!nextOtpElement) return;
 
-      const nextOtpText = nextOtpElement.textContent;
+      const nextOtpText = nextOtpElement.textContent.replace(/\\s+/g, '');
       if (nextOtpText === '------') return;
 
       try {

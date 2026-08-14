@@ -71,12 +71,41 @@ describe('settings page copy', () => {
 	it('uses compact grid cards and the classic prototype table for list view', async () => {
 		const response = await createMainPage({ lazyLoad: false });
 		const html = await response.text();
+		const componentStyles = getComponentStyles();
+		const variables = getVariables();
+		const tableWrapStyle = componentStyles.match(/\.classic-table-wrap \{([^}]*)\}/)?.[1] || '';
+		const tableCellStyle = componentStyles.match(/\.classic-table td \{([^}]*)\}/)?.[1] || '';
+		const tableBadgeStyle =
+			componentStyles.match(/\.classic-table \.table-type-badge,[\s\S]*?\.classic-table \.table-type-badge\.hotp-badge \{([^}]*)\}/)?.[1] ||
+			'';
+		const tableCodeStyle = componentStyles.match(/\.classic-table \.table-code-cell \{([^}]*)\}/)?.[1] || '';
+		const progressTrackStyle = componentStyles.match(/\.table-progress-track \{([^}]*)\}/)?.[1] || '';
+		const progressFillStyle = componentStyles.match(/\.table-progress-fill \{([^}]*)\}/)?.[1] || '';
 
 		expect(html).toContain('grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));');
 		expect(html).toContain('<th scope="col">服务 / 账户</th>');
 		expect(html).toContain('<th scope="col">当前动态验证码</th>');
 		expect(html).toContain('<th scope="col">下一期</th>');
 		expect(html).toContain('padding: 14px 18px;');
+		expect(tableWrapStyle).not.toContain('scrollbar-gutter');
+		expect(tableCellStyle).toContain('border-bottom: 1px solid var(--table-row-divider);');
+		expect(tableBadgeStyle).toContain('background: var(--stripe-canvas);');
+		expect(tableBadgeStyle).toContain('color: var(--stripe-slate);');
+		expect(tableBadgeStyle).toContain('font-size: 11px;');
+		expect(tableBadgeStyle).toContain('padding: 3px 8px;');
+		expect(tableCodeStyle).toContain('color: var(--stripe-navy);');
+		expect(tableCodeStyle).toContain('font-size: 16px;');
+		expect(tableCodeStyle).toContain('letter-spacing: 1px;');
+		expect(progressTrackStyle).toContain('background: var(--stripe-border);');
+		expect(progressFillStyle).toContain('background: var(--stripe-blurple);');
+		expect(variables).toContain('--table-row-divider: #f0f3f7;');
+		expect(variables).toContain('--table-row-divider: #182234;');
+		expect(html).toContain("return normalizedToken.slice(0, 3) + ' ' + normalizedToken.slice(3);");
+		expect(html).toContain("return normalizedToken.slice(0, 4) + ' ' + normalizedToken.slice(4);");
+		expect(html).toContain('otpElement.textContent = formatOTPDisplay(currentToken);');
+		expect(html).toContain('nextOtpElement.textContent = formatOTPDisplay(nextToken);');
+		expect(html).toContain("const otpText = otpElement.textContent.replace(/\\s+/g, '');");
+		expect(html).toContain("const nextOtpText = nextOtpElement.textContent.replace(/\\s+/g, '');");
 	});
 
 	it('keeps full account names visible without legacy responsive card overrides', () => {

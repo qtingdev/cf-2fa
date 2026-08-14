@@ -100,7 +100,6 @@ export function getComponentStyles() {
       box-shadow: var(--shadow-stripe-sm);
       overflow-x: auto;
       overscroll-behavior-inline: contain;
-      scrollbar-gutter: stable;
       -webkit-overflow-scrolling: touch;
     }
 
@@ -126,7 +125,7 @@ export function getComponentStyles() {
 
     .classic-table td {
       padding: 14px 18px;
-      border-bottom: 1px solid var(--stripe-border-light);
+      border-bottom: 1px solid var(--table-row-divider);
       color: var(--stripe-navy);
       vertical-align: middle;
       transition: background-color 0.15s ease;
@@ -188,20 +187,19 @@ export function getComponentStyles() {
       word-break: break-word;
     }
 
-    .table-type-badge {
+    .classic-table .table-type-badge,
+    .classic-table .table-type-badge.totp-badge,
+    .classic-table .table-type-badge.hotp-badge {
       display: inline-flex;
       align-items: center;
-      padding: 2px 7px;
-      border-radius: 5px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .table-type-badge.totp-badge {
-      background: var(--stripe-blurple-light);
-      border: 1px solid rgba(99, 91, 255, 0.2);
-      color: var(--stripe-blurple);
+      padding: 3px 8px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 6px;
+      background: var(--stripe-canvas);
+      color: var(--stripe-slate);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0;
     }
 
     .classic-table .table-code-cell,
@@ -216,10 +214,11 @@ export function getComponentStyles() {
     }
 
     .classic-table .table-code-cell {
-      color: var(--stripe-blurple);
+      color: var(--stripe-navy);
       font-size: 16px;
       font-weight: 700;
       letter-spacing: 1px;
+      line-height: 1.2;
     }
 
     .classic-table .table-code-cell:hover,

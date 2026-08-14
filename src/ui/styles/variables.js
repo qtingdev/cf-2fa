@@ -223,6 +223,7 @@ export function getVariables() {
       --table-header-text: var(--stripe-slate);
       --table-header-border: var(--stripe-border);
       --table-border: var(--stripe-border);
+      --table-row-divider: #f0f3f7;
       --table-row-hover: #f8f9fb;
 
       --tool-bg: var(--stripe-surface);
@@ -396,6 +397,7 @@ export function getVariables() {
       --table-header-text: var(--stripe-slate);
       --table-header-border: #1e293b;
       --table-border: #1e293b;
+      --table-row-divider: #182234;
       --table-row-hover: #172033;
 
       --tool-bg: #111827;

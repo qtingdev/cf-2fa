@@ -344,6 +344,21 @@ export function getOTPCode() {
       }
     }
 
+    function formatOTPDisplay(token) {
+      const originalToken = String(token || '');
+      const normalizedToken = originalToken.replace(/\\s+/g, '');
+
+      if (/^\\d{6}$/.test(normalizedToken)) {
+        return normalizedToken.slice(0, 3) + ' ' + normalizedToken.slice(3);
+      }
+
+      if (/^\\d{8}$/.test(normalizedToken)) {
+        return normalizedToken.slice(0, 4) + ' ' + normalizedToken.slice(4);
+      }
+
+      return originalToken;
+    }
+
     // 创建全局OTP计算器实例
     const otpCalculator = new OTPCalculator();
 
@@ -369,14 +384,14 @@ export function getOTPCode() {
         // 更新当前OTP显示
         const otpElement = document.getElementById('otp-' + secretId);
         if (otpElement) {
-          otpElement.textContent = currentToken;
+          otpElement.textContent = formatOTPDisplay(currentToken);
           console.log('当前OTP更新:', currentToken, '时间窗口:', currentWindow);
         }
 
         // 更新下一个OTP显示
         const nextOtpElement = document.getElementById('next-otp-' + secretId);
         if (nextOtpElement) {
-          nextOtpElement.textContent = nextToken;
+          nextOtpElement.textContent = formatOTPDisplay(nextToken);
           console.log('下一个OTP更新:', nextToken, '时间窗口:', nextWindow);
         }
       } catch (error) {
