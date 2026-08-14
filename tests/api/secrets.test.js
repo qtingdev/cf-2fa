@@ -3,7 +3,7 @@
  * 测试密钥 CRUD 操作、备份恢复功能
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 import {
   handleGetSecrets,
   handleAddSecret,
@@ -13,6 +13,14 @@ import {
   handleBatchAddSecrets,
   handleGenerateOTP
 } from '../../src/api/secrets/index.js';
+import { hashPassword } from '../../src/utils/auth.js';
+
+const DELETE_PASSWORD = 'DeletePass123!';
+let deletePasswordHash = '';
+
+beforeAll(async () => {
+  deletePasswordHash = await hashPassword(DELETE_PASSWORD);
+});
 
 // ==================== Mock 模块 ====================
 
@@ -59,6 +67,7 @@ class MockKV {
 // Mock 环境
 function createMockEnv() {
   const kv = new MockKV();
+  kv.store.set('user_password', deletePasswordHash);
   // 正确的 32 字节加密密钥
   const encryptionKey = Buffer.from('12345678901234567890123456789012').toString('base64');
 
@@ -80,6 +89,10 @@ function createMockRequest(body = {}, method = 'POST', url = 'https://example.co
     }),
     json: async () => body
   };
+}
+
+function createDeleteRequest(secretId, password = DELETE_PASSWORD) {
+  return createMockRequest({ password }, 'DELETE', `https://example.com/api/secrets/${secretId}`);
 }
 
 async function seedEncryptedSecret(env, overrides = {}) {
@@ -574,7 +587,7 @@ describe('API Secrets Module', () => {
       const secretId = (await addResponse.json()).data.secret.id;
 
       // 删除
-      const deleteRequest = createMockRequest({}, 'DELETE', `https://example.com/api/secrets/${secretId}`);
+      const deleteRequest = createDeleteRequest(secretId);
       const response = await handleDeleteSecret(deleteRequest, env);
       const data = await response.json();
 
@@ -588,11 +601,38 @@ describe('API Secrets Module', () => {
       expect(secrets).toHaveLength(0);
     });
 
+    it('缺少鉴权密码时不应该删除密钥', async () => {
+      const env = createMockEnv();
+      const { secretId } = await seedEncryptedSecret(env);
+
+      const response = await handleDeleteSecret(
+        createMockRequest({}, 'DELETE', `https://example.com/api/secrets/${secretId}`),
+        env,
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.message).toBe('请输入鉴权密码');
+      expect((await (await handleGetSecrets(env)).json())).toHaveLength(1);
+    });
+
+    it('鉴权密码错误时不应该删除密钥', async () => {
+      const env = createMockEnv();
+      const { secretId } = await seedEncryptedSecret(env);
+
+      const response = await handleDeleteSecret(createDeleteRequest(secretId, 'WrongPass123!'), env);
+      const data = await response.json();
+
+      expect(response.status).toBe(403);
+      expect(data.message).toBe('鉴权密码错误');
+      expect((await (await handleGetSecrets(env)).json())).toHaveLength(1);
+    });
+
     it('应该拒绝删除不存在的密钥', async () => {
       const env = createMockEnv();
       const fakeId = 'nonexistent-id-123';
 
-      const request = createMockRequest({}, 'DELETE', `https://example.com/api/secrets/${fakeId}`);
+      const request = createDeleteRequest(fakeId);
       const response = await handleDeleteSecret(request, env);
       const data = await response.json();
 
@@ -612,7 +652,7 @@ describe('API Secrets Module', () => {
       const secretId2 = (await addResponse2.json()).data.secret.id;
 
       // 删除中间的密钥
-      await handleDeleteSecret(createMockRequest({}, 'DELETE', `https://example.com/api/secrets/${secretId2}`), env);
+      await handleDeleteSecret(createDeleteRequest(secretId2), env);
 
       // 验证剩余密钥
       const getResponse = await handleGetSecrets(env);
@@ -630,7 +670,7 @@ describe('API Secrets Module', () => {
       delete env.ENCRYPTION_KEY;
 
       const response = await handleDeleteSecret(
-        createMockRequest({}, 'DELETE', `https://example.com/api/secrets/${secretId}`),
+        createDeleteRequest(secretId),
         env,
       );
       const data = await response.json();
@@ -836,7 +876,7 @@ describe('API Secrets Module', () => {
       expect(secrets[0].account).toBe('admin@company.com');
 
       // 6. 删除密钥
-      await handleDeleteSecret(createMockRequest({}, 'DELETE', `https://example.com/api/secrets/${secretId}`), env);
+      await handleDeleteSecret(createDeleteRequest(secretId), env);
 
       // 7. 验证删除
       response = await handleGetSecrets(env);

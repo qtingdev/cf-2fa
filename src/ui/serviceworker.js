@@ -327,9 +327,26 @@ self.addEventListener('fetch', event => {
       fetch(request).catch(async err => {
         console.error('[SW] API 请求失败:', url.pathname, err);
 
-        // 只有修改数据的请求才保存到离线队列（POST、PUT、DELETE）
+        // 删除密钥需要重新输入鉴权密码，不能把请求体持久化到离线队列。
         const method = request.method.toUpperCase();
-        if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
+        if (method === 'DELETE' && url.pathname.startsWith('/api/secrets/')) {
+          return new Response(
+            JSON.stringify({
+              error: '离线不可用',
+              detail: '删除操作需要联网验证密码，请连接网络后重试',
+              offline: true,
+              queued: false
+            }),
+            {
+              status: 503,
+              statusText: 'Service Unavailable',
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        }
+
+        // 只有可安全重放的修改请求才保存到离线队列。
+        if (method === 'POST' || method === 'PUT') {
           try {
             // 读取请求体
             const requestClone = request.clone();
@@ -352,8 +369,6 @@ self.addEventListener('fetch', event => {
               operationType = 'REORDER';
             } else if (method === 'PUT' && url.pathname.startsWith('/api/secrets/')) {
               operationType = 'UPDATE';
-            } else if (method === 'DELETE' && url.pathname.startsWith('/api/secrets/')) {
-              operationType = 'DELETE';
             }
 
             if (operationType === 'UNKNOWN') {
@@ -641,6 +656,23 @@ async function syncPendingOperations() {
     for (const operation of operations) {
       try {
         console.log('[SW] 正在同步操作:', operation.id, operation.type);
+
+        // 清理旧版本遗留的离线删除任务；它们没有二次鉴权密码，不能再重放。
+        if (
+          operation.method === 'DELETE' &&
+          typeof operation.url === 'string' &&
+          operation.url.startsWith('/api/secrets/')
+        ) {
+          await deleteOperation(operation.id);
+          failCount++;
+          await notifyClients({
+            type: 'SYNC_FAILED',
+            operationId: operation.id,
+            operationType: operation.type,
+            error: '删除操作需要重新输入密码'
+          });
+          continue;
+        }
 
         // 构建请求
         const requestOptions = {

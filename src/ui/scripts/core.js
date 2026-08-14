@@ -713,58 +713,67 @@ export function getCoreCode() {
       const secret = secrets.find(s => s.id === id);
       if (!secret) return;
 
-      const confirmed = await showConfirmDialog({
+      const deleteResult = await showConfirmDialog({
         title: '删除密钥',
         message: '确定要删除 "' + secret.name + '" 吗？\\n该操作无法撤销。',
         confirmText: '删除',
         cancelText: '取消',
-        danger: true
+        danger: true,
+        requirePassword: true,
+        passwordLabel: '鉴权密码',
+        passwordPlaceholder: '请输入当前登录密码',
+        submittingText: '正在删除...',
+        onConfirm: async function(password) {
+          if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+            throw new Error('删除操作需要联网验证密码，请连接网络后重试');
+          }
+
+          const deleteRequest = saveQueue.then(async () => {
+            console.log('🗑️ [保存队列] 提交删除请求:', secret.name);
+
+            const response = await authenticatedFetch('/api/secrets/' + id, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ password: password })
+            });
+
+            let result = null;
+            try {
+              result = await response.json();
+            } catch (_) {
+              result = null;
+            }
+
+            if (!response.ok) {
+              const message = result && (result.message || result.detail || result.error);
+              throw new Error(message || '删除失败，请重试');
+            }
+
+            return result || { success: true };
+          });
+
+          saveQueue = deleteRequest.catch((error) => {
+            console.error('❌ [保存队列] 删除失败:', error);
+          });
+
+          return deleteRequest;
+        }
       });
-      if (!confirmed) {
+      if (!deleteResult) {
         return;
       }
 
-      // 🔒 删除操作也使用队列，避免与编辑操作产生竞态条件
-      saveQueue = saveQueue.then(async () => {
-        try {
-          console.log('🗑️ [保存队列] 提交删除请求:', secret.name);
+      secrets = secrets.filter(s => s.id !== id);
+      await renderSecrets();
 
-          const response = await authenticatedFetch('/api/secrets/' + id, {
-            method: 'DELETE'
-          });
+      if (otpIntervals[id]) {
+        clearInterval(otpIntervals[id]);
+        delete otpIntervals[id];
+      }
 
-          if (response.ok) {
-            const result = await response.json();
-
-            // 检查是否为离线排队响应
-            if (result.queued && result.offline) {
-              console.log('📥 [离线模式] 删除操作已排队，等待同步:', result.operationId);
-              showCenterToast('download', result.message || '操作已保存，网络恢复后自动同步');
-
-              // 离线模式下，暂时不更新本地状态，等待同步完成后由 PWA 模块刷新
-              return;
-            }
-
-            // 正常在线响应，立即删除本地数据
-            secrets = secrets.filter(s => s.id !== id);
-            await renderSecrets();
-
-            if (otpIntervals[id]) {
-              clearInterval(otpIntervals[id]);
-              delete otpIntervals[id];
-            }
-
-            console.log('✅ [保存队列] 删除成功:', secret.name);
-          } else {
-            showCenterToast('x', '删除失败，请重试');
-          }
-        } catch (error) {
-          console.error('❌ [保存队列] 删除失败:', error);
-          showCenterToast('x', '删除失败：' + error.message);
-        }
-      }).catch(err => {
-        console.error('❌ [保存队列] 队列执行错误:', err);
-      });
+      console.log('✅ [保存队列] 删除成功:', secret.name);
     }
     
     // 二维码解析工具

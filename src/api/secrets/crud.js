@@ -16,8 +16,10 @@ import { getMonitoring, ErrorSeverity } from '../../utils/monitoring.js';
 import { validateRequest, addSecretSchema, checkDuplicateSecret, validateBase32 } from '../../utils/validation.js';
 import { createJsonResponse, createErrorResponse, createSuccessResponse } from '../../utils/response.js';
 import { checkRateLimit, getClientIdentifier, createRateLimitResponse, RATE_LIMIT_PRESETS } from '../../utils/rateLimit.js';
+import { verifyPassword } from '../../utils/auth.js';
 import {
 	ValidationError,
+	AuthorizationError,
 	NotFoundError,
 	ConflictError,
 	StorageError,
@@ -30,6 +32,7 @@ import {
 import { KV_KEYS } from '../../utils/constants.js';
 
 const monitoring = getMonitoring();
+const KV_USER_PASSWORD_KEY = 'user_password';
 
 /**
  * 获取所有密钥列表
@@ -304,6 +307,41 @@ export async function handleDeleteSecret(request, env, ctx) {
 
 		const url = new URL(request.url);
 		const secretId = url.pathname.split('/').pop();
+		let requestBody = {};
+
+		try {
+			requestBody = await request.json();
+		} catch {
+			// DELETE 请求可能没有请求体，统一按缺少密码处理。
+		}
+
+		const password = typeof requestBody?.password === 'string' ? requestBody.password : '';
+		if (!password) {
+			throw new ValidationError('请输入鉴权密码', {
+				missing: 'password',
+				operation: 'deleteSecret',
+			});
+		}
+
+		if (!env.SECRETS_KV) {
+			throw new ConfigurationError('服务器未配置 KV 存储', {
+				missingConfig: 'SECRETS_KV',
+			});
+		}
+
+		const storedPasswordHash = await env.SECRETS_KV.get(KV_USER_PASSWORD_KEY);
+		if (!storedPasswordHash) {
+			throw new ConfigurationError('未设置密码，请先完成首次设置', {
+				setupRequired: true,
+			});
+		}
+
+		const passwordValid = await verifyPassword(password, storedPasswordHash, env);
+		if (!passwordValid) {
+			throw new AuthorizationError('鉴权密码错误', {
+				operation: 'deleteSecret',
+			});
+		}
 
 		// 获取现有密钥
 		const existingSecrets = await getAllSecrets(env);
@@ -334,6 +372,7 @@ export async function handleDeleteSecret(request, env, ctx) {
 		if (
 			error instanceof NotFoundError ||
 			error instanceof ValidationError ||
+			error instanceof AuthorizationError ||
 			error instanceof StorageError ||
 			error instanceof CryptoError ||
 			error instanceof ConfigurationError

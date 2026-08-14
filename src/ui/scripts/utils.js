@@ -66,7 +66,9 @@ export function getUtilsCode() {
      * @param {string} [options.confirmText='确认'] - 确认按钮文字
      * @param {string} [options.cancelText='取消'] - 取消按钮文字
      * @param {boolean} [options.danger=false] - 危险操作时确认按钮显示为红色
-     * @returns {Promise<boolean>} 用户点击确认返回 true，取消/关闭返回 false
+     * @param {boolean} [options.requirePassword=false] - 是否要求输入鉴权密码
+     * @param {Function} [options.onConfirm] - 需要密码时执行的异步确认操作
+     * @returns {Promise<boolean|Object>} 确认操作结果，取消/关闭返回 false
      */
     /**
      * 并发保护：确认框共用同一个 DOM 节点，必须禁止同时被多个调用打开，
@@ -81,6 +83,11 @@ export function getUtilsCode() {
       const confirmText = opts.confirmText || '确认';
       const cancelText = opts.cancelText || '取消';
       const danger = opts.danger === true;
+      const requirePassword = opts.requirePassword === true;
+      const passwordLabel = opts.passwordLabel || '鉴权密码';
+      const passwordPlaceholder = opts.passwordPlaceholder || '请输入当前登录密码';
+      const submittingText = opts.submittingText || '正在验证...';
+      const onConfirmAction = typeof opts.onConfirm === 'function' ? opts.onConfirm : null;
 
       // 若已有确认框在等待用户操作，直接以 "取消" 语义返回，避免监听器叠加
       if (__confirmDialogBusy) {
@@ -107,6 +114,11 @@ export function getUtilsCode() {
             '    <h3 class="confirm-dialog-title" id="confirmDialogTitle"></h3>' +
             '  </div>' +
             '  <div class="confirm-dialog-message" id="confirmDialogMessage"></div>' +
+            '  <div class="confirm-dialog-auth" id="confirmDialogAuth" hidden>' +
+            '    <label for="confirmDialogPassword" id="confirmDialogPasswordLabel"></label>' +
+            '    <input type="password" id="confirmDialogPassword" autocomplete="current-password" spellcheck="false">' +
+            '    <div class="confirm-dialog-error" id="confirmDialogError" role="alert" aria-live="polite"></div>' +
+            '  </div>' +
             '  <div class="confirm-dialog-actions">' +
             '    <button type="button" class="btn btn-secondary confirm-dialog-cancel" id="confirmDialogCancel"></button>' +
             '    <button type="button" class="btn btn-primary confirm-dialog-confirm" id="confirmDialogConfirm"></button>' +
@@ -118,6 +130,10 @@ export function getUtilsCode() {
         const titleEl = modal.querySelector('#confirmDialogTitle');
         const messageEl = modal.querySelector('#confirmDialogMessage');
         const iconEl = modal.querySelector('#confirmDialogIcon');
+        const authEl = modal.querySelector('#confirmDialogAuth');
+        const passwordLabelEl = modal.querySelector('#confirmDialogPasswordLabel');
+        const passwordInput = modal.querySelector('#confirmDialogPassword');
+        const errorEl = modal.querySelector('#confirmDialogError');
         const cancelBtn = modal.querySelector('#confirmDialogCancel');
         const confirmBtn = modal.querySelector('#confirmDialogConfirm');
 
@@ -132,23 +148,52 @@ export function getUtilsCode() {
         cancelBtn.textContent = cancelText;
         confirmBtn.textContent = confirmText;
         confirmBtn.classList.toggle('btn-danger', danger);
+        authEl.hidden = !requirePassword;
+        passwordLabelEl.textContent = passwordLabel;
+        passwordInput.placeholder = passwordPlaceholder;
+        passwordInput.value = '';
+        passwordInput.disabled = false;
+        passwordInput.removeAttribute('aria-invalid');
+        errorEl.textContent = '';
+        cancelBtn.disabled = false;
+        confirmBtn.disabled = false;
         modal.setAttribute('aria-labelledby', 'confirmDialogTitle');
         modal.setAttribute('aria-describedby', 'confirmDialogMessage');
 
-        // 焦点策略：危险操作停在取消避免误触；非危险默认确认
-        const focusTarget = danger ? cancelBtn : confirmBtn;
+        // 需要重新鉴权时直接聚焦密码框；其他危险操作仍停在取消按钮避免误触。
+        const focusTarget = requirePassword ? passwordInput : (danger ? cancelBtn : confirmBtn);
         // 保存打开前的焦点，关闭后恢复
         const previouslyFocused =
           document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
         let settled = false;
+        let submitting = false;
+        function setError(messageText) {
+          errorEl.textContent = messageText || '';
+          if (messageText) {
+            passwordInput.setAttribute('aria-invalid', 'true');
+          } else {
+            passwordInput.removeAttribute('aria-invalid');
+          }
+        }
+        function setSubmitting(isSubmitting) {
+          submitting = isSubmitting;
+          passwordInput.disabled = isSubmitting;
+          cancelBtn.disabled = isSubmitting;
+          confirmBtn.disabled = isSubmitting;
+          confirmBtn.textContent = isSubmitting ? submittingText : confirmText;
+        }
         function cleanup(result) {
           if (settled) return;
           settled = true;
+          passwordInput.value = '';
+          setError('');
+          setSubmitting(false);
           modal.classList.remove('show');
           document.removeEventListener('keydown', onKey);
           cancelBtn.removeEventListener('click', onCancel);
           confirmBtn.removeEventListener('click', onConfirm);
+          passwordInput.removeEventListener('input', onPasswordInput);
           modal.removeEventListener('click', onOverlay);
           setTimeout(() => {
             modal.style.display = 'none';
@@ -161,13 +206,55 @@ export function getUtilsCode() {
             resolve(result);
           }, 200);
         }
-        function onCancel() { cleanup(false); }
-        function onConfirm() { cleanup(true); }
-        function onOverlay(e) { if (e.target === modal) cleanup(false); }
+        function onCancel() {
+          if (!submitting) cleanup(false);
+        }
+        async function onConfirm() {
+          if (submitting) return;
+          if (!requirePassword) {
+            cleanup(true);
+            return;
+          }
+
+          const password = passwordInput.value;
+          if (!password) {
+            setError('请输入鉴权密码');
+            passwordInput.focus();
+            return;
+          }
+
+          setError('');
+          setSubmitting(true);
+          try {
+            const result = onConfirmAction ? await onConfirmAction(password) : true;
+            passwordInput.value = '';
+            cleanup(result === undefined ? true : result);
+          } catch (error) {
+            passwordInput.value = '';
+            setSubmitting(false);
+            setError(error && error.message ? error.message : '验证失败，请重试');
+            passwordInput.focus();
+          }
+        }
+        function onPasswordInput() {
+          if (errorEl.textContent) setError('');
+        }
+        function onOverlay(e) {
+          if (!submitting && e.target === modal) cleanup(false);
+        }
         function onKey(e) {
+          if (submitting) {
+            e.preventDefault();
+            return;
+          }
           if (e.key === 'Escape') {
             e.preventDefault();
             cleanup(false);
+            return;
+          }
+          if (e.key === 'Enter' && requirePassword && e.target === passwordInput) {
+            e.preventDefault();
+            onConfirm();
             return;
           }
           if (e.key === 'Enter' && !danger) {
@@ -179,9 +266,9 @@ export function getUtilsCode() {
               return;
             }
           }
-          // 焦点陷阱：Tab 在确认/取消两个按钮之间循环
+          // 焦点陷阱：Tab 在当前对话框的可操作控件之间循环
           if (e.key === 'Tab') {
-            const focusable = [cancelBtn, confirmBtn];
+            const focusable = requirePassword ? [passwordInput, cancelBtn, confirmBtn] : [cancelBtn, confirmBtn];
             const idx = focusable.indexOf(document.activeElement);
             if (idx === -1) {
               e.preventDefault();
@@ -198,6 +285,7 @@ export function getUtilsCode() {
 
         cancelBtn.addEventListener('click', onCancel);
         confirmBtn.addEventListener('click', onConfirm);
+        passwordInput.addEventListener('input', onPasswordInput);
         modal.addEventListener('click', onOverlay);
         document.addEventListener('keydown', onKey);
 

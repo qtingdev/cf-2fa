@@ -620,6 +620,53 @@ export function getModalStyles() {
       word-break: break-word;
     }
 
+    .confirm-dialog-auth[hidden] {
+      display: none;
+    }
+
+    .confirm-dialog-auth {
+      margin: -2px 0 20px;
+    }
+
+    .confirm-dialog-auth label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--stripe-navy);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .confirm-dialog-auth input {
+      width: 100%;
+      height: var(--control-height-md, 40px);
+      padding: 0 12px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      box-sizing: border-box;
+      font: inherit;
+    }
+
+    .confirm-dialog-auth input:focus {
+      outline: none;
+      border-color: var(--stripe-blurple);
+      background: var(--input-bg-focus);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
+    }
+
+    .confirm-dialog-auth input[aria-invalid="true"] {
+      border-color: var(--stripe-red);
+    }
+
+    .confirm-dialog-error {
+      min-height: 18px;
+      margin-top: 6px;
+      color: var(--stripe-red);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
     .confirm-dialog-actions {
       display: flex;
       gap: 10px;
