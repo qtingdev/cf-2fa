@@ -135,7 +135,7 @@ function getHTMLBody() {
           ${icon('settings', 'ui-icon')}
         </button>
         <button type="button" class="btn-stripe-primary stripe-btn-primary" onclick="showQRScanner()" aria-label="扫描二维码添加密钥" title="扫描二维码添加密钥">
-          ${icon('qrCode', 'ui-icon')}
+          ${icon('scanLine', 'ui-icon')}
           <span>扫码添加</span>
         </button>
       </div>

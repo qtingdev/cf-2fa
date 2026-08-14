@@ -36,8 +36,12 @@ describe('settings page copy', () => {
 		expect(primaryAction).toContain('onclick="showQRScanner()"');
 		expect(primaryAction).toContain('aria-label="扫描二维码添加密钥"');
 		expect(primaryAction).toContain('<span>扫码添加</span>');
-		expect(primaryAction).toContain(icon('qrCode', 'ui-icon'));
+		expect(primaryAction).toContain(icon('scanLine', 'ui-icon'));
+		expect(primaryAction).not.toContain(icon('qrCode', 'ui-icon'));
 		expect(primaryAction).not.toContain('showAddModal()');
+
+		const mobileStyles = getBaseStyles().slice(getBaseStyles().indexOf('@media (max-width: 600px)'));
+		expect(mobileStyles).toMatch(/\.stripe-btn-primary\s*\{[^}]*justify-content:\s*center;[^}]*padding:\s*0;/s);
 	});
 
 	it('renders the account count only in the top summary', async () => {

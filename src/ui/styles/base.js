@@ -867,6 +867,11 @@ export function getBaseStyles() {
         flex: 0 0 34px;
       }
 
+      .stripe-btn-primary {
+        justify-content: center;
+        padding: 0;
+      }
+
       .stripe-logo-badge {
         padding: 6px 10px;
         font-size: 13px;
