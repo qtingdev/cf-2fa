@@ -112,15 +112,11 @@ function getHTMLBody() {
     <div class="stripe-nav-inner">
       <div class="stripe-brand" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
         <div class="stripe-logo-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
-          2FA Authenticator
-        </div>
-        <div class="stripe-brand-text">
-          <span class="stripe-brand-title">两步验证</span>
-          <span class="stripe-brand-badge">VAULT</span>
+          2FA Vault
         </div>
       </div>
 
@@ -148,10 +144,10 @@ function getHTMLBody() {
       <div class="classic-kpi-bar stripe-metrics-bar">
         <div class="classic-kpi-card stripe-metric-card">
           <div>
-            <div class="kpi-title metric-label">受保护账号 (Protected Accounts)</div>
+            <div class="kpi-title metric-label">受保护账号</div>
             <div class="kpi-value-row metric-value-row">
               <span class="kpi-number metric-num" id="metricSecretCount">0</span>
-              <span class="kpi-pill success">100% 同步就绪</span>
+              <span class="metric-status success"><span class="metric-status-dot"></span>已同步</span>
             </div>
           </div>
           <div class="kpi-icon-wrap">
@@ -161,10 +157,10 @@ function getHTMLBody() {
 
         <div class="classic-kpi-card stripe-metric-card metric-card-sync" onclick="showSettingsModal()" style="cursor: pointer;">
           <div>
-            <div class="kpi-title metric-label">云端存储端点 (Sync Endpoints)</div>
+            <div class="kpi-title metric-label">存储端点</div>
             <div class="kpi-value-row metric-value-row">
-              <span class="kpi-number metric-num">Cloudflare</span>
-              <span class="kpi-pill blurple metric-badge-ready">KV 已同步</span>
+              <span class="kpi-number metric-num">Cloudflare KV</span>
+              <span class="metric-status info"><span class="metric-status-dot"></span>已连接</span>
             </div>
           </div>
           <div class="kpi-icon-wrap" style="color:#00d4ff; background:rgba(0,212,255,0.1);">
@@ -174,10 +170,10 @@ function getHTMLBody() {
 
         <div class="classic-kpi-card stripe-metric-card">
           <div>
-            <div class="kpi-title metric-label">TOTP 动态刷新周期 (Cadence)</div>
+            <div class="kpi-title metric-label">动态刷新</div>
             <div class="kpi-value-row metric-value-row">
               <span class="kpi-number metric-num countdown-num" id="metricTimeCountdown">30s</span>
-              <span class="kpi-pill success">实时心跳同步</span>
+              <span class="metric-status success"><span class="metric-status-dot"></span>实时计算</span>
             </div>
           </div>
           <div class="kpi-icon-wrap" style="color:#00d97e; background:rgba(0,217,126,0.1);">

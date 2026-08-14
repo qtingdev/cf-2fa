@@ -60,49 +60,25 @@ export function getBaseStyles() {
     .stripe-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
       cursor: pointer;
       user-select: none;
+      flex-shrink: 0;
     }
 
     .stripe-logo-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: linear-gradient(135deg, #635bff 0%, #a259ff 100%);
+      background: var(--stripe-blurple);
       color: #ffffff;
       padding: 6px 12px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 0;
-      box-shadow: 0 4px 12px rgba(99, 91, 255, 0.3);
+      box-shadow: 0 2px 6px rgba(99, 91, 255, 0.3);
       white-space: nowrap;
       flex-shrink: 0;
-    }
-
-    .stripe-brand-text {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stripe-brand-title {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0;
-      color: var(--stripe-navy);
-    }
-
-    .stripe-brand-badge {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      padding: 2px 6px;
-      border-radius: 9999px;
-      background: var(--stripe-blurple-light);
-      color: var(--stripe-blurple);
-      text-transform: uppercase;
     }
 
     .stripe-nav-actions {
@@ -269,33 +245,34 @@ export function getBaseStyles() {
       display: inline-block;
     }
 
-    .kpi-pill {
+    .metric-status {
       font-size: 11px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 9999px;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
+      gap: 5px;
       white-space: nowrap;
+      color: var(--stripe-muted);
     }
 
-    .kpi-pill.success {
-      background: var(--stripe-green-bg, #d6f5e8);
+    .metric-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex: 0 0 6px;
+    }
+
+    .metric-status.success {
       color: var(--stripe-green-dark, #0e6245);
     }
 
-    [data-theme="dark"] .kpi-pill.success {
-      background: rgba(0, 217, 126, 0.15);
+    [data-theme="dark"] .metric-status.success {
       color: #00d97e;
     }
 
-    .kpi-pill.blurple, .metric-badge-ready {
-      background: var(--stripe-blurple-light);
+    .metric-status.info {
       color: var(--stripe-blurple);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 9999px;
     }
 
     .kpi-icon-wrap {
@@ -819,10 +796,6 @@ export function getBaseStyles() {
         gap: 10px;
       }
 
-      .stripe-brand-title {
-        font-size: 15px;
-      }
-
       .stripe-btn-primary span {
         display: none;
       }
@@ -850,10 +823,6 @@ export function getBaseStyles() {
       .stripe-nav-inner {
         padding: 8px 12px;
         gap: 8px;
-      }
-
-      .stripe-brand-text {
-        display: none;
       }
 
       .stripe-nav-actions {

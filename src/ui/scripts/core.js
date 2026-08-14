@@ -269,9 +269,10 @@ export function getCoreCode() {
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
       const cardClass = 'secret-card classic-card' + (isManualSort ? ' secret-card-draggable' : '');
       const cardTitle = isManualSort ? '拖拽调整排序，点击卡片复制验证码' : '点击卡片复制验证码';
+      const cardAriaLabel = '复制' + providerName + (displayAccount ? ' ' + displayAccount : '') + '的验证码';
       const dragHandle = createSecretDragHandle(secret.id, false);
 
-      return '<div class="' + cardClass + '" data-secret-id="' + secret.id + '" ondragover="handleSecretDragOver(event, &quot;' + secret.id + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secret.id + '&quot;)" ondragend="handleSecretDragEnd(event)" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="' + cardTitle + '">' +
+      return '<div class="' + cardClass + '" data-secret-id="' + secret.id + '" tabindex="0" role="button" aria-label="' + escapeAttribute(cardAriaLabel) + '" ondragover="handleSecretDragOver(event, &quot;' + secret.id + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secret.id + '&quot;)" ondragend="handleSecretDragEnd(event)" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" onkeydown="handleSecretCardKeydown(event, &quot;' + secret.id + '&quot;)" title="' + cardTitle + '">' +
         '<div class="card-main-content">' +
           '<div class="card-header card-top-row">' +
             '<div class="secret-info service-brand-box">' +
@@ -296,7 +297,6 @@ export function getCoreCode() {
 
           '<div class="otp-display-box">' +
             '<div class="otp-code-wrapper">' +
-              '<span class="otp-code-label">当前 2FA 验证码</span>' +
               '<div class="otp-code otp-current-val" id="otp-' + secret.id + '" onclick="event.stopPropagation(); copyOTP(&quot;' + secret.id + '&quot;)" title="点击复制验证码">------</div>' +
             '</div>' +
             (isHOTP ?
@@ -483,6 +483,15 @@ export function getCoreCode() {
       
       // 执行复制操作
       await copyOTP(secretId);
+    }
+
+    function handleSecretCardKeydown(event, secretId) {
+      if (event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) {
+        return;
+      }
+
+      event.preventDefault();
+      copyOTP(secretId);
     }
 
     // 复制OTP验证码

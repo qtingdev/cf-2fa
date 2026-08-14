@@ -49,10 +49,50 @@ describe('settings page copy', () => {
 		const html = await response.text();
 
 		expect(html).toContain('id="metricSecretCount"');
-		expect(html).toContain('受保护账号 (Protected Accounts)');
+		expect(html).toContain('受保护账号');
 		expect(html).not.toContain('id="secretCount"');
 		expect(html).not.toContain('id="secretCountValue"');
 		expect(html).not.toContain("document.getElementById('secretCount')");
+	});
+
+	it('uses concise dashboard copy and system status indicators', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+		const header = html.match(/<header class="stripe-nav">[\s\S]*?<\/header>/)?.[0] || '';
+		const metrics = html.slice(
+			html.indexOf('<div class="classic-kpi-bar stripe-metrics-bar">'),
+			html.indexOf('<div class="classic-toolbar search-section">'),
+		);
+
+		expect(header).toContain('2FA Vault');
+		expect(header).not.toContain('2FA Authenticator');
+		expect(header).not.toContain('class="stripe-brand-text"');
+		expect(metrics).toContain('class="kpi-title metric-label">存储端点</div>');
+		expect(metrics).toContain('class="kpi-title metric-label">动态刷新</div>');
+		expect(metrics).toContain('class="metric-status success"');
+		expect(metrics).toContain('class="metric-status info"');
+		expect(metrics).not.toContain('Protected Accounts');
+		expect(metrics).not.toContain('Sync Endpoints');
+		expect(metrics).not.toContain('Cadence');
+		expect(metrics).not.toContain('100% 同步就绪');
+		expect(metrics).not.toContain('实时心跳同步');
+	});
+
+	it('reveals the grid copy hint only while the card is active', async () => {
+		const response = await createMainPage({ lazyLoad: false });
+		const html = await response.text();
+		const componentStyles = getComponentStyles();
+		const hintStyle = componentStyles.match(/\.quick-copy-hint \{([^}]*)\}/)?.[1] || '';
+
+		expect(html).not.toContain('当前 2FA 验证码');
+		expect(html).toContain('tabindex="0" role="button"');
+		expect(html).toContain('onkeydown="handleSecretCardKeydown(event');
+		expect(hintStyle).toContain('opacity: 0;');
+		expect(hintStyle).toContain('visibility: hidden;');
+		expect(hintStyle).toContain('pointer-events: none;');
+		expect(componentStyles).toContain('.secret-card:hover .quick-copy-hint,');
+		expect(componentStyles).toContain('.secret-card:focus-visible .quick-copy-hint,');
+		expect(componentStyles).toContain('.secret-card:focus-within .quick-copy-hint');
 	});
 
 	it('renders a provider filter row without adding tags to cards', async () => {

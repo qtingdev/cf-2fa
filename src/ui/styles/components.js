@@ -57,6 +57,12 @@ export function getComponentStyles() {
       box-shadow: var(--shadow-stripe-md);
     }
 
+    .secret-card:focus-visible {
+      outline: none;
+      border-color: var(--stripe-blurple);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring), var(--shadow-stripe-md);
+    }
+
     .secret-card:hover::before {
       opacity: 1;
     }
@@ -596,17 +602,9 @@ export function getComponentStyles() {
     .otp-code-wrapper {
       display: flex;
       flex-direction: column;
+      justify-content: center;
       flex: 1;
       min-width: 0;
-    }
-
-    .otp-code-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--stripe-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 2px;
     }
 
     .otp-current-val, .otp-code {
@@ -724,14 +722,20 @@ export function getComponentStyles() {
       gap: 4px;
       font-weight: 600;
       color: var(--stripe-blurple);
-      opacity: 0.8;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
       cursor: pointer;
-      transition: opacity 0.15s ease;
+      transition: opacity 0.15s ease, visibility 0.15s ease;
       font-size: 12px;
     }
 
-    .secret-card:hover .quick-copy-hint {
+    .secret-card:hover .quick-copy-hint,
+    .secret-card:focus-visible .quick-copy-hint,
+    .secret-card:focus-within .quick-copy-hint {
       opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
     .progress-mini {
