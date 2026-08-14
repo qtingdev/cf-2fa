@@ -315,69 +315,101 @@ export function getResponsiveStyles() {
       color: var(--stripe-muted);
     }
 
-    /* ========== Stripe 经典居中 Toast 胶囊提示 ========== */
+    /* ========== 方案一原型底部 Toast ========== */
     .center-toast {
       position: fixed;
-      top: 50%;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.96);
+      transform: translateX(-50%) translateY(100px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: min(90vw, 620px);
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: #0a2540;
+      color: #ffffff;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+      font-weight: 500;
       z-index: 100000;
       pointer-events: none;
       opacity: 0;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     }
 
     .center-toast.show {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+      transform: translateX(-50%) translateY(0);
     }
 
-    .toast-content {
-      background: var(--stripe-navy);
-      color: #ffffff;
-      padding: 12px 20px;
-      border-radius: 9999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 30px -5px rgba(10, 37, 64, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
-      border: none;
-      min-width: 180px;
-      max-width: min(90vw, 500px);
-      text-align: center;
-      font-size: 14px;
-      font-weight: 600;
-      backdrop-filter: blur(8px);
-    }
-
-    [data-theme="dark"] .toast-content {
-      background: #1e293b;
-      color: #f7fafc;
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    [data-theme="dark"] .center-toast {
+      background: #ffffff;
+      color: #0a2540;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     }
 
     .toast-icon {
       flex-shrink: 0;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       color: var(--stripe-green);
     }
 
+    .center-toast[data-tone="danger"] .toast-icon {
+      color: var(--stripe-red);
+    }
+
+    .center-toast[data-tone="info"] .toast-icon {
+      color: var(--stripe-cyan);
+    }
+
     .toast-icon .ui-icon,
     .toast-svg {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
     }
 
     .toast-message {
-      flex: 1;
+      min-width: 0;
       white-space: normal;
       word-break: break-word;
       overflow-wrap: anywhere;
       line-height: 1.4;
+    }
+
+    .toast-code-badge {
+      flex-shrink: 0;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(99, 91, 255, 0.3);
+      color: #8ce4ff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .toast-code-badge[hidden] {
+      display: none;
+    }
+
+    [data-theme="dark"] .toast-code-badge {
+      background: #e0e7ff;
+      color: #4338ca;
+    }
+
+    @media (max-width: 640px) {
+      .center-toast {
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        max-width: calc(100vw - 32px);
+        padding: 11px 14px;
+      }
     }
 
     /* ========== 扫描器相关样式 ========== */

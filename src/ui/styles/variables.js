@@ -13,12 +13,15 @@ export function getVariables() {
       --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
 
       /* === 主题过渡动画 === */
-      --theme-transition-duration: 0.2s;
+      --theme-transition-duration: 0.18s;
+      --theme-transition-easing: cubic-bezier(0.2, 0, 0, 1);
       --theme-transition:
-        background-color var(--theme-transition-duration) ease,
-        color var(--theme-transition-duration) ease,
-        border-color var(--theme-transition-duration) ease,
-        box-shadow var(--theme-transition-duration) ease;
+        background-color var(--theme-transition-duration) var(--theme-transition-easing),
+        color var(--theme-transition-duration) var(--theme-transition-easing),
+        border-color var(--theme-transition-duration) var(--theme-transition-easing),
+        box-shadow var(--theme-transition-duration) var(--theme-transition-easing),
+        fill var(--theme-transition-duration) var(--theme-transition-easing),
+        stroke var(--theme-transition-duration) var(--theme-transition-easing);
 
       /* === Stripe 经典核心色系 (Stripe Core Palette) === */
       --stripe-blurple: #635bff;
@@ -463,38 +466,61 @@ export function getVariables() {
       }
     }
 
-    /* ========== 主题过渡平滑设定 ========== */
-    html.theme-transition,
-    html.theme-transition *,
-    html.theme-transition *::before,
-    html.theme-transition *::after {
-      transition: var(--theme-transition) !important;
-      transition-delay: 0s !important;
+    :root {
+      color-scheme: light;
     }
 
-    /* 应用过渡到主要界面元素 */
-    body,
-    .card,
-    .secret-card,
-    .modal,
-    .modal-content,
-    input,
-    select,
-    textarea,
-    button,
-    .search-container,
-    .header,
-    .footer {
+    [data-theme="dark"] {
+      color-scheme: dark;
+    }
+
+    /* ========== 主题过渡平滑设定 ========== */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.2s;
+      animation-timing-function: var(--theme-transition-easing);
+      mix-blend-mode: normal;
+    }
+
+    html.theme-transition body,
+    html.theme-transition .stripe-topnav,
+    html.theme-transition .classic-kpi-card,
+    html.theme-transition .classic-toolbar,
+    html.theme-transition .secret-card,
+    html.theme-transition .classic-table-wrap,
+    html.theme-transition .classic-table th,
+    html.theme-transition .classic-table td,
+    html.theme-transition .modal-content,
+    html.theme-transition .card-menu-dropdown,
+    html.theme-transition input,
+    html.theme-transition select,
+    html.theme-transition textarea,
+    html.theme-transition button,
+    html.theme-transition .ui-icon {
       transition: var(--theme-transition);
     }
 
     /* 禁用过渡的情况（减弱动态效果设置） */
     @media (prefers-reduced-motion: reduce) {
-      html.theme-transition,
-      html.theme-transition *,
-      html.theme-transition *::before,
-      html.theme-transition *::after {
+      ::view-transition-old(root),
+      ::view-transition-new(root),
+      html.theme-transition body,
+      html.theme-transition .stripe-topnav,
+      html.theme-transition .classic-kpi-card,
+      html.theme-transition .classic-toolbar,
+      html.theme-transition .secret-card,
+      html.theme-transition .classic-table-wrap,
+      html.theme-transition .classic-table th,
+      html.theme-transition .classic-table td,
+      html.theme-transition .modal-content,
+      html.theme-transition .card-menu-dropdown,
+      html.theme-transition input,
+      html.theme-transition select,
+      html.theme-transition textarea,
+      html.theme-transition button,
+      html.theme-transition .ui-icon {
         transition: none !important;
+        animation-duration: 0s !important;
       }
     }
   `;

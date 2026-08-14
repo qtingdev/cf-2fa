@@ -202,22 +202,6 @@ export function getCoreCode() {
       }
     }
 
-    // 获取服务商颜色
-    function getServiceColor(serviceName) {
-      const colors = [
-        '#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8',
-        '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6c757d',
-        '#343a40', '#007bff', '#28a745', '#dc3545', '#ffc107'
-      ];
-      
-      let hash = 0;
-      for (let i = 0; i < serviceName.length; i++) {
-        hash = serviceName.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      
-      return colors[Math.abs(hash) % colors.length];
-    }
-
     function escapeAttribute(value) {
       return String(value || '').replace(/[&<>"']/g, function(char) {
         return {
@@ -244,6 +228,41 @@ export function getCoreCode() {
         pad(date.getMinutes());
     }
 
+    function createServiceAvatar(providerName, logoUrl, extraClass) {
+      const className = 'service-icon service-avatar' + (extraClass ? ' ' + extraClass : '');
+      const fallback = escapeHTML(providerName.charAt(0).toUpperCase());
+      const fallbackStyle = logoUrl ? ' style="display: none;"' : '';
+      const image = logoUrl
+        ? '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;inline-flex&quot;;">'
+        : '';
+
+      return '<div class="' + className + '">' +
+        image +
+        '<span class="service-avatar-fallback"' + fallbackStyle + '>' + fallback + '</span>' +
+      '</div>';
+    }
+
+    function createSecretMenu(secretId) {
+      return '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secretId + '&quot;)" aria-label="更多操作" title="更多操作">' +
+        '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
+        '<div class="card-menu-dropdown" id="menu-' + secretId + '">' +
+          '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secretId + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
+          '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secretId + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
+          '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secretId + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
+          '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secretId + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    function createSecretDragHandle(secretId, compact) {
+      if (!(typeof isManualSortMode === 'function' && isManualSortMode())) {
+        return '';
+      }
+
+      const className = compact ? 'drag-handle table-drag-handle' : 'drag-handle';
+      return '<button type="button" class="' + className + '" draggable="true" onpointerdown="handleSecretPointerDown(event, &quot;' + secretId + '&quot;)" ondragstart="handleSecretDragStart(event, &quot;' + secretId + '&quot;)" onclick="event.stopPropagation()" aria-label="拖拽排序" title="拖拽排序">' + renderIcon('gripVertical', 'ui-icon') + '</button>';
+    }
+
     // 创建密钥卡片 (方案一：Stripe Dashboard 经典控制台风格)
     function createSecretCard(secret) {
       const providerName = getSecretProviderName(secret) || '未命名';
@@ -258,22 +277,13 @@ export function getCoreCode() {
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
       const cardClass = 'secret-card classic-card' + (isManualSort ? ' secret-card-draggable' : '');
       const cardTitle = isManualSort ? '拖拽调整排序，点击卡片复制验证码' : '点击卡片复制验证码';
-      const serviceColor = getServiceColor(providerName);
-      const dragHandle = isManualSort
-        ? '<button type="button" class="drag-handle" draggable="true" onpointerdown="handleSecretPointerDown(event, &quot;' + secret.id + '&quot;)" ondragstart="handleSecretDragStart(event, &quot;' + secret.id + '&quot;)" onclick="event.stopPropagation()" aria-label="拖拽排序" title="拖拽排序">' + renderIcon('gripVertical', 'ui-icon') + '</button>'
-        : '';
+      const dragHandle = createSecretDragHandle(secret.id, false);
 
       return '<div class="' + cardClass + '" data-secret-id="' + secret.id + '" ondragover="handleSecretDragOver(event, &quot;' + secret.id + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secret.id + '&quot;)" ondragend="handleSecretDragEnd(event)" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="' + cardTitle + '">' +
         '<div class="card-main-content">' +
           '<div class="card-header card-top-row">' +
             '<div class="secret-info service-brand-box">' +
-              '<div class="service-icon service-avatar" style="background: ' + serviceColor + ';">' +
-                (logoUrl ?
-                  '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
-                  '<span style="display: none;">' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>' :
-                  '<span>' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>'
-                ) +
-              '</div>' +
+              createServiceAvatar(providerName, logoUrl, '') +
               '<div class="secret-text service-text">' +
                 '<div class="service-name-row">' +
                   '<h3>' + safeServiceName + '</h3>' +
@@ -288,15 +298,7 @@ export function getCoreCode() {
             '</div>' +
             '<div class="card-header-actions card-actions-row">' +
               dragHandle +
-              '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)" aria-label="更多操作" title="更多操作">' +
-                '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
-                '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
-                  '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
-                  '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
-                  '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
-                  '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
-                '</div>' +
-              '</div>' +
+              createSecretMenu(secret.id) +
             '</div>' +
           '</div>' +
 
@@ -322,6 +324,7 @@ export function getCoreCode() {
           (isHOTP ?
             '<div class="otp-next-container"><span>模式:</span><strong>HOTP</strong></div>' :
             '<div class="otp-next-container" onclick="event.stopPropagation(); copyNextOTP(&quot;' + secret.id + '&quot;)" title="点击复制下期验证码" aria-label="复制下期验证码">' +
+              '<span class="otp-next-label">下一期</span>' +
               '<strong class="otp-next-code" id="next-otp-' + secret.id + '">------</strong>' +
             '</div>'
           ) +
@@ -330,6 +333,68 @@ export function getCoreCode() {
             '点击复制' +
           '</div>' +
         '</div>' +
+      '</div>';
+    }
+
+    function createSecretTableRow(secret) {
+      const providerName = getSecretProviderName(secret) || '未命名';
+      const logoUrl = getServiceLogo(providerName);
+      const isHOTP = secret.type && secret.type.toUpperCase() === 'HOTP';
+      const displayAccount = getDisplayAccount(secret);
+      const createdAtText = formatSecretCreatedAt(secret.createdAt);
+      const secretId = escapeAttribute(secret.id);
+      const rowClass = 'secret-table-row' + (typeof isManualSortMode === 'function' && isManualSortMode() ? ' secret-row-draggable' : '');
+      const remainingCell = isHOTP
+        ? '<span class="table-on-demand">按需生成</span>'
+        : '<div class="table-expiry">' +
+            '<div class="table-progress-track"><div class="table-progress-fill" id="progress-' + secretId + '"></div></div>' +
+            '<span class="table-seconds" id="sec-' + secretId + '">30s</span>' +
+          '</div>';
+      const nextCell = isHOTP
+        ? '<span class="table-empty-value">--</span>'
+        : '<button type="button" class="table-next-code otp-next-code" id="next-otp-' + secretId + '" onclick="event.stopPropagation(); copyNextOTP(&quot;' + secretId + '&quot;)" title="点击复制下一期验证码">------</button>';
+      const generateButton = isHOTP
+        ? '<button type="button" class="table-copy-btn" onclick="event.stopPropagation(); generateNextHOTP(&quot;' + secretId + '&quot;)" title="生成下一个验证码">生成</button>'
+        : '';
+
+      return '<tr class="' + rowClass + '" data-secret-id="' + secretId + '" ondragover="handleSecretDragOver(event, &quot;' + secretId + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secretId + '&quot;)" ondragend="handleSecretDragEnd(event)">' +
+        '<td>' +
+          '<div class="table-service-cell">' +
+            createServiceAvatar(providerName, logoUrl, 'table-service-avatar') +
+            '<div class="table-service-text">' +
+              '<div class="table-service-name">' + escapeHTML(providerName) + '</div>' +
+              (displayAccount ? '<div class="table-service-account" title="' + escapeAttribute(displayAccount) + '">' + escapeHTML(displayAccount) + '</div>' : '') +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td><span class="secret-badge table-type-badge ' + (isHOTP ? 'hotp-badge' : 'totp-badge') + '">' + (isHOTP ? 'HOTP' : 'TOTP') + '</span></td>' +
+        '<td><button type="button" class="table-code-cell otp-code" id="otp-' + secretId + '" onclick="event.stopPropagation(); copyOTP(&quot;' + secretId + '&quot;)" title="点击复制验证码">------</button></td>' +
+        '<td>' + remainingCell + '</td>' +
+        '<td>' + nextCell + '</td>' +
+        '<td><span class="table-created-at">' + escapeHTML(createdAtText) + '</span></td>' +
+        '<td class="table-actions-cell"><div class="table-actions">' +
+          createSecretDragHandle(secret.id, true) +
+          generateButton +
+          '<button type="button" class="table-copy-btn" onclick="event.stopPropagation(); copyOTP(&quot;' + secretId + '&quot;)" title="复制当前验证码">' + renderIcon('copy', 'ui-icon') + '<span>复制</span></button>' +
+          createSecretMenu(secret.id) +
+        '</div></td>' +
+      '</tr>';
+    }
+
+    function createSecretTable(secretItems) {
+      return '<div class="classic-table-wrap">' +
+        '<table class="classic-table">' +
+          '<thead><tr>' +
+            '<th scope="col">服务 / 账户</th>' +
+            '<th scope="col">类型</th>' +
+            '<th scope="col">当前动态验证码</th>' +
+            '<th scope="col">剩余有效</th>' +
+            '<th scope="col">下一期</th>' +
+            '<th scope="col">创建时间</th>' +
+            '<th scope="col" class="table-actions-heading">操作</th>' +
+          '</tr></thead>' +
+          '<tbody>' + secretItems.map(secret => createSecretTableRow(secret)).join('') + '</tbody>' +
+        '</table>' +
       '</div>';
     }
 
@@ -368,7 +433,7 @@ export function getCoreCode() {
       }
 
       emptyState.style.display = 'none';
-      secretsList.style.display = currentViewMode === 'list' ? 'flex' : 'grid';
+      secretsList.style.display = currentViewMode === 'list' ? 'block' : 'grid';
       secretsList.classList.toggle('view-grid', currentViewMode === 'grid');
       secretsList.classList.toggle('view-list', currentViewMode === 'list');
       secretsList.classList.toggle('manual-sort-mode', currentSortType === 'manual-order');
@@ -376,7 +441,9 @@ export function getCoreCode() {
       // 应用排序
       const sortedSecrets = sortSecrets(filteredSecrets, currentSortType);
 
-      secretsList.innerHTML = sortedSecrets.map(secret => createSecretCard(secret)).join('');
+      secretsList.innerHTML = currentViewMode === 'list'
+        ? createSecretTable(sortedSecrets)
+        : sortedSecrets.map(secret => createSecretCard(secret)).join('');
 
       // 🚀 性能优化：并发计算所有OTP
       const perfStart = performance.now();
@@ -453,9 +520,10 @@ export function getCoreCode() {
 
     function showOTPCopyFeedback(secretId) {
       const secret = secrets.find(s => s.id === secretId);
-      const serviceName = secret ? secret.name : '验证码';
-      
-      showCenterToast('check', serviceName + ' 验证码已复制到剪贴板');
+      const serviceName = secret ? (getSecretProviderName(secret) || secret.name) : '验证码';
+      const otpElement = document.getElementById('otp-' + secretId);
+
+      showCenterToast('check', '已复制 ' + serviceName + ' 验证码', otpElement ? otpElement.textContent : '');
     }
 
     async function copyNextOTP(secretId) {
@@ -484,9 +552,10 @@ export function getCoreCode() {
 
     function showNextOTPCopyFeedback(secretId) {
       const secret = secrets.find(s => s.id === secretId);
-      const serviceName = secret ? secret.name : '验证码';
+      const serviceName = secret ? (getSecretProviderName(secret) || secret.name) : '验证码';
+      const nextOtpElement = document.getElementById('next-otp-' + secretId);
 
-      showCenterToast('arrowRight', serviceName + ' 下一个验证码已复制到剪贴板');
+      showCenterToast('arrowRight', '已复制 ' + serviceName + ' 下一期验证码', nextOtpElement ? nextOtpElement.textContent : '');
     }
 
     // 复制OTP链接（otpauth://格式）
@@ -552,14 +621,34 @@ export function getCoreCode() {
       const dropdown = document.getElementById('menu-' + secretId);
       if (!dropdown) return;
 
-      const card = dropdown.closest('.secret-card');
+      const entry = dropdown.closest('[data-secret-id]');
+      const trigger = dropdown.closest('.card-menu');
       const shouldOpen = !dropdown.classList.contains('show');
       closeAllCardMenus();
 
-      if (shouldOpen) {
+      if (shouldOpen && trigger) {
         dropdown.classList.add('show');
-        if (card) {
-          card.classList.add('menu-open');
+        dropdown.style.visibility = 'hidden';
+
+        const triggerRect = trigger.getBoundingClientRect();
+        const dropdownWidth = dropdown.offsetWidth;
+        const dropdownHeight = dropdown.offsetHeight;
+        const viewportPadding = 8;
+        const gap = 6;
+        const maxLeft = Math.max(viewportPadding, window.innerWidth - dropdownWidth - viewportPadding);
+        const left = Math.min(Math.max(viewportPadding, triggerRect.right - dropdownWidth), maxLeft);
+        let top = triggerRect.bottom + gap;
+
+        if (top + dropdownHeight > window.innerHeight - viewportPadding) {
+          top = Math.max(viewportPadding, triggerRect.top - dropdownHeight - gap);
+        }
+
+        dropdown.style.left = left + 'px';
+        dropdown.style.top = top + 'px';
+        dropdown.style.visibility = '';
+
+        if (entry) {
+          entry.classList.add('menu-open');
         }
       }
     }
@@ -567,9 +656,12 @@ export function getCoreCode() {
     function closeAllCardMenus() {
       document.querySelectorAll('.card-menu-dropdown').forEach(menu => {
         menu.classList.remove('show');
+        menu.style.left = '';
+        menu.style.top = '';
+        menu.style.visibility = '';
       });
-      document.querySelectorAll('.secret-card.menu-open').forEach(card => {
-        card.classList.remove('menu-open');
+      document.querySelectorAll('[data-secret-id].menu-open').forEach(entry => {
+        entry.classList.remove('menu-open');
       });
     }
 
@@ -578,6 +670,9 @@ export function getCoreCode() {
         closeAllCardMenus();
       }
     });
+
+    window.addEventListener('resize', closeAllCardMenus);
+    window.addEventListener('scroll', closeAllCardMenus, true);
 
 
     // 编辑密钥

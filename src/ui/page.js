@@ -1328,12 +1328,11 @@ function getHTMLBody() {
     </div>
   </div>
 
-      <!-- 中间提示组件 -->
-  <div id="centerToast" class="center-toast">
-    <div class="toast-content">
-      <div class="toast-icon">${icon('check', 'ui-icon')}</div>
-      <div class="toast-message">验证码已复制到剪贴板</div>
-    </div>
+      <!-- 操作提示组件 -->
+  <div id="centerToast" class="center-toast stripe-toast" role="status" aria-live="polite" aria-atomic="true">
+    <div class="toast-icon">${icon('check', 'ui-icon')}</div>
+    <span class="toast-message">验证码已复制</span>
+    <span class="toast-code-badge" hidden></span>
   </div>
 
   <!-- 导出格式选择模态框 -->

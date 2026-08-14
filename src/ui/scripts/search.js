@@ -506,19 +506,19 @@ export function getSearchCode() {
     }
 
     function getRenderedSecretIds() {
-      return Array.from(document.querySelectorAll('#secretsList .secret-card[data-secret-id]'))
-        .map(card => card.dataset.secretId)
+      return Array.from(document.querySelectorAll('#secretsList [data-secret-id]'))
+        .map(entry => entry.dataset.secretId)
         .filter(Boolean);
     }
 
     function getSecretCardElement(secretId) {
-      return Array.from(document.querySelectorAll('#secretsList .secret-card[data-secret-id]'))
-        .find(card => card.dataset.secretId === secretId) || null;
+      return Array.from(document.querySelectorAll('#secretsList [data-secret-id]'))
+        .find(entry => entry.dataset.secretId === secretId) || null;
     }
 
     function clearSecretDragClasses() {
-      document.querySelectorAll('.secret-card.dragging, .secret-card.drag-over').forEach(card => {
-        card.classList.remove('dragging', 'drag-over');
+      document.querySelectorAll('#secretsList [data-secret-id].dragging, #secretsList [data-secret-id].drag-over').forEach(entry => {
+        entry.classList.remove('dragging', 'drag-over');
       });
     }
 
@@ -526,6 +526,10 @@ export function getSearchCode() {
       const rect = card.getBoundingClientRect();
       const xOffset = clientX - (rect.left + rect.width / 2);
       const yOffset = clientY - (rect.top + rect.height / 2);
+
+      if (card.classList.contains('secret-table-row')) {
+        return yOffset > 0;
+      }
 
       if (Math.abs(xOffset) > Math.abs(yOffset)) {
         return xOffset > 0;
@@ -676,9 +680,9 @@ export function getSearchCode() {
         event.dataTransfer.dropEffect = 'move';
       }
 
-      document.querySelectorAll('.secret-card.drag-over').forEach(card => {
-        if (card.dataset.secretId !== targetId) {
-          card.classList.remove('drag-over');
+      document.querySelectorAll('#secretsList [data-secret-id].drag-over').forEach(entry => {
+        if (entry.dataset.secretId !== targetId) {
+          entry.classList.remove('drag-over');
         }
       });
 
@@ -752,9 +756,9 @@ export function getSearchCode() {
 
       event.preventDefault();
       const element = document.elementFromPoint(event.clientX, event.clientY);
-      const card = element ? element.closest('.secret-card[data-secret-id]') : null;
+      const card = element ? element.closest('#secretsList [data-secret-id]') : null;
 
-      document.querySelectorAll('.secret-card.drag-over').forEach(item => item.classList.remove('drag-over'));
+      document.querySelectorAll('#secretsList [data-secret-id].drag-over').forEach(item => item.classList.remove('drag-over'));
 
       if (!card || card.dataset.secretId === pointerDragState.sourceId) {
         pointerDragState.targetId = null;

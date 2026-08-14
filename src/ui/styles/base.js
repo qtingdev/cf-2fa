@@ -137,25 +137,44 @@ export function getBaseStyles() {
     }
 
     .theme-icon-container {
+      position: relative;
+      width: 18px;
+      height: 18px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
     /* 主题图标状态切换 */
+    .theme-icon-container .theme-sun,
+    .theme-icon-container .theme-moon {
+      position: absolute;
+      inset: 0;
+      width: 18px;
+      height: 18px;
+      transition:
+        opacity 0.16s ease,
+        transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+        color 0.16s ease;
+    }
+
     [data-theme="dark"] .theme-sun {
-      display: none;
+      opacity: 0;
+      transform: rotate(45deg) scale(0.72);
     }
     [data-theme="dark"] .theme-moon {
-      display: inline-block;
+      opacity: 1;
+      transform: rotate(0) scale(1);
       color: #facc15;
     }
     :root:not([data-theme="dark"]) .theme-sun {
-      display: inline-block;
+      opacity: 1;
+      transform: rotate(0) scale(1);
       color: #f59e0b;
     }
     :root:not([data-theme="dark"]) .theme-moon {
-      display: none;
+      opacity: 0;
+      transform: rotate(-35deg) scale(0.72);
     }
 
     .btn-stripe-primary, .stripe-btn-primary {
@@ -302,7 +321,7 @@ export function getBaseStyles() {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       margin-bottom: 20px;
       position: relative;
@@ -311,14 +330,14 @@ export function getBaseStyles() {
     .classic-search-wrap, .search-input-wrapper {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       background: var(--stripe-canvas);
       border: 1px solid var(--stripe-border);
       border-radius: 8px;
-      padding: 4px 12px;
+      padding: 6px 12px;
       flex: 1;
-      min-width: 240px;
-      max-width: 380px;
+      min-width: 260px;
+      max-width: 420px;
       transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
       position: relative;
     }
@@ -334,13 +353,22 @@ export function getBaseStyles() {
       border: none;
       color: var(--stripe-muted);
       cursor: pointer;
-      display: flex;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 4px;
-      border-radius: 6px;
+      padding: 0;
+      border-radius: 5px;
       transition: all 0.15s ease;
       flex-shrink: 0;
+    }
+
+    .search-scan-button .ui-icon,
+    .search-icon .ui-icon,
+    .search-clear .ui-icon {
+      width: 16px;
+      height: 16px;
     }
 
     .search-scan-button:hover {
@@ -363,7 +391,8 @@ export function getBaseStyles() {
       font-size: 13px;
       background: transparent;
       color: var(--stripe-navy);
-      height: 32px;
+      height: 20px;
+      line-height: 20px;
       font-family: var(--font-sans);
       min-width: 0;
     }
@@ -371,14 +400,15 @@ export function getBaseStyles() {
     .search-clear {
       background: none;
       border: none;
-      padding: 4px 8px;
+      width: 20px;
+      height: 20px;
+      padding: 0;
       color: var(--stripe-muted);
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: color 0.15s ease;
-      font-size: 14px;
       flex-shrink: 0;
     }
 

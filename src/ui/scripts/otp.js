@@ -429,18 +429,23 @@ export function getOTPCode() {
 
       const progressElement = document.getElementById('progress-' + secretId);
       if (progressElement) {
-        // 支持 SVG stroke-dashoffset 圆环
-        progressElement.style.strokeDashoffset = offset;
-
-        let strokeColor;
+        let progressColor;
         if (remaining <= 5) {
-          strokeColor = 'var(--stripe-red, #df1b41)';
+          progressColor = 'var(--stripe-red, #df1b41)';
         } else if (remaining <= 10) {
-          strokeColor = 'var(--stripe-amber, #f59e0b)';
+          progressColor = 'var(--stripe-amber, #f59e0b)';
         } else {
-          strokeColor = 'var(--stripe-blurple, #635bff)';
+          progressColor = 'var(--stripe-blurple, #635bff)';
         }
-        progressElement.style.stroke = strokeColor;
+
+        if (progressElement.tagName.toLowerCase() === 'circle') {
+          progressElement.style.strokeDashoffset = offset;
+          progressElement.style.stroke = progressColor;
+        } else {
+          progressElement.style.width = (ratio * 100) + '%';
+          progressElement.style.backgroundColor = progressColor;
+        }
+
         progressElement.title = '验证码剩余 ' + remaining + ' 秒';
       }
 

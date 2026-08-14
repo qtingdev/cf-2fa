@@ -12,59 +12,51 @@ export function getUICode() {
 
     // Toast 提示相关变量
     let toastTimeout = null;
-    let isToastVisible = false;
-    let lastToastTime = 0;
+    let themeTransitionTimer = null;
 
-    // 显示中间提示
-    function showCenterToast(icon, message) {
-      const now = Date.now();
-
-      // 防止过于频繁的toast调用（至少间隔100ms）
-      if (now - lastToastTime < 100) {
-        return;
+    function formatToastCode(code) {
+      const normalizedCode = String(code || '').replace(/\\s+/g, '');
+      if (/^\\d{6}$/.test(normalizedCode)) {
+        return normalizedCode.slice(0, 3) + ' ' + normalizedCode.slice(3);
       }
-      lastToastTime = now;
+
+      if (/^\\d{8}$/.test(normalizedCode)) {
+        return normalizedCode.slice(0, 4) + ' ' + normalizedCode.slice(4);
+      }
+
+      return normalizedCode;
+    }
+
+    // 显示底部操作提示，复制验证码时附带验证码徽标
+    function showCenterToast(icon, message, code = '') {
       const toast = document.getElementById('centerToast');
+      if (!toast) return;
+
       const iconElement = toast.querySelector('.toast-icon');
       const messageElement = toast.querySelector('.toast-message');
+      const codeElement = toast.querySelector('.toast-code-badge');
+      const formattedCode = formatToastCode(code);
 
-      // 如果当前有toast正在显示，先清除之前的定时器
       if (toastTimeout) {
         clearTimeout(toastTimeout);
-        toastTimeout = null;
       }
 
-      // 更新内容
       iconElement.innerHTML = renderIcon(getToastIconName(icon), 'ui-icon toast-svg');
       messageElement.textContent = message;
+      toast.dataset.tone = ['x', 'alertTriangle'].includes(icon)
+        ? 'danger'
+        : (icon === 'check' ? 'success' : 'info');
 
-      // 如果toast已经显示，先隐藏再显示，确保动画效果
-      if (isToastVisible) {
-        toast.classList.remove('show');
-        // 等待隐藏动画完成后再显示新的toast
-        setTimeout(() => {
-          toast.classList.add('show');
-          isToastVisible = true;
-
-          // 设置新的定时器
-          toastTimeout = setTimeout(() => {
-            toast.classList.remove('show');
-            isToastVisible = false;
-            toastTimeout = null;
-          }, 2000);
-        }, 125); // 等待隐藏动画的一半时间 (0.25s / 2)
-      } else {
-        // 直接显示toast
-        toast.classList.add('show');
-        isToastVisible = true;
-
-        // 设置定时器
-        toastTimeout = setTimeout(() => {
-          toast.classList.remove('show');
-          isToastVisible = false;
-          toastTimeout = null;
-        }, 2000);
+      if (codeElement) {
+        codeElement.textContent = formattedCode;
+        codeElement.hidden = !formattedCode;
       }
+
+      toast.classList.add('show');
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+        toastTimeout = null;
+      }, 2500);
     }
 
     // 顶部导航栏一键切换深浅色模式
@@ -81,30 +73,46 @@ export function getUICode() {
       toggleThemeQuick();
     }
 
-    // 应用主题（支持过渡动画）
+    function resolveTheme(theme) {
+      if (theme === 'dark' || theme === 'light') {
+        return theme;
+      }
+
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    // 应用主题（优先使用浏览器 View Transition，旧浏览器使用受控颜色过渡）
     function applyTheme(theme, withTransition = false) {
       const root = document.documentElement;
+      const nextTheme = resolveTheme(theme);
+      const commitTheme = () => root.setAttribute('data-theme', nextTheme);
 
-      // 添加过渡类（如果需要动画）
-      if (withTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        root.classList.add('theme-transition');
-
-        // 过渡完成后移除类
-        setTimeout(() => {
-          root.classList.remove('theme-transition');
-        }, 300);
+      if (root.getAttribute('data-theme') === nextTheme) {
+        return;
       }
 
-      // 设置主题属性
-      if (theme === 'dark') {
-        root.setAttribute('data-theme', 'dark');
-      } else if (theme === 'light') {
-        root.setAttribute('data-theme', 'light');
-      } else {
-        // auto 模式：跟随系统
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!withTransition || reduceMotion) {
+        commitTheme();
+        return;
       }
+
+      if (typeof document.startViewTransition === 'function') {
+        const transition = document.startViewTransition(commitTheme);
+        transition.finished.catch(() => {});
+        return;
+      }
+
+      if (themeTransitionTimer) {
+        clearTimeout(themeTransitionTimer);
+      }
+
+      root.classList.add('theme-transition');
+      commitTheme();
+      themeTransitionTimer = setTimeout(() => {
+        root.classList.remove('theme-transition');
+        themeTransitionTimer = null;
+      }, 220);
     }
 
     function initTheme() {
@@ -112,7 +120,7 @@ export function getUICode() {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
         const currentTheme = localStorage.getItem('theme') || 'auto';
         if (currentTheme === 'auto') {
-          applyTheme('auto');
+          applyTheme('auto', true);
         }
       });
     }

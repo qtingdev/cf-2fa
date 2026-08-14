@@ -84,275 +84,252 @@ export function getComponentStyles() {
       background: var(--stripe-blurple-light);
     }
 
-    /* ========== 列表视图模式 (Stripe 数据行样式) ========== */
+    /* ========== 列表视图模式 (方案一原型表格) ========== */
     .secrets-list.view-list {
-      display: flex;
-      flex-direction: column;
-      grid-template-columns: none;
-      justify-content: flex-start;
-      align-items: stretch;
-      gap: 10px;
+      display: block;
       width: 100%;
+      min-width: 0;
     }
 
-    .secrets-list.view-list .secret-card {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 8px 10px;
-      border-radius: var(--radius-surface);
+    .classic-table-wrap {
+      width: 100%;
+      max-width: 100%;
       background: var(--stripe-surface);
       border: 1px solid var(--stripe-border);
-      box-shadow: var(--shadow-stripe-xs);
-    }
-
-    .secrets-list.view-list .secret-card:hover {
-      background: var(--stripe-surface);
-      border-color: rgba(99, 91, 255, 0.45);
+      border-radius: 12px;
       box-shadow: var(--shadow-stripe-sm);
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scrollbar-gutter: stable;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .secrets-list.view-list .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 14px;
-      margin-bottom: 0;
-      flex: 1 1 auto;
-      min-width: 0;
+    .classic-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
     }
 
-    .secrets-list.view-list .secret-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .secrets-list.view-list .service-icon {
-      width: 36px;
-      height: 36px;
-      flex: 0 0 36px;
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    .secrets-list.view-list .service-icon img {
-      width: 24px;
-      height: 24px;
-    }
-
-    .secrets-list.view-list .secret-text {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .secrets-list.view-list .secret-details {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .secrets-list.view-list .service-name-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .secrets-list.view-list .secret-text h3 {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--stripe-navy);
+    .classic-table th {
+      padding: 12px 18px;
+      background: var(--stripe-canvas);
+      border-bottom: 1px solid var(--stripe-border);
+      color: var(--stripe-muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       white-space: nowrap;
     }
 
-    .secrets-list.view-list .secret-text .secret-account {
+    .classic-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--stripe-border-light);
+      color: var(--stripe-navy);
+      vertical-align: middle;
+      transition: background-color 0.15s ease;
+    }
+
+    .classic-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .classic-table tbody tr:hover td {
+      background: var(--stripe-canvas);
+    }
+
+    .secret-table-row.dragging td {
+      opacity: 0.55;
+    }
+
+    .secret-table-row.drag-over td {
+      background: var(--stripe-blurple-light);
+      box-shadow: inset 0 -2px 0 var(--stripe-blurple);
+    }
+
+    .secret-row-draggable {
+      cursor: grab;
+    }
+
+    .table-service-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 220px;
+    }
+
+    .service-icon.table-service-avatar {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .table-service-text {
+      min-width: 0;
+    }
+
+    .table-service-name {
+      color: var(--stripe-navy);
       font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .table-service-account {
+      margin-top: 2px;
       color: var(--stripe-muted);
-      margin: 0;
-      text-align: left;
-      overflow: visible;
-      text-overflow: clip;
-      white-space: normal;
+      font-size: 12px;
+      line-height: 1.35;
       overflow-wrap: anywhere;
       word-break: break-word;
-      flex: 1;
-      min-width: 0;
     }
 
-    .secrets-list.view-list .secret-text .secret-account::before {
-      content: '·';
-      margin-right: 6px;
-      color: var(--stripe-border);
-    }
-
-    .secrets-list.view-list .secret-created-at {
-      flex: 0 0 auto;
-      margin: 0;
-      font-size: 11px;
-      color: var(--stripe-muted);
-    }
-
-    .secrets-list.view-list .secret-created-at::before {
-      content: '·';
-      margin-right: 6px;
-      color: var(--stripe-border);
-    }
-
-    .secrets-list.view-list .card-main-content {
-      display: flex;
-      flex-direction: row;
+    .table-type-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      flex: 1;
-      min-width: 0;
-      gap: 16px;
-    }
-
-    .secrets-list.view-list .card-header-actions {
-      order: 3;
-      margin-left: 0;
-    }
-
-    .secrets-list.view-list .otp-display-box {
-      margin: 0;
-      padding: 0 8px;
-      background: transparent;
-      border: none;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .secrets-list.view-list .otp-code-wrapper {
-      flex: 0 0 auto;
-    }
-
-    .secrets-list.view-list .otp-code-label {
-      display: none;
-    }
-
-    .secrets-list.view-list .otp-current-val,
-    .secrets-list.view-list .otp-code {
-      font-size: 20px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      margin: 0;
-      color: var(--stripe-navy);
+      letter-spacing: 0.04em;
     }
 
-    .secrets-list.view-list .timer-ring-wrapper {
-      width: 24px;
-      height: 24px;
-      flex: 0 0 24px;
+    .table-type-badge.totp-badge {
+      background: var(--stripe-blurple-light);
+      border: 1px solid rgba(99, 91, 255, 0.2);
+      color: var(--stripe-blurple);
     }
 
-    .secrets-list.view-list .timer-ring-svg {
-      width: 24px;
-      height: 24px;
+    .classic-table .table-code-cell,
+    .classic-table .table-next-code {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    .secrets-list.view-list .timer-ring-wrapper .timer-num-text,
-    .secrets-list.view-list .timer-ring-wrapper .live-sec-num {
-      font-size: 8px;
+    .classic-table .table-code-cell {
+      color: var(--stripe-blurple);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
-    .secrets-list.view-list .card-footer-row {
-      border-top: none;
-      padding-top: 0;
-      margin-left: 0;
-      gap: 10px;
-      flex-shrink: 0;
+    .classic-table .table-code-cell:hover,
+    .classic-table .table-next-code:hover {
+      color: var(--stripe-blurple-hover);
     }
 
-    .secrets-list.view-list .quick-copy-hint {
-      display: none;
-    }
-
-    .secrets-list.view-list .otp-countdown-ring {
-      width: 20px;
-      height: 20px;
-      flex: 0 0 20px;
-    }
-
-    .secrets-list.view-list .otp-next-container {
-      flex-direction: row;
+    .table-expiry {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      min-width: auto;
-      height: 28px;
+      gap: 8px;
+      white-space: nowrap;
     }
 
-    .secrets-list.view-list .otp-next-code {
+    .table-progress-track {
+      width: 50px;
+      height: 6px;
+      overflow: hidden;
+      background: var(--stripe-border);
+      border-radius: 3px;
+    }
+
+    .table-progress-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--stripe-blurple);
+      border-radius: inherit;
+      transition: width 1s linear, background-color 0.3s ease;
+    }
+
+    .table-seconds,
+    .table-created-at,
+    .table-on-demand,
+    .table-empty-value {
+      color: var(--stripe-muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .table-seconds,
+    .table-empty-value {
+      font-family: var(--font-mono);
+    }
+
+    .classic-table .table-next-code {
+      color: var(--stripe-slate);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .table-actions-heading,
+    .table-actions-cell {
+      text-align: right;
+    }
+
+    .table-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .table-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-height: 28px;
+      padding: 5px 10px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 6px;
+      background: var(--stripe-surface);
+      color: var(--stripe-navy);
+      font-family: var(--font-sans);
       font-size: 12px;
       font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .table-copy-btn:hover {
+      background: var(--stripe-blurple);
+      border-color: var(--stripe-blurple);
+      color: #ffffff;
+    }
+
+    .table-copy-btn .ui-icon {
+      width: 13px;
+      height: 13px;
+    }
+
+    .table-actions .card-menu,
+    .drag-handle.table-drag-handle {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
     }
 
     @media (max-width: 640px) {
-      .secrets-list.view-list .secret-card {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 12px 14px;
-        gap: 10px;
+      .classic-table {
+        min-width: 900px;
       }
 
-      .secrets-list.view-list .card-main-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-        width: 100%;
-      }
-
-      .secrets-list.view-list .card-header {
-        width: 100%;
-        flex: 1 0 100%;
-        justify-content: space-between;
-      }
-
-      .secrets-list.view-list .secret-text {
-        flex-direction: column;
-        gap: 2px;
-        align-items: flex-start;
-      }
-
-      .secrets-list.view-list .secret-details {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1px;
-      }
-
-      .secrets-list.view-list .secret-text .secret-account::before,
-      .secrets-list.view-list .secret-created-at::before {
-        display: none;
-      }
-
-      .secrets-list.view-list .card-header-actions {
-        order: 1;
-      }
-
-      .secrets-list.view-list .otp-display-box {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .secrets-list.view-list .card-footer-row {
-        width: 100%;
-        justify-content: flex-end;
-      }
-
-      .secrets-list.view-list .otp-next-container {
-        margin-left: auto;
+      .classic-table th,
+      .classic-table td {
+        padding-right: 14px;
+        padding-left: 14px;
       }
     }
 
@@ -390,18 +367,29 @@ export function getComponentStyles() {
       justify-content: center;
       font-weight: 800;
       font-size: 15px;
-      color: #ffffff;
-      background: var(--stripe-blurple);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      color: var(--stripe-blurple);
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      overflow: hidden;
       user-select: none;
     }
 
     .service-icon img {
-      width: 28px;
-      height: 28px;
+      display: block;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      border-radius: 6px;
+      border-radius: inherit;
+    }
+
+    .service-avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--stripe-blurple);
     }
 
     .secret-text {
@@ -542,15 +530,16 @@ export function getComponentStyles() {
 
     .card-menu-dropdown {
       display: none;
-      position: absolute;
-      top: -6px;
-      right: -6px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: auto;
       background: var(--stripe-surface);
       border: 1px solid var(--stripe-border);
       border-radius: 12px;
       min-width: 140px;
       box-shadow: var(--shadow-stripe-lg);
-      z-index: 10000;
+      z-index: 100000;
       overflow: hidden;
       padding: 4px;
     }
@@ -717,6 +706,13 @@ export function getComponentStyles() {
       font-family: var(--font-mono);
       color: var(--stripe-slate);
       font-weight: 600;
+    }
+
+    .otp-next-label {
+      color: var(--stripe-muted);
+      font-family: var(--font-sans);
+      font-weight: 500;
+      white-space: nowrap;
     }
 
     .next-otp-pill:hover strong, .otp-next-container:hover .otp-next-code {
