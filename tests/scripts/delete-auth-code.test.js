@@ -12,6 +12,7 @@ describe('delete reauthentication runtime code', () => {
 		const deleteCode = code.slice(deleteStart, deleteEnd);
 
 		expect(deleteCode).toContain('requirePassword: true');
+		expect(deleteCode).toContain("message: '确定要删除 ' + secret.name + ' 的两步验证账号吗？\\n该操作无法撤销。'");
 		expect(deleteCode).toContain('navigator.onLine === false');
 		expect(deleteCode).toContain('body: JSON.stringify({ password: password })');
 		expect(deleteCode).not.toContain('result.queued');

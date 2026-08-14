@@ -715,7 +715,7 @@ export function getCoreCode() {
 
       const deleteResult = await showConfirmDialog({
         title: '删除密钥',
-        message: '确定要删除 "' + secret.name + '" 吗？\\n该操作无法撤销。',
+        message: '确定要删除 ' + secret.name + ' 的两步验证账号吗？\\n该操作无法撤销。',
         confirmText: '删除',
         cancelText: '取消',
         danger: true,
