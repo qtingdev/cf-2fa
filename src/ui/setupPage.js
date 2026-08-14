@@ -1,5 +1,5 @@
 /**
- * 首次设置页面模块
+ * 首次设置页面模块 - Stripe 经典设计系统规范
  * 用于用户首次访问时设置管理员密码
  */
 
@@ -38,81 +38,85 @@ export async function createSetupPage() {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
       background: var(--bg-primary);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
+      line-height: 1.5;
     }
 
     .setup-container {
-      background: var(--bg-primary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      max-width: 480px;
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-stripe-floating);
+      max-width: 460px;
       width: 100%;
-      padding: 40px;
+      padding: 36px;
     }
 
     .setup-header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
 
     .setup-icon {
-      width: 56px;
-      height: 56px;
-      margin-bottom: 15px;
+      width: 52px;
+      height: 52px;
+      margin-bottom: 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
-      background: var(--accent);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
+      color: #ffffff;
+      background: var(--stripe-blurple);
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(99, 91, 255, 0.35);
     }
 
     .setup-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--stripe-navy);
+      margin-bottom: 8px;
+      letter-spacing: 0;
     }
 
     .setup-description {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+      font-size: 14px;
+      color: var(--stripe-muted);
+      line-height: 1.5;
     }
 
     .security-notice {
-      background: var(--warning-light);
-      border: 1px solid var(--warning-dark);
-      border-radius: var(--radius-md);
-      padding: 15px;
-      margin-bottom: 25px;
-      font-size: 13px;
-      color: var(--warning-dark);
+      background: var(--stripe-amber-light);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 24px;
+      font-size: 12.5px;
+      color: #92400e;
       line-height: 1.5;
     }
 
     .security-notice strong {
       display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .notice-title {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .ui-icon {
@@ -122,20 +126,20 @@ export async function createSetupPage() {
     }
 
     .setup-icon .ui-icon {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-label {
       display: block;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 8px;
+      color: var(--stripe-navy);
+      margin-bottom: 6px;
     }
 
     .password-input-wrapper {
@@ -144,57 +148,67 @@ export async function createSetupPage() {
 
     .form-input {
       width: 100%;
-      padding: 14px 40px 14px 16px;
-      border: 1px solid var(--input-border);
-      border-radius: var(--radius-md);
-      font-size: 15px;
-      transition: all 0.3s ease;
+      height: 42px;
+      padding: 0 40px 0 14px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.15s ease;
       font-family: inherit;
       background: var(--input-bg);
-      color: var(--text-primary);
+      color: var(--stripe-navy);
+      box-sizing: border-box;
     }
 
     .form-input:focus {
       outline: none;
-      border-color: var(--input-border-focus);
+      border-color: var(--stripe-blurple);
       background: var(--input-bg-focus);
-      box-shadow: 0 0 0 3px var(--ring);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .toggle-password {
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
       cursor: pointer;
       padding: 5px;
-      color: var(--text-tertiary);
-      transition: color 0.2s;
+      color: var(--stripe-muted);
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .toggle-password:hover {
-      color: var(--primary-600);
+      color: var(--stripe-blurple);
     }
 
     .password-requirements {
-      background: var(--bg-secondary);
-      border-radius: var(--radius-sm);
-      padding: 12px 15px;
+      background: var(--stripe-canvas);
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
+      padding: 12px 14px;
       margin-top: 10px;
       font-size: 12px;
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
+    }
+
+    .password-requirements strong {
+      color: var(--stripe-navy);
     }
 
     .password-requirements ul {
       list-style: none;
-      margin: 5px 0 0 0;
+      margin: 6px 0 0 0;
     }
 
     .password-requirements li {
-      padding: 3px 0;
-      padding-left: 20px;
+      padding: 2px 0;
+      padding-left: 16px;
       position: relative;
     }
 
@@ -202,18 +216,17 @@ export async function createSetupPage() {
       content: '';
       position: absolute;
       left: 0;
-      top: 9px;
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: #4caf50;
-      color: #4caf50;
+      top: 8px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--stripe-green);
     }
 
     .password-strength {
-      margin-top: 10px;
+      margin-top: 8px;
       height: 4px;
-      background: var(--border-primary);
+      background: var(--stripe-border);
       border-radius: 2px;
       overflow: hidden;
     }
@@ -221,62 +234,71 @@ export async function createSetupPage() {
     .password-strength-bar {
       height: 100%;
       width: 0%;
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
       border-radius: 2px;
     }
 
-    .strength-weak { background: #f44336; width: 33%; }
-    .strength-medium { background: #ff9800; width: 66%; }
-    .strength-strong { background: #4caf50; width: 100%; }
+    .strength-weak { background: var(--stripe-red); width: 33%; }
+    .strength-medium { background: var(--stripe-amber); width: 66%; }
+    .strength-strong { background: var(--stripe-green); width: 100%; }
 
     .submit-button {
       width: 100%;
-      padding: 16px;
-      background: var(--primary);
+      height: 42px;
+      background: var(--stripe-blurple);
       color: white;
       border: none;
-      border-radius: var(--radius-md);
-      font-size: 16px;
+      border-radius: 8px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease;
-      margin-top: 10px;
+      transition: all 0.15s ease;
+      margin-top: 12px;
+      box-shadow: 0 2px 6px rgba(99, 91, 255, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .submit-button:hover {
-      background: var(--primary-hover);
+      background: var(--stripe-blurple-hover);
+      box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
     }
 
     .submit-button:active {
-      opacity: 0.9;
+      background: var(--stripe-blurple-active);
     }
 
     .submit-button:disabled {
-      background: var(--text-tertiary);
+      background: var(--stripe-muted);
       cursor: not-allowed;
-      opacity: 0.8;
+      opacity: 0.6;
+      box-shadow: none;
     }
 
     .error-message {
-      background: var(--danger-light);
-      border: 1px solid var(--danger-dark);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      margin-bottom: 20px;
-      color: var(--danger-darker);
-      font-size: 14px;
+      background: var(--stripe-red-light);
+      border: 1px solid rgba(223, 27, 65, 0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      color: var(--stripe-red);
+      font-size: 13px;
       display: none;
+      text-align: center;
     }
 
     .success-message {
-      background: var(--success-light);
-      border: 1px solid var(--success-dark);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      margin-bottom: 20px;
-      color: var(--success-dark);
-      font-size: 14px;
+      background: var(--stripe-green-light);
+      border: 1px solid rgba(0, 217, 126, 0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      color: #059669;
+      font-size: 13px;
       display: none;
+      text-align: center;
     }
 
     .loading-spinner {
@@ -287,30 +309,20 @@ export async function createSetupPage() {
       border-top-color: white;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin-right: 8px;
-      vertical-align: middle;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    /* 响应式设计 */
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
       .setup-container {
-        padding: 30px 25px;
-      }
-
-      .setup-icon {
-        font-size: 48px;
+        padding: 24px 20px;
+        border-radius: 14px;
       }
 
       .setup-title {
-        font-size: 24px;
-      }
-
-      .setup-description {
-        font-size: 14px;
+        font-size: 20px;
       }
     }
   </style>
@@ -328,7 +340,7 @@ export async function createSetupPage() {
 
     <div class="security-notice">
       <strong class="notice-title">${icon('shield', 'ui-icon')}安全提示</strong>
-      请设置一个强密码，并妥善保管。这是您登录管理密钥的唯一凭证。
+      请设置一个强密码并妥善保管，这是您登录管理密钥的凭证。
     </div>
 
     <div id="errorMessage" class="error-message"></div>
@@ -441,7 +453,7 @@ export async function createSetupPage() {
       errorDiv.textContent = message;
       errorDiv.style.display = 'block';
 
-      // 3秒后自动隐藏
+      // 5秒后自动隐藏
       setTimeout(() => {
         errorDiv.style.display = 'none';
       }, 5000);

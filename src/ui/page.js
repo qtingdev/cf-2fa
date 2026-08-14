@@ -107,53 +107,140 @@ function getHTMLStart() {
 function getHTMLBody() {
 	return `
 <body>
+  <!-- Stripe Top Navigation Header -->
+  <header class="stripe-nav">
+    <div class="stripe-nav-inner">
+      <div class="stripe-brand" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <div class="stripe-logo-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          2FA Authenticator
+        </div>
+        <div class="stripe-brand-text">
+          <span class="stripe-brand-title">两步验证</span>
+          <span class="stripe-brand-badge">VAULT</span>
+        </div>
+      </div>
+
+      <div class="stripe-nav-actions">
+        <button type="button" class="stripe-nav-btn theme-toggle-btn" onclick="toggleThemeQuick()" aria-label="切换深浅主题" title="切换深浅主题">
+          <span class="theme-icon-container">${icon('sun', 'ui-icon theme-sun')}${icon('moon', 'ui-icon theme-moon')}</span>
+        </button>
+        <button type="button" class="stripe-nav-btn" onclick="showToolsModal()" aria-label="实用工具" title="实用工具">
+          ${icon('wrench', 'ui-icon')}
+        </button>
+        <button type="button" class="stripe-nav-btn" onclick="showSettingsModal()" aria-label="系统设置" title="系统设置">
+          ${icon('settings', 'ui-icon')}
+        </button>
+        <button type="button" class="btn-stripe-primary stripe-btn-primary" onclick="showAddModal()" title="添加新密钥">
+          ${icon('plus', 'ui-icon')}
+          <span>添加密钥</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
   <div class="container">
     <div class="content">
-      <div class="search-section">
-        <div class="search-container">
-          <!-- 防止浏览器自动填充的隐藏输入框 -->
-          <input type="text" name="prevent_autofill_username" style="display:none" tabindex="-1" autocomplete="new-password">
-          <input type="password" name="prevent_autofill_password" style="display:none" tabindex="-1" autocomplete="new-password">
+      <!-- Stripe Dashboard KPI Top Summary Bar (方案一) -->
+      <div class="classic-kpi-bar stripe-metrics-bar">
+        <div class="classic-kpi-card stripe-metric-card">
+          <div>
+            <div class="kpi-title metric-label">受保护账号 (Protected Accounts)</div>
+            <div class="kpi-value-row metric-value-row">
+              <span class="kpi-number metric-num" id="metricSecretCount">0</span>
+              <span class="kpi-pill success">100% 同步就绪</span>
+            </div>
+          </div>
+          <div class="kpi-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+        </div>
 
-          <!-- 搜索框和操作按钮的水平布局 -->
-          <div class="search-action-row">
+        <div class="classic-kpi-card stripe-metric-card metric-card-sync" onclick="showSettingsModal()" style="cursor: pointer;">
+          <div>
+            <div class="kpi-title metric-label">云端存储端点 (Sync Endpoints)</div>
+            <div class="kpi-value-row metric-value-row">
+              <span class="kpi-number metric-num">Cloudflare</span>
+              <span class="kpi-pill blurple metric-badge-ready">KV 已同步</span>
+            </div>
+          </div>
+          <div class="kpi-icon-wrap" style="color:#00d4ff; background:rgba(0,212,255,0.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9Z"/></svg>
+          </div>
+        </div>
+
+        <div class="classic-kpi-card stripe-metric-card">
+          <div>
+            <div class="kpi-title metric-label">TOTP 动态刷新周期 (Cadence)</div>
+            <div class="kpi-value-row metric-value-row">
+              <span class="kpi-number metric-num countdown-num" id="metricTimeCountdown">30s</span>
+              <span class="kpi-pill success">实时心跳同步</span>
+            </div>
+          </div>
+          <div class="kpi-icon-wrap" style="color:#00d97e; background:rgba(0,217,126,0.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="classic-toolbar search-section">
+        <!-- 防止浏览器自动填充的隐藏输入框 -->
+        <input type="text" name="prevent_autofill_username" style="display:none" tabindex="-1" autocomplete="new-password">
+        <input type="password" name="prevent_autofill_password" style="display:none" tabindex="-1" autocomplete="new-password">
+
+        <!-- 搜索输入框 (左侧) -->
+        <div class="classic-search-wrap search-input-wrapper">
           <button type="button" class="search-scan-button" onclick="showQRScanner()" aria-label="扫描二维码" title="扫描二维码">
             ${icon('qrCode', 'ui-icon')}
           </button>
-          <div class="search-input-wrapper">
-            <span class="search-icon">${icon('search', 'ui-icon')}</span>
-            <input type="search"
-                   id="searchInput"
-                   name="search-query"
-                   class="search-input"
-                   placeholder="搜索服务或账户名称"
-                   oninput="filterSecrets(this.value)"
-                   autocomplete="off"
-                   autocorrect="off"
-                   autocapitalize="off"
-                   spellcheck="false"
-                   role="searchbox"
-                   aria-label="搜索2FA密钥"
-                   data-form-type="other"
-                   data-lpignore="true"
-                   data-1p-ignore="true"
-                   data-bwignore="true"
-                   readonly
-                   onfocus="this.removeAttribute('readonly')">
-            <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display: none;" aria-label="清除搜索">${icon('x', 'ui-icon')}</button>
-      </div>
+          <span class="search-icon">${icon('search', 'ui-icon')}</span>
+          <input type="search"
+                 id="searchInput"
+                 name="search-query"
+                 class="classic-search-input search-input"
+                 placeholder="搜索服务名称、账号、邮箱..."
+                 oninput="filterSecrets(this.value)"
+                 autocomplete="off"
+                 autocorrect="off"
+                 autocapitalize="off"
+                 spellcheck="false"
+                 role="searchbox"
+                 aria-label="搜索2FA密钥"
+                 data-form-type="other"
+                 data-lpignore="true"
+                 data-1p-ignore="true"
+                 data-bwignore="true"
+                 readonly
+                 onfocus="this.removeAttribute('readonly')">
+          <button type="button" class="search-clear" id="searchClear" onclick="clearSearch()" style="display: none;" aria-label="清除搜索" title="清除搜索">${icon('x', 'ui-icon')}</button>
+        </div>
+
+        <div class="secret-count" id="secretCount" aria-live="polite" aria-atomic="true">
+          ${icon('key', 'ui-icon')}
+          <span>共 <strong id="secretCountValue">0</strong> 个账号</span>
+        </div>
+
+        <!-- 过滤芯片列表 (中间) -->
+        <div class="classic-filter-chips provider-filters" id="providerFilters" role="group" aria-label="按提供商筛选" style="display: none;"></div>
+
+        <!-- 控制区：视图切换与排序 (右侧) -->
+        <div class="toolbar-controls-right">
           <div class="view-controls" role="group" aria-label="视图切换">
-            <button type="button" class="view-toggle-button active" data-view="grid" onclick="selectViewMode('grid')" aria-label="网格视图" aria-pressed="true" title="网格视图">
+            <button type="button" class="view-btn view-toggle-button active" data-view="grid" onclick="selectViewMode('grid')" aria-label="网格视图" aria-pressed="true" title="网格视图">
               ${icon('layoutGrid', 'ui-icon')}
             </button>
-            <button type="button" class="view-toggle-button" data-view="list" onclick="selectViewMode('list')" aria-label="列表视图" aria-pressed="false" title="列表视图">
+            <button type="button" class="view-btn view-toggle-button" data-view="list" onclick="selectViewMode('list')" aria-label="列表视图" aria-pressed="false" title="列表视图">
               ${icon('list', 'ui-icon')}
             </button>
           </div>
+
           <div class="sort-controls">
             <details class="sort-dropdown" id="sortDropdown">
               <summary class="sort-trigger" aria-label="排序" aria-haspopup="menu" title="排序">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M3 6h18"></path>
                   <path d="M6 12h12"></path>
                   <path d="M10 18h4"></path>
@@ -179,17 +266,10 @@ function getHTMLBody() {
               <option value="account-asc">账户名称 A-Z</option>
               <option value="account-desc">账户名称 Z-A</option>
             </select>
-      </div>
-          </div>
-          <div class="search-meta-row">
-            <div class="secret-count" id="secretCount" aria-live="polite" aria-atomic="true">
-              ${icon('key', 'ui-icon')}
-              <span>共 <strong id="secretCountValue">0</strong> 个账号</span>
-            </div>
-            <div class="provider-filters" id="providerFilters" role="group" aria-label="按提供商筛选" style="display: none;"></div>
-            <div class="search-stats" id="searchStats" style="display: none;"></div>
           </div>
         </div>
+
+        <div class="search-stats" id="searchStats" style="display: none; width: 100%;"></div>
       </div>
 
       <!-- 背景遮罩 -->

@@ -422,24 +422,37 @@ export function getOTPCode() {
 
       const timeStep = secret.period || 30;
       const remaining = otpCalculator.getRemainingTime(timeStep);
+      const ratio = timeStep > 0 ? Math.max(0, Math.min(1, remaining / timeStep)) : 0;
+      const radius = 16;
+      const circumference = 2 * Math.PI * radius; // 100.5309649...
+      const offset = circumference * (1 - ratio);
 
       const progressElement = document.getElementById('progress-' + secretId);
       if (progressElement) {
-        const ratio = timeStep > 0 ? Math.max(0, Math.min(1, remaining / timeStep)) : 0;
-        const progress = ratio * 100;
+        // 支持 SVG stroke-dashoffset 圆环
+        progressElement.style.strokeDashoffset = offset;
 
-        let color;
-        if (ratio > 0.6) {
-          color = '#4CAF50';
-        } else if (ratio > 0.3) {
-          color = '#FF9800';
+        let strokeColor;
+        if (remaining <= 5) {
+          strokeColor = 'var(--stripe-red, #df1b41)';
+        } else if (remaining <= 10) {
+          strokeColor = 'var(--stripe-amber, #f59e0b)';
         } else {
-          color = '#F44336';
+          strokeColor = 'var(--stripe-blurple, #635bff)';
         }
-
-        progressElement.style.setProperty('--progress-deg', (progress * 3.6) + 'deg');
-        progressElement.style.setProperty('--progress-color', color);
+        progressElement.style.stroke = strokeColor;
         progressElement.title = '验证码剩余 ' + remaining + ' 秒';
+      }
+
+      const secElement = document.getElementById('sec-' + secretId);
+      if (secElement) {
+        secElement.textContent = remaining + 's';
+      }
+
+      // 同步更新顶部 KPI 状态条的 Cadence 倒计时
+      const metricCountdown = document.getElementById('metricTimeCountdown');
+      if (metricCountdown) {
+        metricCountdown.textContent = remaining + 's';
       }
 
       // 🔄 防御性检查：如果验证码显示为默认值，立即刷新

@@ -18,5 +18,6 @@ describe('card menu stacking runtime code', () => {
 
 		expect(styles).toContain('.secret-card.menu-open');
 		expect(styles).toContain('z-index: 10001;');
+		expect(styles).toContain('overflow: visible;');
 	});
 });

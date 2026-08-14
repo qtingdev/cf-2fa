@@ -1,37 +1,37 @@
 /**
- * 组件样式模块
+ * 组件样式模块 - Stripe Dashboard 经典卡片与列表设计规范
  */
 export function getComponentStyles() {
 	return `    /* ========== 密钥列表容器 (网格视图) ========== */
     .secrets-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 12px;
+      gap: 16px;
       justify-content: center;
       margin: 0 auto;
       width: 100%;
     }
 
-    /* ========== 网格模式卡片 ========== */
+    /* ========== 网格模式卡片 (Stripe Dashboard 经典卡片) ========== */
     .secret-card {
-      background: var(--card-bg);
+      background: var(--stripe-surface);
       border-radius: var(--radius-surface);
       padding: 14px 16px;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--stripe-border);
       transition:
-        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        border-color 0.2s ease,
-        background-color 0.2s ease;
+        box-shadow 0.15s ease,
+        border-color 0.15s ease,
+        background-color 0.15s ease;
       position: relative;
       width: 100%;
-      box-shadow: var(--card-shadow);
+      box-shadow: var(--shadow-stripe-sm);
       margin-bottom: 0;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       box-sizing: border-box;
+      overflow: hidden;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -39,18 +39,31 @@ export function getComponentStyles() {
       -webkit-touch-callout: none;
     }
 
-    .secret-card:hover {
-      border-color: var(--card-hover-border);
-      box-shadow: var(--card-hover-shadow);
-      transform: translateY(-2px);
+    /* 顶部细微渐变强调条 (悬浮触发) */
+    .secret-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: linear-gradient(90deg, #635bff, #00d4ff);
+      opacity: 0;
+      transition: opacity 0.15s ease;
     }
 
-    .secret-card:active {
-      transform: scale(0.99);
+    .secret-card:hover {
+      border-color: rgba(99, 91, 255, 0.45);
+      box-shadow: var(--shadow-stripe-md);
+    }
+
+    .secret-card:hover::before {
+      opacity: 1;
     }
 
     .secret-card.menu-open {
       z-index: 10001;
+      overflow: visible;
     }
 
     .secret-card-draggable {
@@ -63,23 +76,22 @@ export function getComponentStyles() {
 
     .secret-card.dragging {
       opacity: 0.55;
-      border-color: var(--border-focus);
-      transform: scale(0.98);
+      border-color: var(--stripe-blurple);
     }
 
     .secret-card.drag-over {
-      border-color: var(--primary);
-      background: var(--bg-hover);
+      border-color: var(--stripe-blurple);
+      background: var(--stripe-blurple-light);
     }
 
-    /* ========== 列表视图模式 ========== */
+    /* ========== 列表视图模式 (Stripe 数据行样式) ========== */
     .secrets-list.view-list {
       display: flex;
       flex-direction: column;
       grid-template-columns: none;
       justify-content: flex-start;
       align-items: stretch;
-      gap: 8px;
+      gap: 10px;
       width: 100%;
     }
 
@@ -88,26 +100,25 @@ export function getComponentStyles() {
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 16px;
       padding: 8px 10px;
-      border-radius: var(--radius-md);
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--card-shadow);
+      border-radius: var(--radius-surface);
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .secrets-list.view-list .secret-card:hover {
-      transform: none;
-      background: var(--bg-hover);
-      border-color: var(--card-hover-border);
-      box-shadow: var(--shadow-sm);
+      background: var(--stripe-surface);
+      border-color: rgba(99, 91, 255, 0.45);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .secrets-list.view-list .card-header {
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 0;
       flex: 1 1 auto;
       min-width: 0;
@@ -116,22 +127,22 @@ export function getComponentStyles() {
     .secrets-list.view-list .secret-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex: 1;
       min-width: 0;
     }
 
     .secrets-list.view-list .service-icon {
-      width: 32px;
-      height: 32px;
-      flex: 0 0 32px;
-      border-radius: var(--radius-sm);
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      border-radius: 10px;
       font-size: 14px;
     }
 
     .secrets-list.view-list .service-icon img {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
     }
 
     .secrets-list.view-list .secret-text {
@@ -153,19 +164,20 @@ export function getComponentStyles() {
     .secrets-list.view-list .service-name-row {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
     .secrets-list.view-list .secret-text h3 {
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
+      color: var(--stripe-navy);
       white-space: nowrap;
     }
 
     .secrets-list.view-list .secret-text .secret-account {
       font-size: 13px;
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
       margin: 0;
       text-align: left;
       overflow: visible;
@@ -180,18 +192,30 @@ export function getComponentStyles() {
     .secrets-list.view-list .secret-text .secret-account::before {
       content: '·';
       margin-right: 6px;
-      color: var(--text-tertiary);
+      color: var(--stripe-border);
     }
 
     .secrets-list.view-list .secret-created-at {
       flex: 0 0 auto;
       margin: 0;
+      font-size: 11px;
+      color: var(--stripe-muted);
     }
 
     .secrets-list.view-list .secret-created-at::before {
       content: '·';
       margin-right: 6px;
-      color: var(--text-tertiary);
+      color: var(--stripe-border);
+    }
+
+    .secrets-list.view-list .card-main-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      min-width: 0;
+      gap: 16px;
     }
 
     .secrets-list.view-list .card-header-actions {
@@ -199,30 +223,60 @@ export function getComponentStyles() {
       margin-left: 0;
     }
 
-    .secrets-list.view-list .otp-preview {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: none;
-      order: 2;
-      flex-shrink: 0;
-    }
-
-    .secrets-list.view-list .otp-main {
+    .secrets-list.view-list .otp-display-box {
+      margin: 0;
+      padding: 0 8px;
+      background: transparent;
+      border: none;
       display: flex;
       align-items: center;
       gap: 12px;
-      justify-content: flex-end;
+      flex-shrink: 0;
     }
 
-    .secrets-list.view-list .otp-code-container {
+    .secrets-list.view-list .otp-code-wrapper {
       flex: 0 0 auto;
     }
 
+    .secrets-list.view-list .otp-code-label {
+      display: none;
+    }
+
+    .secrets-list.view-list .otp-current-val,
     .secrets-list.view-list .otp-code {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
       margin: 0;
+      color: var(--stripe-navy);
+    }
+
+    .secrets-list.view-list .timer-ring-wrapper {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+    }
+
+    .secrets-list.view-list .timer-ring-svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .secrets-list.view-list .timer-ring-wrapper .timer-num-text,
+    .secrets-list.view-list .timer-ring-wrapper .live-sec-num {
+      font-size: 8px;
+    }
+
+    .secrets-list.view-list .card-footer-row {
+      border-top: none;
+      padding-top: 0;
+      margin-left: 0;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .secrets-list.view-list .quick-copy-hint {
+      display: none;
     }
 
     .secrets-list.view-list .otp-countdown-ring {
@@ -234,10 +288,10 @@ export function getComponentStyles() {
     .secrets-list.view-list .otp-next-container {
       flex-direction: row;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       padding: 3px 8px;
       min-width: auto;
-      height: 26px;
+      height: 28px;
     }
 
     .secrets-list.view-list .otp-next-code {
@@ -247,9 +301,17 @@ export function getComponentStyles() {
 
     @media (max-width: 640px) {
       .secrets-list.view-list .secret-card {
-        flex-wrap: wrap;
-        padding: 10px 12px;
-        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 14px;
+        gap: 10px;
+      }
+
+      .secrets-list.view-list .card-main-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
       }
 
       .secrets-list.view-list .card-header {
@@ -270,10 +332,7 @@ export function getComponentStyles() {
         gap: 1px;
       }
 
-      .secrets-list.view-list .secret-text .secret-account::before {
-        display: none;
-      }
-
+      .secrets-list.view-list .secret-text .secret-account::before,
       .secrets-list.view-list .secret-created-at::before {
         display: none;
       }
@@ -282,25 +341,28 @@ export function getComponentStyles() {
         order: 1;
       }
 
-      .secrets-list.view-list .otp-preview {
-        width: 100%;
-        flex: 1 0 100%;
-        order: 2;
-      }
-
-      .secrets-list.view-list .otp-main {
+      .secrets-list.view-list .otp-display-box {
         width: 100%;
         justify-content: space-between;
       }
+
+      .secrets-list.view-list .card-footer-row {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .secrets-list.view-list .otp-next-container {
+        margin-left: auto;
+      }
     }
 
-    /* ========== 卡片内部布局与组件细节 ========== */
+    /* ========== 卡片内部细节组件 ========== */
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .card-header-actions {
@@ -308,38 +370,38 @@ export function getComponentStyles() {
       align-items: center;
       gap: 4px;
       flex-shrink: 0;
-      margin-left: 6px;
     }
 
     .secret-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex: 1;
       min-width: 0;
     }
 
     .service-icon {
-      width: 38px;
-      height: 38px;
-      flex: 0 0 38px;
-      border-radius: var(--radius-md);
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 16px;
-      color: var(--text-primary);
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+      font-weight: 800;
+      font-size: 15px;
+      color: #ffffff;
+      background: var(--stripe-blurple);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      user-select: none;
     }
 
     .service-icon img {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       object-fit: contain;
-      border-radius: var(--radius-sm);
+      border-radius: 6px;
     }
 
     .secret-text {
@@ -356,24 +418,25 @@ export function getComponentStyles() {
     }
 
     .secret-text h3 {
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       margin: 0;
       line-height: 1.3;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      letter-spacing: 0;
     }
 
     .secret-badge.hotp-badge {
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
       padding: 1px 5px;
       border-radius: 4px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      color: var(--text-tertiary);
+      background: var(--stripe-amber-light);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #b45309;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       flex-shrink: 0;
@@ -382,8 +445,8 @@ export function getComponentStyles() {
     .secret-text .secret-account {
       display: block;
       max-width: 100%;
-      margin-top: 2px;
-      color: var(--text-secondary);
+      margin-top: 3px;
+      color: var(--stripe-muted);
       font-size: 12.5px;
       font-weight: 500;
       line-height: 1.35;
@@ -406,7 +469,7 @@ export function getComponentStyles() {
 
     .secret-created-at {
       margin: 0;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       font-size: 11px;
       font-weight: 400;
       line-height: 1.35;
@@ -416,52 +479,49 @@ export function getComponentStyles() {
 
     .secret-counter {
       font-size: 11px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       margin: 2px 0 0 0;
-      font-family: monospace;
+      font-family: var(--font-mono);
     }
 
     .card-menu {
       position: relative;
       cursor: pointer;
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: var(--radius-sm);
-      color: var(--text-tertiary);
-      transition: background-color 0.15s ease, color 0.15s ease;
+      border-radius: 7px;
+      color: var(--stripe-muted);
+      transition: background-color 0.12s ease, color 0.12s ease;
     }
 
     .card-menu:hover {
       background: var(--bg-hover);
-      color: var(--text-primary);
+      color: var(--stripe-navy);
     }
 
     .drag-handle {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      background: var(--bg-secondary);
-      color: var(--text-tertiary);
+      border: 1px solid var(--stripe-border);
+      border-radius: 7px;
+      background: var(--stripe-surface);
+      color: var(--stripe-muted);
       cursor: grab;
       touch-action: none;
-      transition:
-        border-color 0.2s ease,
-        background-color 0.2s ease,
-        color 0.2s ease;
+      transition: all 0.15s ease;
     }
 
     .drag-handle:hover,
     .drag-handle:focus-visible {
-      border-color: var(--border-focus);
-      background: var(--bg-hover);
-      color: var(--text-primary);
+      border-color: var(--stripe-blurple);
+      background: var(--stripe-blurple-light);
+      color: var(--stripe-blurple);
       outline: none;
     }
 
@@ -469,28 +529,12 @@ export function getComponentStyles() {
       cursor: grabbing;
     }
 
-    /* P1.6 手机端保证 ≥44px 触控面积（iOS HIG） */
-    @media (max-width: 768px) {
-      .card-menu {
-        min-width: 44px;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .drag-handle {
-        min-width: 44px;
-        min-height: 44px;
-      }
-    }
-
     .menu-dots {
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
       line-height: 1;
       user-select: none;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -499,16 +543,16 @@ export function getComponentStyles() {
     .card-menu-dropdown {
       display: none;
       position: absolute;
-      top: -8px;
-      right: -8px;
-      background: var(--menu-bg);
-      border: 1px solid var(--menu-border);
-      border-radius: var(--radius-surface);
-      min-width: 136px;
-      width: fit-content;
-      box-shadow: var(--menu-shadow);
+      top: -6px;
+      right: -6px;
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 12px;
+      min-width: 140px;
+      box-shadow: var(--shadow-stripe-lg);
       z-index: 10000;
       overflow: hidden;
+      padding: 4px;
     }
 
     .card-menu-dropdown.show {
@@ -516,165 +560,213 @@ export function getComponentStyles() {
     }
 
     .menu-item {
-      padding: 10px 14px;
-      color: var(--text-primary);
+      padding: 8px 12px;
+      color: var(--stripe-slate);
       cursor: pointer;
-      transition: background 0.2s ease;
-      font-size: 14px;
+      transition: background 0.12s ease, color 0.12s ease;
+      font-size: 13px;
+      font-weight: 500;
       white-space: nowrap;
       display: flex;
       align-items: center;
       gap: 8px;
+      border-radius: 6px;
     }
 
     .menu-item:hover {
-      background: var(--menu-item-hover);
+      background: var(--bg-hover);
+      color: var(--stripe-navy);
     }
 
     .menu-item-danger {
-      color: var(--danger) !important;
+      color: var(--stripe-red) !important;
     }
 
     .menu-item-danger:hover {
-      background: var(--danger-light) !important;
+      background: var(--stripe-red-light) !important;
     }
 
-    .otp-preview {
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-primary);
-      background: none;
-    }
-
-    .otp-main {
+    /* ========== 方案一：Stripe 经典 OTP 验证码展示区与圆形倒计时 ========== */
+    .otp-display-box {
+      background: var(--stripe-canvas);
+      border: 1px solid var(--stripe-border);
+      border-radius: 10px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
       justify-content: space-between;
+      margin-top: 12px;
+      margin-bottom: 12px;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
 
-    .otp-code-container {
+    .secret-card:hover .otp-display-box {
+      background: var(--stripe-surface);
+      border-color: rgba(99, 91, 255, 0.25);
+    }
+
+    .otp-code-wrapper {
+      display: flex;
+      flex-direction: column;
       flex: 1;
       min-width: 0;
     }
 
-    .otp-code-row {
+    .otp-code-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--stripe-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+
+    .otp-current-val, .otp-code {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--stripe-navy);
+      transition: color 0.15s ease;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+      border: none;
+      background: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    .secret-card:hover .otp-current-val,
+    .secret-card:hover .otp-code {
+      color: var(--stripe-blurple);
+    }
+
+    .timer-ring-wrapper {
+      position: relative;
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      min-width: 0;
-      width: 100%;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    .otp-code {
-      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--otp-text);
-      letter-spacing: 1.5px;
-      cursor: pointer;
-      transition: color 0.15s ease;
-      user-select: none;
-      margin: 0;
-      line-height: 1.1;
-      padding: 0;
-      background: none;
-      border: none;
-      display: block;
-      flex: 0 1 auto;
-      min-width: 0;
-      width: auto;
-      text-align: left;
-      font-variant-numeric: tabular-nums;
+    .timer-ring-svg {
+      transform: rotate(-90deg);
+      width: 34px;
+      height: 34px;
     }
 
-    .otp-code:hover {
-      color: var(--primary);
+    .ring-bg {
+      fill: none;
+      stroke: var(--stripe-border);
+      stroke-width: 3;
     }
 
-    .otp-countdown-ring {
-      --progress-deg: 360deg;
-      --progress-color: var(--success);
-      position: relative;
-      width: 22px;
-      height: 22px;
-      flex: 0 0 22px;
-      border-radius: 50%;
-      background: conic-gradient(var(--progress-color) var(--progress-deg), var(--border-primary) 0deg);
-      transition: background 1s linear;
+    .ring-progress, .otp-countdown-ring {
+      fill: none;
+      stroke: var(--stripe-blurple);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 100.53;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+    }
+
+    .timer-ring-wrapper .timer-num-text,
+    .timer-ring-wrapper .live-sec-num {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--stripe-slate);
       pointer-events: none;
     }
 
-    .otp-countdown-ring-inner {
-      position: absolute;
-      inset: 3px;
-      border-radius: 50%;
-      background: var(--card-bg);
-    }
-
-    .otp-next-container {
-      text-align: right;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      padding: 4px 8px;
-      border-radius: var(--radius-sm);
-      background: var(--otp-next-bg);
-      border: 1px solid var(--border-primary);
-      flex-shrink: 0;
-      min-width: 60px;
+    /* ========== 方案一：卡片底栏与下期验证码 ========== */
+    .card-footer-row {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--stripe-muted);
+      padding-top: 10px;
+      border-top: 1px solid var(--stripe-border-light);
     }
 
-    .otp-next-container:hover {
-      background: var(--otp-next-bg-hover);
-      border-color: var(--border-focus);
-      transform: translateY(-1px);
+    .next-otp-pill, .otp-next-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      background: var(--stripe-border-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
     }
 
-    .otp-next-code {
-      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-      font-size: 13px;
+    .next-otp-pill:hover, .otp-next-container:hover {
+      background: var(--stripe-blurple-light);
+      border-color: rgba(99, 91, 255, 0.3);
+    }
+
+    .next-otp-pill strong, .otp-next-code {
+      font-family: var(--font-mono);
+      color: var(--stripe-slate);
       font-weight: 600;
-      color: var(--otp-next-text);
-      letter-spacing: 0.5px;
-      line-height: 1;
-      display: block;
-      white-space: nowrap;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
+    }
+
+    .next-otp-pill:hover strong, .otp-next-container:hover .otp-next-code {
+      color: var(--stripe-blurple);
+    }
+
+    .quick-copy-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      color: var(--stripe-blurple);
+      opacity: 0.8;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+      font-size: 12px;
+    }
+
+    .secret-card:hover .quick-copy-hint {
+      opacity: 1;
     }
 
     .progress-mini {
       width: 60px;
       height: 4px;
-      background: var(--border-primary);
+      background: var(--stripe-border);
       border-radius: 2px;
       overflow: hidden;
     }
 
     .progress-mini-fill {
       height: 100%;
-      background: #8B5CF6;
+      background: var(--stripe-blurple);
       border-radius: 2px;
-      transition: width 1s ease-in-out;
+      transition: width 1s linear;
     }
 
     /* ========== 同步目标卡片 ========== */
     .dest-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-surface);
-      padding: 14px;
+      background: var(--stripe-canvas);
+      border: 1px solid var(--stripe-border);
+      border-radius: 12px;
+      padding: 14px 16px;
       margin-bottom: 10px;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
     .dest-card:hover {
-      border-color: var(--border-focus);
-      box-shadow: var(--shadow-sm);
+      border-color: rgba(99, 91, 255, 0.35);
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .dest-card-disabled {
@@ -695,16 +787,16 @@ export function getComponentStyles() {
 
     .dest-card-name {
       display: block;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 14px;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       margin-bottom: 2px;
     }
 
     .dest-card-url {
       display: block;
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -725,20 +817,20 @@ export function getComponentStyles() {
     }
 
     .dest-status-dot-green {
-      background: #22c55e;
+      background: var(--stripe-green);
     }
 
     .dest-status-dot-red {
-      background: #ef4444;
+      background: var(--stripe-red);
     }
 
     .dest-status-dot-gray {
-      background: #9ca3af;
+      background: var(--stripe-muted);
     }
 
     .dest-status-text {
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -750,34 +842,38 @@ export function getComponentStyles() {
     }
 
     .btn-sm {
-      padding: 4px 12px;
+      padding: 5px 12px;
       font-size: 12px;
-      border-radius: var(--radius-sm);
+      font-weight: 500;
+      border-radius: 6px;
       cursor: pointer;
-      border: 1px solid var(--border-primary);
-      background: var(--bg-primary);
-      color: var(--text-secondary);
-      transition: all 0.2s ease;
+      border: 1px solid var(--stripe-border);
+      background: var(--stripe-surface);
+      color: var(--stripe-slate);
+      transition: all 0.15s ease;
     }
 
     .btn-sm:hover {
-      background: var(--bg-hover, var(--bg-secondary));
+      border-color: var(--stripe-blurple);
+      color: var(--stripe-blurple);
+      background: var(--stripe-blurple-light);
     }
 
     .btn-danger-outline {
-      border-color: var(--danger, #ef4444);
-      color: var(--danger, #ef4444);
+      border-color: rgba(223, 27, 65, 0.3);
+      color: var(--stripe-red);
     }
 
     .btn-danger-outline:hover {
-      background: var(--danger-light, rgba(239, 68, 68, 0.1));
+      background: var(--stripe-red-light);
+      border-color: var(--stripe-red);
     }
 
-    /* 开关切换 */
+    /* 开关切换 (Stripe Toggle Switch) */
     .dest-toggle {
       position: relative;
       display: inline-block;
-      width: 40px;
+      width: 38px;
       height: 22px;
       flex-shrink: 0;
       margin-left: 10px;
@@ -796,9 +892,9 @@ export function getComponentStyles() {
       left: 0;
       right: 0;
       bottom: 0;
-      background: #ccc;
+      background: var(--stripe-border);
       border-radius: 22px;
-      transition: 0.3s;
+      transition: 0.2s ease;
     }
 
     .dest-toggle-slider:before {
@@ -810,173 +906,39 @@ export function getComponentStyles() {
       bottom: 3px;
       background: white;
       border-radius: 50%;
-      transition: 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: 0.2s ease;
     }
 
     .dest-toggle input:checked + .dest-toggle-slider {
-      background: var(--primary);
+      background: var(--stripe-blurple);
     }
 
     .dest-toggle input:checked + .dest-toggle-slider:before {
-      transform: translateX(18px);
+      transform: translateX(16px);
     }
 
-    /* ========== 页面底部 Footer ========== */
-    .page-footer {
-      margin-top: 40px;
-      padding: 15px 20px 20px 20px;
-      background: var(--footer-bg);
-      border-top: 1px solid var(--footer-border);
-      text-align: center;
-    }
-
-    .footer-content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .footer-link {
-      color: var(--footer-link);
-      text-decoration: none;
-      font-size: 12px;
-      transition: color 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .footer-link:hover {
-      color: var(--footer-link-hover);
-    }
-
-    .github-icon {
-      vertical-align: middle;
-      width: 14px;
-      height: 14px;
-    }
-
-    .footer-separator {
-      color: var(--border-secondary);
-      font-size: 12px;
-      user-select: none;
-    }
-
-    .footer-info {
-      color: var(--text-tertiary);
-      font-size: 11px;
-      margin-top: 6px;
-    }
-
-    .footer-info a {
-      color: var(--footer-link);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .footer-info a:hover {
-      color: var(--footer-link-hover);
-    }
-
-    /* ========== 离线状态横幅 ========== */
+    /* 离线横幅 */
     .offline-banner {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      background: var(--warning-dark);
-      color: white;
-      padding: 12px 20px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-      z-index: 999; /* 低于操作菜单（1001），不会遮挡"+"按钮 */
+      background: var(--stripe-amber);
+      color: #ffffff;
+      padding: 10px 20px;
+      box-shadow: var(--shadow-stripe-md);
+      z-index: 999;
       transform: translateY(-100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .offline-banner.show {
       transform: translateY(0);
     }
-
-    .offline-banner-icon {
-      width: 20px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .offline-banner-text {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    /* 离线模式下的页面样式调整 */
-    body.offline-mode {
-      padding-top: 44px; /* 为离线横幅留出空间 */
-    }
-
-    body.offline-mode .secret-card {
-      opacity: 0.95;
-    }
-
-    /* ========== 离线横幅响应式 ========== */
-
-    /* 移动设备 */
-    @media (max-width: 480px) {
-      .offline-banner {
-        padding: 10px 16px;
-      }
-
-      .offline-banner-icon {
-        font-size: 18px;
-      }
-
-      .offline-banner-text {
-        font-size: 13px;
-      }
-
-      body.offline-mode {
-        padding-top: 40px;
-      }
-    }
-
-    /* 超小屏幕 */
-    @media (max-width: 360px) {
-      .offline-banner {
-        padding: 8px 12px;
-      }
-
-      .offline-banner-icon {
-        font-size: 16px;
-      }
-
-      .offline-banner-text {
-        font-size: 12px;
-      }
-
-      body.offline-mode {
-        padding-top: 36px;
-      }
-    }
-
-    /* 超宽屏幕 */
-    @media (min-width: 1440px) {
-      .action-menu-float {
-        right: calc(32px + env(safe-area-inset-right, 0px));
-      }
-    }
-
 `;
 }

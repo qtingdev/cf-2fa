@@ -187,11 +187,19 @@ export function getCoreCode() {
     }
 
     function updateSecretCount() {
-      const countElement = document.getElementById('secretCountValue');
-      if (!countElement) return;
-
       const totalCount = Array.isArray(secrets) ? secrets.length : 0;
-      countElement.textContent = String(totalCount);
+      const countContainer = document.getElementById('secretCount');
+      const countElement = document.getElementById('secretCountValue');
+      if (countContainer) {
+        countContainer.style.display = 'inline-flex';
+      }
+      if (countElement) {
+        countElement.textContent = String(totalCount);
+      }
+      const metricCountElement = document.getElementById('metricSecretCount');
+      if (metricCountElement) {
+        metricCountElement.textContent = String(totalCount);
+      }
     }
 
     // 获取服务商颜色
@@ -236,7 +244,7 @@ export function getCoreCode() {
         pad(date.getMinutes());
     }
 
-    // 创建密钥卡片
+    // 创建密钥卡片 (方案一：Stripe Dashboard 经典控制台风格)
     function createSecretCard(secret) {
       const providerName = getSecretProviderName(secret) || '未命名';
       const logoUrl = getServiceLogo(providerName);
@@ -248,61 +256,78 @@ export function getCoreCode() {
       const createdAtText = formatSecretCreatedAt(secret.createdAt);
       const createdAtTitle = createdAtText ? '创建时间：' + createdAtText : '';
       const isManualSort = typeof isManualSortMode === 'function' && isManualSortMode();
-      const cardClass = 'secret-card' + (isManualSort ? ' secret-card-draggable' : '');
+      const cardClass = 'secret-card classic-card' + (isManualSort ? ' secret-card-draggable' : '');
       const cardTitle = isManualSort ? '拖拽调整排序，点击卡片复制验证码' : '点击卡片复制验证码';
+      const serviceColor = getServiceColor(providerName);
       const dragHandle = isManualSort
         ? '<button type="button" class="drag-handle" draggable="true" onpointerdown="handleSecretPointerDown(event, &quot;' + secret.id + '&quot;)" ondragstart="handleSecretDragStart(event, &quot;' + secret.id + '&quot;)" onclick="event.stopPropagation()" aria-label="拖拽排序" title="拖拽排序">' + renderIcon('gripVertical', 'ui-icon') + '</button>'
         : '';
 
       return '<div class="' + cardClass + '" data-secret-id="' + secret.id + '" ondragover="handleSecretDragOver(event, &quot;' + secret.id + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secret.id + '&quot;)" ondragend="handleSecretDragEnd(event)" onclick="copyOTPFromCard(event, &quot;' + secret.id + '&quot;)" title="' + cardTitle + '">' +
-        '<div class="card-header">' +
-          '<div class="secret-info">' +
-            '<div class="service-icon">' +
-              (logoUrl ?
-                '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
-                '<span style="display: none;">' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>' :
-                '<span>' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>'
-              ) +
-            '</div>' +
-            '<div class="secret-text">' +
-              '<div class="service-name-row">' +
-                '<h3>' + safeServiceName + '</h3>' +
-                (isHOTP ? '<span class="secret-badge hotp-badge">HOTP</span>' : '') +
+        '<div class="card-main-content">' +
+          '<div class="card-header card-top-row">' +
+            '<div class="secret-info service-brand-box">' +
+              '<div class="service-icon service-avatar" style="background: ' + serviceColor + ';">' +
+                (logoUrl ?
+                  '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;block&quot;;">' +
+                  '<span style="display: none;">' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>' :
+                  '<span>' + escapeHTML(providerName.charAt(0).toUpperCase()) + '</span>'
+                ) +
               '</div>' +
-              '<div class="secret-details">' +
-                (displayAccount ? '<p class="secret-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
-                (createdAtText ? '<p class="secret-created-at" title="' + escapeAttribute(createdAtTitle) + '">创建时间 ' + escapeHTML(createdAtText) + '</p>' : '') +
-                (isHOTP ? '<p class="secret-counter">计数器: ' + (secret.counter || 0) + '</p>' : '') +
+              '<div class="secret-text service-text">' +
+                '<div class="service-name-row">' +
+                  '<h3>' + safeServiceName + '</h3>' +
+                  (isHOTP ? '<span class="secret-badge hotp-badge">HOTP</span>' : '') +
+                '</div>' +
+                '<div class="secret-details">' +
+                  (displayAccount ? '<p class="secret-account service-account" title="' + accountTitle + '">' + safeAccount + '</p>' : '') +
+                  (createdAtText ? '<p class="secret-created-at" title="' + escapeAttribute(createdAtTitle) + '">创建时间 ' + escapeHTML(createdAtText) + '</p>' : '') +
+                  (isHOTP ? '<p class="secret-counter">计数器: ' + (secret.counter || 0) + '</p>' : '') +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="card-header-actions card-actions-row">' +
+              dragHandle +
+              '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)" aria-label="更多操作" title="更多操作">' +
+                '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
+                '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
+                  '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
+                  '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
+                  '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
+                  '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>' +
-          '<div class="card-header-actions">' +
-            dragHandle +
-            '<div class="card-menu" onclick="event.stopPropagation(); toggleCardMenu(&quot;' + secret.id + '&quot;)" aria-label="更多操作" title="更多操作">' +
-              '<div class="menu-dots">' + renderIcon('moreVertical', 'ui-icon') + '</div>' +
-              '<div class="card-menu-dropdown" id="menu-' + secret.id + '">' +
-                '<div class="menu-item" onclick="event.stopPropagation(); showQRCode(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('qrCode', 'ui-icon') + '二维码</div>' +
-                '<div class="menu-item" onclick="event.stopPropagation(); copyOTPAuthURL(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('link', 'ui-icon') + '复制链接</div>' +
-                '<div class="menu-item" onclick="event.stopPropagation(); editSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('settings', 'ui-icon') + '编辑</div>' +
-                '<div class="menu-item menu-item-danger" onclick="event.stopPropagation(); deleteSecret(&quot;' + secret.id + '&quot;); closeAllCardMenus();">' + renderIcon('x', 'ui-icon') + '删除</div>' +
-              '</div>' +
+
+          '<div class="otp-display-box">' +
+            '<div class="otp-code-wrapper">' +
+              '<span class="otp-code-label">当前 2FA 验证码</span>' +
+              '<div class="otp-code otp-current-val" id="otp-' + secret.id + '" onclick="event.stopPropagation(); copyOTP(&quot;' + secret.id + '&quot;)" title="点击复制验证码">------</div>' +
             '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="otp-preview">' +
-          '<div class="otp-main">' +
-            '<div class="otp-code-container">' +
-              '<div class="otp-code-row">' +
-                '<div class="otp-code" id="otp-' + secret.id + '" onclick="event.stopPropagation(); copyOTP(&quot;' + secret.id + '&quot;)" title="点击复制验证码">------</div>' +
-                (isHOTP ? '' : '<div class="otp-countdown-ring" id="progress-' + secret.id + '" title="验证码剩余时间" aria-hidden="true"><span class="otp-countdown-ring-inner"></span></div>') +
-              '</div>' +
-            '</div>' +
-            // HOTP 不显示"下一个"验证码（因为不是时间基准）
-            (isHOTP ? '' :
-              '<div class="otp-next-container" onclick="event.stopPropagation(); copyNextOTP(&quot;' + secret.id + '&quot;)" title="点击复制下一个验证码">' +
-                '<span class="otp-next-code" id="next-otp-' + secret.id + '">------</span>' +
+            (isHOTP ?
+              '<button type="button" class="btn-stripe-primary btn-sm" onclick="event.stopPropagation(); generateNextHOTP(&quot;' + secret.id + '&quot;)" title="生成下一个验证码" style="height:32px; padding:4px 10px;">生成</button>' :
+              '<div class="timer-ring-wrapper">' +
+                '<svg class="timer-ring-svg" viewBox="0 0 36 36">' +
+                  '<circle class="ring-bg" cx="18" cy="18" r="16"></circle>' +
+                  '<circle class="ring-progress live-ring-circle otp-countdown-ring" id="progress-' + secret.id + '" cx="18" cy="18" r="16"></circle>' +
+                '</svg>' +
+                '<span class="timer-num-text live-sec-num" id="sec-' + secret.id + '">30s</span>' +
               '</div>'
             ) +
+          '</div>' +
+        '</div>' +
+
+        '<div class="card-footer-row">' +
+          (isHOTP ?
+            '<div class="otp-next-container"><span>模式:</span><strong>HOTP</strong></div>' :
+            '<div class="otp-next-container" onclick="event.stopPropagation(); copyNextOTP(&quot;' + secret.id + '&quot;)" title="点击复制下期验证码" aria-label="复制下期验证码">' +
+              '<strong class="otp-next-code" id="next-otp-' + secret.id + '">------</strong>' +
+            '</div>'
+          ) +
+          '<div class="quick-copy-hint" onclick="event.stopPropagation(); copyOTP(&quot;' + secret.id + '&quot;)">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+            '点击复制' +
           '</div>' +
         '</div>' +
       '</div>';

@@ -274,7 +274,7 @@ export function getSearchCode() {
         : !currentProviderFilter && !currentDuplicateFilter;
 
       button.type = 'button';
-      button.className = 'provider-filter-option' + (isActive ? ' active' : '');
+      button.className = 'chip-btn provider-filter-option' + (isActive ? ' active' : '');
       button.textContent = label;
       button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       button.setAttribute('aria-label', providerName
@@ -291,7 +291,7 @@ export function getSearchCode() {
       const isActive = currentDuplicateFilter;
 
       button.type = 'button';
-      button.className = 'provider-filter-option duplicate-account-filter' + (isActive ? ' active' : '');
+      button.className = 'chip-btn provider-filter-option duplicate-account-filter' + (isActive ? ' active' : '');
       button.innerHTML = renderIcon('copy', 'ui-icon') + '<span>重复 ' + accountCount + '</span>';
       button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       button.setAttribute('aria-label', '筛选同一提供商下重复的账号，共 ' + accountCount + ' 个');

@@ -67,6 +67,20 @@ export function getUICode() {
       }
     }
 
+    // 顶部导航栏一键切换深浅色模式
+    function toggleThemeQuick() {
+      const root = document.documentElement;
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      const nextTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem('theme', nextTheme);
+      applyTheme(nextTheme, true);
+      showCenterToast(nextTheme === 'dark' ? 'moon' : 'sun', nextTheme === 'dark' ? '已切换至深色模式' : '已切换至浅色模式');
+    }
+
+    function toggleTheme() {
+      toggleThemeQuick();
+    }
+
     // 应用主题（支持过渡动画）
     function applyTheme(theme, withTransition = false) {
       const root = document.documentElement;

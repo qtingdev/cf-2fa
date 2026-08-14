@@ -1,8 +1,9 @@
 /**
- * 弹窗样式模块
+ * 弹窗样式模块 - Stripe Dashboard 经典设计系统
  */
 export function getModalStyles() {
-	return `    .modal {
+	return `    /* ========== 基础模态框容器与遮罩 ========== */
+    .modal {
       display: none;
       position: fixed;
       top: 0;
@@ -14,30 +15,32 @@ export function getModalStyles() {
       padding: 20px;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .modal.show {
       display: flex;
     }
 
+    /* Stripe Dashboard 浮动模态卡片 */
     .modal-content {
       background: var(--modal-bg);
       border: 1px solid var(--modal-border);
-      border-radius: var(--radius-lg);
+      border-radius: 16px;
       padding: 24px;
       max-width: 600px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
-      color: var(--text-primary);
-      box-shadow: var(--shadow-xl);
-      transform: scale(0.95);
+      color: var(--stripe-navy);
+      box-shadow: var(--shadow-stripe-floating);
+      transform: scale(0.98);
       opacity: 0;
-      transition: all 0.3s ease;
-      /* 修复模态框滚动条破坏圆角的问题 */
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+      box-sizing: border-box;
     }
 
     /* FAB 链路弹窗统一宽度 */
@@ -58,24 +61,21 @@ export function getModalStyles() {
 
     /* 模态框滚动条样式 */
     .modal-content::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
 
     .modal-content::-webkit-scrollbar-track {
       background: var(--scrollbar-track);
-      border-radius: var(--radius-lg);
+      border-radius: 8px;
     }
 
     .modal-content::-webkit-scrollbar-thumb {
       background: var(--scrollbar-thumb);
-      border-radius: var(--radius-sm);
-      border: 2px solid transparent;
-      background-clip: content-box;
+      border-radius: 4px;
     }
 
     .modal-content::-webkit-scrollbar-thumb:hover {
       background: var(--scrollbar-thumb-hover);
-      background-clip: content-box;
     }
 
     .modal.show .modal-content {
@@ -84,9 +84,9 @@ export function getModalStyles() {
     }
 
     .modal.drag-over .modal-content {
-      border: 2px dashed var(--primary);
-      background: var(--modal-bg);
-      box-shadow: inset 0 0 30px rgba(var(--primary-rgb, 59, 130, 246), 0.1);
+      border: 2px dashed var(--stripe-blurple);
+      background: var(--stripe-blurple-light);
+      box-shadow: inset 0 0 30px rgba(99, 91, 255, 0.1);
     }
 
     .modal.drag-over::after {
@@ -95,30 +95,32 @@ export function getModalStyles() {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--primary);
-      color: white;
-      padding: 16px 32px;
-      border-radius: var(--radius-md);
-      font-size: 16px;
+      background: var(--stripe-blurple);
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
       font-weight: 600;
       z-index: 999999;
       pointer-events: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow-stripe-lg);
     }
 
+    /* ========== 弹窗头部规范 ========== */
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 25px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--modal-header-border);
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--stripe-border-light);
     }
 
     .modal-header h2 {
-      color: var(--text-primary);
-      font-size: 22px;
-      font-weight: 600;
+      color: var(--stripe-navy);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
       margin: 0;
       display: flex;
       align-items: center;
@@ -126,34 +128,34 @@ export function getModalStyles() {
     }
 
     .modal-title-icon {
-      width: 22px;
-      height: 22px;
-      color: var(--text-secondary);
+      width: 20px;
+      height: 20px;
+      color: var(--stripe-blurple);
     }
 
     .modal-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid var(--modal-header-border);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--stripe-border-light);
     }
 
-    /* 按钮基础与尺寸层级规范 */
+    /* ========== Stripe 按钮设计系统 ========== */
     .btn {
       height: var(--control-height-md, 40px);
       padding: 0 18px;
       border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      font-weight: 500;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       line-height: 1;
       box-sizing: border-box;
       white-space: nowrap;
@@ -163,12 +165,12 @@ export function getModalStyles() {
 
     .btn:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 3px var(--ring);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .btn:disabled,
     .btn[disabled] {
-      opacity: 0.55;
+      opacity: 0.5;
       cursor: not-allowed;
       pointer-events: none;
     }
@@ -177,30 +179,30 @@ export function getModalStyles() {
     .btn-sm {
       height: var(--control-height-sm, 32px);
       padding: 0 12px;
-      font-size: 13px;
-      border-radius: var(--radius-sm);
+      font-size: 12px;
+      border-radius: 6px;
     }
 
     .btn-md {
       height: var(--control-height-md, 40px);
       padding: 0 18px;
-      font-size: 14px;
-      border-radius: var(--radius-md);
+      font-size: 13px;
+      border-radius: 8px;
     }
 
     .btn-lg {
       height: var(--control-height-lg, 44px);
       padding: 0 22px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      border-radius: var(--radius-md);
+      border-radius: 8px;
     }
 
     .btn-compact {
       height: var(--control-height-sm, 32px);
       padding: 0 12px;
-      font-size: 13px;
-      border-radius: var(--radius-sm);
+      font-size: 12px;
+      border-radius: 6px;
     }
 
     /* 按钮布局修饰词 */
@@ -226,90 +228,103 @@ export function getModalStyles() {
       flex: 1;
     }
 
-    /* 按钮变体样式 */
+    /* 按钮变体体系 */
     .btn-primary {
-      background: var(--btn-primary-bg);
-      color: var(--btn-primary-text);
+      background: var(--stripe-blurple);
+      color: #ffffff;
       border-color: transparent;
+      box-shadow: 0 2px 5px rgba(99, 91, 255, 0.25);
     }
 
     .btn-primary:hover {
-      background: var(--btn-primary-hover);
+      background: var(--stripe-blurple-hover);
+      box-shadow: 0 4px 12px rgba(99, 91, 255, 0.35);
+    }
+
+    .btn-primary:active {
+      background: var(--stripe-blurple-active);
     }
 
     .btn-secondary {
-      background: var(--btn-secondary-bg);
-      color: var(--btn-secondary-text);
-      border-color: var(--border-primary);
+      background: var(--stripe-surface);
+      color: var(--stripe-slate);
+      border-color: var(--stripe-border);
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .btn-secondary:hover {
-      background: var(--btn-secondary-hover);
+      background: var(--bg-hover);
+      color: var(--stripe-navy);
+      border-color: var(--stripe-blurple);
     }
 
     .btn-outline {
       background: transparent;
-      border: 1px solid var(--border-primary);
-      color: var(--text-primary);
+      border: 1px solid var(--stripe-border);
+      color: var(--stripe-slate);
     }
 
     .btn-outline:hover {
-      background: var(--bg-hover);
-      border-color: var(--border-focus);
+      background: var(--stripe-blurple-light);
+      border-color: var(--stripe-blurple);
+      color: var(--stripe-blurple);
     }
 
     .btn-outline.active {
-      background: var(--btn-primary-bg);
-      border-color: var(--btn-primary-bg);
-      color: var(--btn-primary-text);
+      background: var(--stripe-blurple);
+      border-color: var(--stripe-blurple);
+      color: #ffffff;
     }
 
     .btn-danger {
-      background: var(--btn-danger-bg, #dc2626);
-      color: var(--btn-danger-text, #ffffff);
+      background: var(--stripe-red);
+      color: #ffffff;
       border-color: transparent;
+      box-shadow: 0 2px 5px rgba(223, 27, 65, 0.2);
     }
 
     .btn-danger:hover {
-      background: var(--btn-danger-hover, #b91c1c);
+      background: #c91838;
+      box-shadow: 0 4px 12px rgba(223, 27, 65, 0.3);
     }
 
     .btn-danger-outline {
       background: transparent;
-      border: 1px solid var(--danger, #ef4444);
-      color: var(--danger, #ef4444);
+      border: 1px solid rgba(223, 27, 65, 0.3);
+      color: var(--stripe-red);
     }
 
     .btn-danger-outline:hover {
-      background: var(--danger-light, rgba(239, 68, 68, 0.1));
+      background: var(--stripe-red-light);
+      border-color: var(--stripe-red);
     }
 
     .btn-info {
-      background: var(--btn-info-bg);
-      color: var(--btn-info-text);
+      background: var(--stripe-cyan);
+      color: #0a2540;
       border-color: transparent;
+      font-weight: 600;
     }
 
     .btn-info:hover {
-      background: var(--btn-info-hover);
+      background: #00beea;
     }
 
     .close-btn {
       background: none;
       border: 1px solid transparent;
       cursor: pointer;
-      color: var(--text-secondary);
-      padding: 8px;
-      border-radius: var(--radius-sm);
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-      width: 40px;
-      height: 40px;
+      color: var(--stripe-muted);
+      padding: 6px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* P1.6 手机端 close 按钮触控面积提升到 44px */
     @media (max-width: 768px) {
       .close-btn {
         width: 44px;
@@ -318,21 +333,22 @@ export function getModalStyles() {
     }
 
     .close-btn:hover {
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       background: var(--bg-hover);
-      border-color: var(--border-primary);
+      border-color: var(--stripe-border);
     }
 
+    /* ========== 表单控件与输入体系 ========== */
     .form-group {
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 10px;
-      color: var(--text-primary);
+      margin-bottom: 7px;
+      color: var(--stripe-navy);
       font-weight: 600;
-      font-size: 15px;
+      font-size: 13px;
     }
 
     .form-group input,
@@ -341,84 +357,84 @@ export function getModalStyles() {
       width: 100%;
       height: var(--control-height-md, 40px);
       padding: 0 14px;
-      border: 1px solid var(--input-border);
-      border-radius: var(--radius-md);
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
       font-size: 14px;
-      transition: all 0.2s ease;
-      background: var(--input-bg-focus);
-      color: var(--input-text);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
       box-sizing: border-box;
+      font-family: inherit;
     }
 
     .form-group input:focus,
     .form-group select:focus,
     .secret-input:focus {
       outline: none;
-      border-color: var(--input-border-focus);
+      border-color: var(--stripe-blurple);
       background: var(--input-bg-focus);
-      box-shadow: 0 0 0 3px var(--ring);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
-    /* 高级选项样式 */
+    .form-group input::placeholder,
+    .secret-input::placeholder {
+      color: var(--stripe-muted);
+    }
+
+    /* 高级选项面板 */
     .form-section {
-      margin: 25px 0;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
+      margin: 20px 0;
+      border: 1px solid var(--stripe-border);
+      border-radius: 12px;
       overflow: hidden;
-      background: var(--bg-secondary);
-      box-shadow: var(--shadow-sm);
-      transition: all 0.3s ease;
+      background: var(--stripe-surface);
+      box-shadow: var(--shadow-stripe-xs);
+      transition: border-color 0.15s ease;
     }
 
     .form-section:hover {
-      border-color: var(--border-focus);
+      border-color: rgba(99, 91, 255, 0.4);
     }
 
     .section-header {
-      background: var(--import-instructions-bg);
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-primary);
-      transition: background 0.3s ease;
+      background: var(--stripe-canvas);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--stripe-border);
+      transition: background 0.15s ease;
     }
 
     .section-header:hover {
-      background: var(--bg-tertiary);
+      background: var(--bg-hover);
     }
 
     .section-header label {
       margin: 0;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 600;
       display: flex;
       align-items: center;
       cursor: pointer;
-      color: var(--text-primary);
-      transition: color 0.3s ease;
-    }
-
-    .section-header label:hover {
-      color: var(--border-focus);
+      color: var(--stripe-navy);
     }
 
     .section-header input[type="checkbox"] {
-      margin-right: 10px;
-      width: 18px;
-      height: 18px;
-      padding: 0;
-      accent-color: var(--border-focus);
+      margin-right: 8px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--stripe-blurple);
       cursor: pointer;
     }
 
     .advanced-options {
-      padding: 20px;
-      background: var(--card-bg);
+      padding: 16px;
+      background: var(--stripe-surface);
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
     .form-row:last-child {
@@ -431,96 +447,78 @@ export function getModalStyles() {
     }
 
     .form-group-small label {
-      font-size: 14px;
-      margin-bottom: 8px;
+      font-size: 12px;
+      margin-bottom: 6px;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       display: block;
     }
 
     .form-group-small select,
     .form-group-small input {
       width: 100%;
-      font-size: 14px;
-      padding: 12px 16px;
-      border: 1px solid var(--input-border);
-      border-radius: var(--radius-sm);
-      background: var(--input-bg-focus);
-      color: var(--input-text);
-      transition: all 0.3s ease;
-      font-weight: 500;
+      height: 38px;
+      font-size: 13px;
+      padding: 0 12px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 7px;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+      font-family: inherit;
     }
 
     .form-group-small select:focus,
     .form-group-small input:focus {
       outline: none;
-      border-color: var(--input-border-focus);
-      box-shadow: 0 0 0 3px var(--ring);
+      border-color: var(--stripe-blurple);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
       background: var(--input-bg-focus);
     }
 
     .form-group-small select:hover,
     .form-group-small input:hover {
-      border-color: var(--border-tertiary);
+      border-color: var(--stripe-blurple);
     }
 
     .advanced-info {
-      font-size: 13px;
-      color: var(--text-secondary);
-      background: var(--info-light);
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      border-left: 4px solid var(--border-focus);
-      margin-top: 15px;
+      font-size: 12px;
+      color: var(--stripe-slate);
+      background: var(--stripe-cyan-light);
+      padding: 12px 14px;
+      border-radius: 8px;
+      border-left: 3px solid var(--stripe-blurple);
+      margin-top: 14px;
       line-height: 1.5;
-      box-shadow: var(--shadow-sm);
     }
 
     /* 响应式设计 */
     @media (max-width: 600px) {
       .form-row {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 12px;
       }
 
       .advanced-options {
-        padding: 16px;
+        padding: 14px;
       }
 
       .section-header {
-        padding: 14px 16px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .form-section {
-        margin: 20px 0;
-        border-radius: var(--radius-md);
-      }
-
-      .form-group-small select,
-      .form-group-small input {
         padding: 10px 14px;
-        font-size: 13px;
-      }
-
-      .advanced-info {
-        font-size: 12px;
-        padding: 12px 14px;
       }
     }
 
     .form-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: flex-end;
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid var(--modal-header-border);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--stripe-border-light);
     }
 
     /* ========== 扫码 Modal 溢出修复 ========== */
-    /* 让底部的“选择图片/粘贴截图/连续扫描”在 modal 滚动时始终可见 */
     #qrScanModal .modal-content {
       position: relative;
       max-height: 90vh;
@@ -538,7 +536,7 @@ export function getModalStyles() {
       position: sticky;
       bottom: 0;
       background: var(--modal-bg);
-      border-top: 1px solid var(--border-primary);
+      border-top: 1px solid var(--stripe-border);
       padding: 12px 4px;
       margin: 0;
       z-index: 2;
@@ -553,7 +551,6 @@ export function getModalStyles() {
       padding: 4px 0;
     }
 
-    /* 矮屏（常见笔记本 900×600 窗口化）缩小摄像头预览避免滚动 */
     @media (max-height: 820px) {
       #qrScanModal .video-wrapper {
         width: 280px !important;
@@ -571,7 +568,7 @@ export function getModalStyles() {
       }
     }
 
-    /* 自定义确认对话框 */
+    /* ========== 自定义确认对话框 (Stripe Confirm Dialog) ========== */
     .confirm-dialog-modal {
       z-index: 100010;
     }
@@ -579,22 +576,23 @@ export function getModalStyles() {
     .confirm-dialog-content {
       padding: 24px;
       max-width: 420px;
+      border-radius: 16px;
     }
 
     .confirm-dialog-header {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .confirm-dialog-icon {
       width: 40px;
       height: 40px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-primary);
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--stripe-border);
+      background: var(--stripe-blurple-light);
+      color: var(--stripe-blurple);
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
@@ -608,29 +606,30 @@ export function getModalStyles() {
 
     .confirm-dialog-title {
       margin: 0;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--stripe-navy);
+      letter-spacing: 0;
     }
 
     .confirm-dialog-message {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      margin-bottom: 24px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--stripe-slate);
+      margin-bottom: 20px;
       word-break: break-word;
     }
 
     .confirm-dialog-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: flex-end;
     }
 
     .confirm-dialog-actions .btn {
-      min-width: 96px;
-      padding: 10px 20px;
-      font-size: 14px;
+      min-width: 88px;
+      padding: 8px 16px;
+      font-size: 13px;
     }
 
     @media (max-width: 480px) {
@@ -645,31 +644,34 @@ export function getModalStyles() {
       }
     }
 
-    /* 登录模态框 */
+    /* ========== 登录与主密码模态框 ========== */
     .login-modal {
       z-index: 100001;
     }
 
     .login-modal-content {
       max-width: 400px;
+      border-radius: 16px;
     }
 
     .login-modal-title {
       text-align: center;
-      margin-bottom: 10px;
-      color: var(--text-primary);
+      margin-bottom: 8px;
+      color: var(--stripe-navy);
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .login-modal-description {
       text-align: center;
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
       margin-bottom: 20px;
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.5;
     }
 
     .login-modal-hint {
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       font-size: 12px;
     }
 
@@ -683,41 +685,41 @@ export function getModalStyles() {
     }
 
     .login-password-wrapper input {
-      padding-right: 56px;
+      padding-right: 50px;
     }
 
     .login-password-toggle {
       position: absolute;
       top: 50%;
-      right: 12px;
+      right: 8px;
       transform: translateY(-50%);
       border: none;
       background: transparent;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       cursor: pointer;
       padding: 0;
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-sm);
-      transition: color 0.2s ease, background-color 0.2s ease;
+      border-radius: 6px;
+      transition: color 0.15s ease, background-color 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .login-password-toggle:hover {
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       background: var(--bg-hover);
     }
 
     .login-password-toggle:focus-visible {
-      outline: 2px solid var(--input-border-focus);
+      outline: 2px solid var(--stripe-blurple);
       outline-offset: 2px;
     }
 
     .login-password-icon {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       display: block;
     }
 
@@ -741,27 +743,28 @@ export function getModalStyles() {
 
     .login-modal-error {
       display: none;
-      margin-top: 15px;
-      padding: 10px;
-      background: var(--danger-light);
-      border-radius: var(--radius-sm);
-      color: var(--danger-dark);
-      font-size: 14px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: var(--stripe-red-light);
+      border-radius: 8px;
+      border: 1px solid rgba(223, 27, 65, 0.2);
+      color: var(--stripe-red);
+      font-size: 13px;
       text-align: center;
     }
 
     .login-modal-cancel-btn,
     .login-modal-submit-btn {
       flex: 1;
-      padding: 14px 28px;
-      font-size: 16px;
+      padding: 10px 18px;
+      font-size: 14px;
       font-weight: 600;
     }
 
     .empty-state {
       text-align: center;
       padding: 40px 20px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
     }
 
     .empty-state .icon {
@@ -772,106 +775,107 @@ export function getModalStyles() {
     .loading {
       text-align: center;
       padding: 40px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
     }
 
-    /* 导入模态框样式 */
+    /* ========== 导入模态框规范 ========== */
     .import-instructions {
-      background: var(--import-instructions-bg);
-      border-radius: var(--radius-sm);
-      padding: 20px;
-      margin-bottom: 25px;
-      border: 1px solid var(--import-instructions-border);
-      box-shadow: var(--shadow-sm);
+      background: var(--stripe-canvas);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--stripe-border);
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .import-instructions p {
-      margin: 0 0 18px 0;
-      color: var(--text-primary);
-      font-size: 15px;
-      font-weight: 500;
+      margin: 0 0 14px 0;
+      color: var(--stripe-navy);
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .import-methods {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .import-method {
-      background: var(--import-method-bg);
-      border: 1px solid var(--import-method-border);
-      border-radius: var(--radius-surface);
-      padding: 12px 15px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      box-shadow: var(--card-shadow);
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .import-method:hover {
-      border-color: var(--import-method-hover-border);
-      box-shadow: var(--shadow-md);
+      border-color: var(--stripe-blurple);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .file-import-section {
-      background: var(--import-file-bg);
-      border: 1px dashed var(--import-file-border);
-      border-radius: var(--radius-sm);
-      padding: 25px;
+      background: var(--stripe-blurple-light);
+      border: 1px dashed var(--stripe-blurple);
+      border-radius: 10px;
+      padding: 24px;
       text-align: center;
-      margin-bottom: 25px;
-      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      transition: all 0.15s ease;
     }
 
     .file-import-section:hover {
-      border-color: var(--info-dark);
-      background: var(--import-file-bg);
-      box-shadow: var(--shadow-md);
+      border-color: var(--stripe-blurple-hover);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .file-info {
       display: block;
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--text-secondary);
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--stripe-muted);
     }
 
     .import-example {
-      background: var(--import-example-bg);
-      border: 1px solid var(--import-example-border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-size: 13px;
-      margin-top: 12px;
-      color: var(--import-example-text);
+      background: var(--stripe-amber-light);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      margin-top: 10px;
+      color: #92400e;
     }
 
     .import-example code {
-      background: var(--card-bg);
-      padding: 4px 6px;
-      border-radius: var(--radius-sm);
-      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      background: var(--stripe-surface);
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
       word-break: break-all;
       display: block;
       margin-top: 6px;
-      font-size: 12px;
-      border: 1px solid var(--border-primary);
+      font-size: 11px;
+      border: 1px solid var(--stripe-border);
+      color: var(--stripe-navy);
     }
 
-    /* 实用工具模态框样式 */
+    /* ========== 实用工具模态框样式 ========== */
     .tools-list {
-      background: var(--tool-bg);
-      border-radius: var(--radius-surface);
+      background: var(--stripe-surface);
+      border-radius: 12px;
+      border: 1px solid var(--stripe-border);
       overflow: hidden;
-      margin-top: 20px;
+      margin-top: 16px;
     }
 
     .tool-item {
       display: flex;
       align-items: flex-start;
-      padding: 20px;
-      border-bottom: 1px solid var(--tool-border);
+      padding: 16px;
+      border-bottom: 1px solid var(--stripe-border-light);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background-color 0.12s ease;
     }
 
     .tool-item:last-child {
@@ -879,7 +883,7 @@ export function getModalStyles() {
     }
 
     .tool-item:hover {
-      background-color: var(--tool-hover-bg);
+      background-color: var(--bg-hover);
     }
 
     .tool-item:active {
@@ -887,16 +891,17 @@ export function getModalStyles() {
     }
 
     .tool-icon {
-      margin-right: 16px;
-      width: 48px;
-      height: 48px;
+      margin-right: 14px;
+      width: 42px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      background: var(--tool-icon-bg);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--tool-icon-border);
+      background: var(--stripe-blurple-light);
+      border-radius: 10px;
+      border: 1px solid rgba(99, 91, 255, 0.2);
+      color: var(--stripe-blurple);
     }
 
     .tool-content {
@@ -904,339 +909,277 @@ export function getModalStyles() {
     }
 
     .tool-title {
-      font-size: 16px;
-      color: var(--text-primary);
-      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--stripe-navy);
+      margin-bottom: 3px;
       font-weight: 600;
     }
 
     .tool-desc {
-      font-size: 14px;
-      color: var(--text-secondary);
+      font-size: 12.5px;
+      color: var(--stripe-muted);
       line-height: 1.4;
     }
 
     .import-label {
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 10px;
+      color: var(--stripe-navy);
+      margin-bottom: 8px;
       display: block;
+      font-size: 13px;
     }
 
     .import-file-btn {
-      font-size: 15px;
-      padding: 12px 20px;
-      border-radius: var(--radius-sm);
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 7px;
     }
 
     .import-textarea {
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--input-border);
-      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-      font-size: 13px;
+      border-radius: 8px;
+      border: 1px solid var(--stripe-border);
+      font-family: var(--font-mono);
+      font-size: 12px;
       line-height: 1.5;
-      background: var(--input-bg-focus);
-      color: var(--input-text);
-      transition: border-color 0.2s;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      box-sizing: border-box;
+      padding: 10px 12px;
     }
 
     .import-textarea:focus {
-      border-color: var(--input-border-focus);
+      border-color: var(--stripe-blurple);
       outline: none;
-      box-shadow: 0 0 0 3px var(--ring);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .import-form-actions {
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid var(--modal-header-border);
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--stripe-border-light);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .import-form-actions .btn {
-      padding: 12px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 7px;
+      font-size: 13px;
     }
 
     .import-preview {
-      background: var(--import-instructions-bg);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      margin: 20px 0;
-      border: 1px solid var(--import-instructions-border);
-      max-height: 350px;
+      background: var(--stripe-canvas);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0;
+      border: 1px solid var(--stripe-border);
+      max-height: 320px;
       overflow-y: auto;
-      box-shadow: var(--shadow-sm);
-      /* 修复滚动条破坏圆角的问题 */
+      box-shadow: var(--shadow-stripe-xs);
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     }
 
-    /* Webkit浏览器的滚动条样式 */
     .import-preview::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
 
     .import-preview::-webkit-scrollbar-track {
       background: var(--scrollbar-track);
-      border-radius: var(--radius-md);
+      border-radius: 6px;
     }
 
     .import-preview::-webkit-scrollbar-thumb {
       background: var(--scrollbar-thumb);
-      border-radius: var(--radius-sm);
-      border: 2px solid transparent;
-      background-clip: content-box;
-    }
-
-    .import-preview::-webkit-scrollbar-thumb:hover {
-      background: var(--scrollbar-thumb-hover);
-      background-clip: content-box;
+      border-radius: 3px;
     }
 
     .import-preview h3 {
-      margin: 0 0 18px 0;
-      color: var(--text-primary);
-      font-size: 17px;
-      font-weight: 600;
+      margin: 0 0 14px 0;
+      color: var(--stripe-navy);
+      font-size: 15px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .import-preview-item {
-      background: var(--card-bg);
-      border: 1px solid var(--border-secondary);
-      border-radius: var(--radius-sm);
-      padding: 12px 15px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      box-shadow: var(--card-shadow);
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .import-preview-item:hover {
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .import-preview-item.valid {
-      border-color: var(--success);
-      background: var(--success-light);
-      border-left: 4px solid var(--success);
+      border-color: rgba(0, 217, 126, 0.4);
+      background: var(--stripe-green-light);
+      border-left: 3.5px solid var(--stripe-green);
     }
 
     .import-preview-item.invalid {
-      border-color: var(--danger-darker);
-      background: var(--danger-light);
-      border-left: 4px solid var(--danger-darker);
+      border-color: rgba(223, 27, 65, 0.4);
+      background: var(--stripe-red-light);
+      border-left: 3.5px solid var(--stripe-red);
     }
 
     .import-preview-item.skipped {
-      border-color: var(--warning);
-      background: var(--warning-light);
-      border-left: 4px solid var(--warning);
-      opacity: 0.8;
+      border-color: rgba(245, 158, 11, 0.4);
+      background: var(--stripe-amber-light);
+      border-left: 3.5px solid var(--stripe-amber);
+      opacity: 0.85;
     }
 
     .import-preview-item .service-name {
-      font-weight: bold;
-      color: var(--text-primary);
+      font-weight: 700;
+      color: var(--stripe-navy);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .import-preview-item .account-name {
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
       font-size: 12px;
     }
 
     .import-preview-item .error-msg {
-      color: var(--danger-darker);
+      color: var(--stripe-red);
       font-size: 12px;
-      margin-top: 5px;
-    }
-
-    .btn-info {
-      background: var(--btn-info-bg);
-      color: var(--btn-info-text);
-    }
-
-    .btn-info:hover {
-      background: var(--btn-info-hover);
+      margin-top: 4px;
     }
 
     textarea {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--input-border);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-family: monospace;
+      padding: 10px 12px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: var(--font-mono);
       resize: vertical;
       min-height: 120px;
-      background: var(--input-bg-focus);
-      color: var(--input-text);
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      box-sizing: border-box;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     textarea:focus {
       outline: none;
-      border-color: var(--input-border-focus);
-      box-shadow: 0 0 0 3px var(--ring);
+      border-color: var(--stripe-blurple);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
-    /* 二维码模态框样式 - 已移除，使用标准模态框样式 */
-
+    /* ========== 二维码与图片展示 ========== */
     .qr-code-container {
-      background: var(--bg-secondary);
-      border-radius: var(--radius-md);
-      padding: 30px;
-      margin: 20px 0;
-      border: 1px solid var(--border-primary);
+      background: var(--stripe-surface);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 16px 0;
+      border: 1px solid var(--stripe-border);
       text-align: center;
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .qr-display {
       text-align: center;
-      padding: 20px;
+      padding: 16px;
     }
 
     .qr-image {
-      max-width: 300px;
+      max-width: 260px;
       height: auto;
       margin: 0 auto;
       display: block;
-      border-radius: var(--radius-sm);
-      box-shadow: var(--shadow-sm);
+      border-radius: 8px;
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .qr-code {
-      width: 200px;
-      height: 200px;
+      width: 180px;
+      height: 180px;
       margin: 0 auto;
       display: block;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-secondary);
-      background: var(--card-bg);
-      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--stripe-border);
+      background: #ffffff;
+      padding: 8px;
     }
 
     .qr-info {
-      background: var(--info-light);
-      border-radius: var(--radius-sm);
-      padding: 15px;
-      margin: 20px 0;
-      font-size: 14px;
-      color: var(--info);
+      background: var(--stripe-cyan-light);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--stripe-navy);
       text-align: center;
-      border: 1px solid var(--border-primary);
+      border: 1px solid rgba(0, 212, 255, 0.3);
       line-height: 1.5;
     }
 
-
-    /* 扫描器相关样式 - 已更新，使用新的样式 */
-
-    /* 小屏幕手机适配 */
+    /* ========== 移动端适配 ========== */
     @media (max-width: 480px) {
-      body {
-        padding: 0;
-      }
-
-      .container {
-        min-height: 100vh;
-        border-radius: 0;
-      }
-
-      .header {
-        padding: 40px 20px 30px 20px;
-      }
-
-      .content {
-        padding: 0 16px 20px 16px;
-      }
-
-      /* 二维码专用样式 */
       .qr-subtitle-section {
         text-align: center;
-        margin-bottom: 20px;
-        padding: 12px;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-primary);
+        margin-bottom: 16px;
+        padding: 10px;
+        background: var(--stripe-canvas);
+        border-radius: 8px;
+        border: 1px solid var(--stripe-border);
       }
 
       .qr-subtitle-section p {
-        color: var(--text-secondary);
+        color: var(--stripe-muted);
         margin: 0;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 500;
       }
 
-
-
-      /* 模态框移动端优化 */
       .modal {
         padding: 10px;
       }
 
       .modal-content {
-        padding: 20px;
+        padding: 18px;
         max-height: 90vh;
-        border-radius: 6px;
-        /* 移动端模态框滚动条样式 */
-        scrollbar-width: thin;
-        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-      }
-
-      .modal-content::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .modal-content::-webkit-scrollbar-track {
-        background: var(--scrollbar-track);
-        border-radius: 6px;
-      }
-
-      .modal-content::-webkit-scrollbar-thumb {
-        background: var(--scrollbar-thumb);
-        border-radius: 3px;
-        border: 1px solid transparent;
-        background-clip: content-box;
-      }
-
-      .modal-content::-webkit-scrollbar-thumb:hover {
-        background: var(--scrollbar-thumb-hover);
-        background-clip: content-box;
+        border-radius: 12px;
       }
 
       .modal-header {
-        margin-bottom: 20px;
-        padding-bottom: 15px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
       }
 
       .modal-header h2 {
-        font-size: 20px;
+        font-size: 17px;
       }
 
       .modal-actions {
-        margin-top: 20px;
-        padding-top: 15px;
-        gap: 12px;
+        margin-top: 16px;
+        padding-top: 12px;
+        gap: 10px;
       }
 
       .form-actions {
-        margin-top: 20px;
-        padding-top: 15px;
+        margin-top: 16px;
+        padding-top: 12px;
         gap: 8px;
       }
 
       .btn {
-        padding: 12px 16px;
-        font-size: 14px;
-        min-width: 100px;
+        padding: 8px 14px;
+        font-size: 13px;
       }
 
       .scanner-container {
@@ -1251,164 +1194,35 @@ export function getModalStyles() {
 
       .qr-btn-action,
       .qr-btn-close {
-        padding: 10px 12px;
-        font-size: 13px;
-        min-width: 100px;
-        max-width: 150px;
+        padding: 8px 12px;
+        font-size: 12px;
       }
 
-      /* 批量导入移动端优化 */
       .import-instructions {
-        padding: 15px;
-        margin-bottom: 20px;
+        padding: 12px;
+        margin-bottom: 16px;
       }
 
-      /* 还原配置移动端优化 */
       .restore-content {
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
       }
 
       .restore-instructions {
-        padding: 15px;
-        margin-bottom: 20px;
-      }
-
-      .restore-instructions p {
-        font-size: 14px;
-      }
-
-      .restore-instructions p:last-child {
-        font-size: 12px;
-        padding: 6px 10px;
-      }
-
-      .backup-list-header {
-        padding: 10px 12px;
-        margin-bottom: 12px;
-      }
-
-      .backup-list-header span {
-        font-size: 13px;
+        padding: 12px;
+        margin-bottom: 16px;
       }
 
       .backup-select {
         width: 100%;
         min-width: 100%;
         max-width: 100%;
-        padding: 10px 14px;
-        padding-right: 36px;
-        font-size: 13px;
-        border: 1px solid var(--table-border);
-        border-radius: var(--radius-sm);
-        background: var(--backup-select-bg);
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-        background-size: 16px;
-        color: var(--text-primary);
-        cursor: pointer;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        box-sizing: border-box;
-        display: block;
+        padding: 8px 12px;
+        font-size: 12px;
       }
-
-      /* 强制 option 元素不换行并正确显示 */
-      .backup-select option {
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        padding: 8px 12px !important;
-        font-size: 13px !important;
-        line-height: normal !important;
-        max-width: 100% !important;
-        display: block !important;
-      }
-
-      .backup-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
-        gap: 8px;
-      }
-
-      .preview-header {
-        padding: 10px 12px;
-        margin-bottom: 12px;
-        font-size: 13px;
-      }
-
-      .backup-preview-content {
-        max-height: 300px;
-        padding: 8px;
-      }
-
-      .backup-table {
-        font-size: 11px;
-        border: 2px solid var(--table-border);
-      }
-
-      .backup-table th {
-        padding: 8px 10px;
-        font-size: 10px;
-        border-right: 1px solid rgba(255, 255, 255, 0.3);
-        border-bottom: 2px solid var(--table-header-border);
-      }
-
-      .backup-table th:last-child {
-        border-right: none;
-      }
-
-      .backup-table td {
-        padding: 8px 10px;
-        border-right: 1px solid var(--table-border);
-        border-bottom: 1px solid var(--table-border);
-      }
-
-      .backup-table td:last-child {
-        border-right: none;
-      }
-
-      .backup-table tbody tr:last-child td {
-        border-bottom: none;
-      }
-
-      .service-name {
-        min-width: 80px;
-        max-width: 100px;
-        font-size: 11px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .account-info {
-        min-width: 100px;
-        max-width: 120px;
-        font-size: 10px;
-      }
-
-      .secret-type {
-        min-width: 50px;
-        font-size: 10px;
-        white-space: nowrap;
-      }
-
-      .created-time {
-        min-width: 100px;
-        font-size: 9px;
-      }
-
-      /* 移动端深色主题表格边框 */
     }
 
-    /* ==================== 导出格式选择 - 紧凑网格布局 ==================== */
+    /* ========== 导出格式选择 - 紧凑网格布局 ========== */
     .export-modal-compact {
       max-width: var(--fab-modal-max-width, 600px);
     }
@@ -1418,20 +1232,22 @@ export function getModalStyles() {
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius-sm);
-      margin-bottom: 20px;
+      background: var(--stripe-canvas);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      border: 1px solid var(--stripe-border);
       gap: 12px;
     }
 
     .export-count {
-      font-size: 14px;
-      color: var(--text-secondary);
+      font-size: 13px;
+      color: var(--stripe-muted);
     }
 
     .export-count strong {
-      color: var(--text-primary);
-      font-size: 16px;
+      color: var(--stripe-navy);
+      font-size: 15px;
+      font-family: var(--font-mono);
     }
 
     .export-sort-wrapper {
@@ -1441,43 +1257,43 @@ export function getModalStyles() {
     }
 
     .export-sort-label {
-      font-size: 13px;
-      color: var(--text-secondary);
+      font-size: 12px;
+      color: var(--stripe-muted);
       white-space: nowrap;
     }
 
     .export-sort-select {
-      padding: 8px 12px;
-      border: 1px solid var(--border-primary);
+      padding: 6px 10px;
+      border: 1px solid var(--stripe-border);
       border-radius: 6px;
       background: var(--input-bg);
-      color: var(--text-primary);
-      font-size: 13px;
+      color: var(--stripe-navy);
+      font-size: 12px;
       cursor: pointer;
     }
 
     .format-section {
-      margin-bottom: 20px;
-    }
-
-    .format-section:last-of-type {
       margin-bottom: 16px;
     }
 
+    .format-section:last-of-type {
+      margin-bottom: 12px;
+    }
+
     .format-section-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      margin-bottom: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--stripe-muted);
+      margin-bottom: 8px;
       padding-left: 2px;
       text-transform: uppercase;
-      letter-spacing: 0;
+      letter-spacing: 0.04em;
     }
 
     .format-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
     .format-card {
@@ -1485,95 +1301,95 @@ export function getModalStyles() {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 14px 8px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-surface);
+      padding: 12px 8px;
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 72px;
+      transition: all 0.15s ease;
+      min-height: 70px;
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .format-card:hover {
-      border-color: var(--success);
-      background: var(--bg-hover);
-      box-shadow: var(--shadow-md);
-    }
-
-    .format-card:active {
-      box-shadow: var(--shadow-sm);
+      border-color: var(--stripe-blurple);
+      background: var(--stripe-blurple-light);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .format-icon {
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       line-height: 1;
-      color: var(--text-secondary);
+      color: var(--stripe-blurple);
     }
 
     .format-icon .ui-icon,
     .format-option-icon .ui-icon {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
     .format-name {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       text-align: center;
       line-height: 1.2;
     }
 
     .format-ext {
       font-size: 10px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       margin-top: 2px;
+      font-family: var(--font-mono);
     }
 
     .format-compat {
       font-size: 9px;
-      color: var(--success);
-      margin-top: 4px;
-      padding: 2px 6px;
-      background: var(--success-light, rgba(76, 175, 80, 0.1));
-      border-radius: var(--radius-sm);
+      color: #059669;
+      margin-top: 3px;
+      padding: 1px 5px;
+      background: var(--stripe-green-light);
+      border-radius: 4px;
       white-space: nowrap;
+      font-weight: 600;
     }
 
     .format-details {
-      margin: 16px 0;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
+      margin: 14px 0;
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
       overflow: hidden;
     }
 
     .format-details summary {
       cursor: pointer;
-      font-size: 13px;
-      color: var(--text-secondary);
-      padding: 12px 16px;
-      background: var(--bg-secondary);
+      font-size: 12.5px;
+      color: var(--stripe-slate);
+      padding: 10px 14px;
+      background: var(--stripe-canvas);
       user-select: none;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-weight: 500;
     }
 
     .format-details summary:hover {
-      color: var(--text-primary);
-      background: var(--bg-tertiary);
+      color: var(--stripe-navy);
+      background: var(--bg-hover);
     }
 
     .format-details[open] summary {
-      border-bottom: 1px solid var(--border-primary);
+      border-bottom: 1px solid var(--stripe-border);
     }
 
     .format-help-content {
-      padding: 12px 16px;
+      padding: 12px 14px;
       font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.8;
-      background: var(--bg-primary);
+      color: var(--stripe-slate);
+      line-height: 1.6;
+      background: var(--stripe-surface);
     }
 
     .format-help-content p {
@@ -1583,11 +1399,11 @@ export function getModalStyles() {
     }
 
     .format-help-content strong {
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       min-width: 70px;
     }
 
-    /* 导出格式响应式 - 手机端 */
+    /* 导出格式响应式 */
     @media (max-width: 480px) {
       .export-modal-compact {
         max-width: 100%;
@@ -1616,42 +1432,8 @@ export function getModalStyles() {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
       }
-
-      .format-card {
-        padding: 12px 6px;
-        min-height: 68px;
-        border-radius: var(--radius-md);
-      }
-
-      .format-icon {
-        margin-bottom: 4px;
-      }
-
-      .format-name {
-        font-size: 12px;
-      }
-
-      .format-ext {
-        font-size: 9px;
-      }
-
-      .format-compat {
-        font-size: 8px;
-        padding: 1px 4px;
-      }
-
-      .format-details summary {
-        padding: 10px 14px;
-        font-size: 12px;
-      }
-
-      .format-help-content {
-        padding: 10px 14px;
-        font-size: 11px;
-      }
     }
 
-    /* P1.5 导出格式网格：平板 3 列 / 481-767 手机大屏 2 列（481-767 的 2 列与 ≤480 同规则重复但不冲突） */
     @media (min-width: 768px) and (max-width: 1279px) {
       .format-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -1665,57 +1447,57 @@ export function getModalStyles() {
       }
     }
 
-    /* ==================== 导入模态框 - 紧凑优化布局 ==================== */
+    /* ========== 导入模态框 - 智能输入区 ========== */
     .import-modal-compact {
       max-width: var(--fab-modal-max-width, 600px);
     }
 
-    /* ==================== 智能输入区样式 ==================== */
     .smart-import-zone {
       margin-bottom: 12px;
     }
 
     .import-textarea-smart {
       width: 100%;
-      min-height: 140px;
-      padding: 14px 16px;
-      border: 2px dashed var(--import-file-border);
-      border-radius: var(--radius-md);
-      background: var(--import-file-bg);
-      color: var(--text-primary);
-      font-size: 14px;
-      font-family: inherit;
+      min-height: 130px;
+      padding: 12px 14px;
+      border: 1.5px dashed var(--stripe-border);
+      border-radius: 10px;
+      background: var(--stripe-canvas);
+      color: var(--stripe-navy);
+      font-size: 13px;
+      font-family: var(--font-mono);
       line-height: 1.5;
       resize: vertical;
-      transition: all 0.3s ease;
+      transition: all 0.15s ease;
       box-sizing: border-box;
     }
 
     .import-textarea-smart::placeholder {
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
+      font-family: var(--font-sans);
     }
 
     .import-textarea-smart:hover {
-      border-color: var(--btn-primary-bg);
+      border-color: var(--stripe-blurple);
       background: var(--bg-hover);
     }
 
     .import-textarea-smart:focus {
       outline: none;
-      border-color: var(--btn-primary-bg);
+      border-color: var(--stripe-blurple);
       border-style: solid;
       background: var(--input-bg-focus);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .import-textarea-smart.drag-over {
-      border-color: var(--success);
+      border-color: var(--stripe-green);
       border-style: solid;
-      background: var(--success-light);
+      background: var(--stripe-green-light);
     }
 
     .import-textarea-smart.has-content {
-      border-color: var(--success);
+      border-color: var(--stripe-blurple);
       border-style: solid;
     }
 
@@ -1735,17 +1517,10 @@ export function getModalStyles() {
       min-width: auto;
     }
 
-    .import-file-btn {
-      padding: 10px 18px;
-      font-size: 14px;
-      font-weight: 500;
-      border-radius: var(--radius-sm);
-    }
-
     .import-file-hint {
       flex: 0 1 auto;
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       text-align: left;
     }
 
@@ -1754,16 +1529,17 @@ export function getModalStyles() {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 14px;
-      background: var(--success-light);
-      border: 1px solid var(--success);
-      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      background: var(--stripe-green-light);
+      border: 1px solid rgba(0, 217, 126, 0.3);
+      border-radius: 8px;
       margin-bottom: 12px;
       font-size: 13px;
     }
 
     .file-info-badge .file-icon {
       flex-shrink: 0;
+      color: var(--stripe-green);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1771,7 +1547,7 @@ export function getModalStyles() {
 
     .file-info-badge .file-name {
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1779,26 +1555,27 @@ export function getModalStyles() {
     }
 
     .file-info-badge .file-size {
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
       font-size: 12px;
+      font-family: var(--font-mono);
       flex-shrink: 0;
     }
 
     .file-info-badge .file-clear-btn {
       background: none;
       border: none;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      transition: all 0.2s;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      transition: all 0.15s ease;
       flex-shrink: 0;
     }
 
     .file-info-badge .file-clear-btn:hover {
-      background: var(--danger-light);
-      color: var(--danger-darker);
+      background: var(--stripe-red-light);
+      color: var(--stripe-red);
     }
 
     /* 导入小提示 */
@@ -1808,110 +1585,112 @@ export function getModalStyles() {
       justify-content: center;
       flex-wrap: wrap;
       gap: 8px;
-      padding: 10px 12px;
-      margin: 12px 0;
+      padding: 8px 12px;
+      margin: 10px 0;
       font-size: 12px;
-      color: var(--text-secondary);
-      background: var(--bg-secondary);
+      color: var(--stripe-slate);
+      background: var(--stripe-canvas);
       border-radius: 6px;
+      border: 1px solid var(--stripe-border);
     }
 
     .import-tip a {
-      color: var(--text-link);
+      color: var(--stripe-blurple);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .import-tip a:hover {
-      color: var(--text-link-hover);
       text-decoration: underline;
     }
 
     .import-tip-divider {
-      color: var(--border-primary);
+      color: var(--stripe-border);
     }
 
     /* 格式说明折叠区 */
     .import-format-details {
       margin: 8px 0;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
       overflow: hidden;
     }
 
     .import-format-details summary {
       cursor: pointer;
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       padding: 8px 12px;
-      background: var(--bg-secondary);
+      background: var(--stripe-canvas);
       user-select: none;
       display: flex;
       align-items: center;
       gap: 6px;
+      font-weight: 500;
     }
 
     .import-format-details summary:hover {
-      color: var(--text-primary);
-      background: var(--bg-tertiary);
+      color: var(--stripe-navy);
+      background: var(--bg-hover);
     }
 
     .import-format-details[open] summary {
-      border-bottom: 1px solid var(--border-primary);
+      border-bottom: 1px solid var(--stripe-border);
     }
 
     .import-format-help {
-      padding: 12px 14px;
+      padding: 10px 12px;
       font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.8;
-      background: var(--bg-primary);
+      color: var(--stripe-slate);
+      line-height: 1.6;
+      background: var(--stripe-surface);
     }
 
     .import-format-help p {
-      margin: 4px 0;
+      margin: 3px 0;
     }
 
     .import-format-help strong {
-      color: var(--text-primary);
+      color: var(--stripe-navy);
       min-width: 80px;
       display: inline-block;
     }
 
     .import-format-help code {
       display: block;
-      margin-top: 10px;
-      padding: 10px;
-      background: var(--bg-secondary);
+      margin-top: 8px;
+      padding: 8px;
+      background: var(--stripe-canvas);
       border-radius: 6px;
       font-size: 11px;
+      font-family: var(--font-mono);
       word-break: break-all;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-primary);
+      color: var(--stripe-navy);
+      border: 1px solid var(--stripe-border);
     }
 
     /* 紧凑预览区 */
     .import-preview-compact {
-      background: var(--bg-secondary);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      margin: 16px 0;
-      border: 1px solid var(--border-primary);
+      background: var(--stripe-canvas);
+      border-radius: 10px;
+      padding: 12px;
+      margin: 14px 0;
+      border: 1px solid var(--stripe-border);
     }
 
     .import-preview-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
       gap: 8px;
     }
 
     .preview-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--stripe-navy);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1919,31 +1698,32 @@ export function getModalStyles() {
 
     .import-stats-inline {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       font-size: 12px;
+      font-family: var(--font-mono);
     }
 
     .stat-valid {
-      color: var(--success);
-      font-weight: 600;
+      color: var(--stripe-green);
+      font-weight: 700;
     }
 
     .stat-invalid {
-      color: var(--danger-darker);
-      font-weight: 600;
+      color: var(--stripe-red);
+      font-weight: 700;
     }
 
     .stat-skipped {
-      color: var(--warning);
-      font-weight: 600;
+      color: var(--stripe-amber);
+      font-weight: 700;
     }
 
     .stat-total {
-      color: var(--text-secondary);
+      color: var(--stripe-muted);
     }
 
     .import-preview-list {
-      max-height: 200px;
+      max-height: 180px;
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
@@ -1964,11 +1744,11 @@ export function getModalStyles() {
     }
 
     .import-progress-panel {
-      background: var(--bg-secondary);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      margin: 12px 0 16px;
-      border: 1px solid var(--border-primary);
+      background: var(--stripe-canvas);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 10px 0 14px;
+      border: 1px solid var(--stripe-border);
     }
 
     .import-progress-header {
@@ -1976,33 +1756,34 @@ export function getModalStyles() {
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .import-progress-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
     }
 
     .import-progress-percent {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--btn-primary-bg);
+      color: var(--stripe-blurple);
+      font-family: var(--font-mono);
     }
 
     .import-progress-bar {
       width: 100%;
-      height: 10px;
-      background: var(--progress-bg);
+      height: 8px;
+      background: var(--stripe-border-light);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .import-progress-fill {
       height: 100%;
-      background: var(--progress-fill);
+      background: linear-gradient(90deg, #635bff, #00d4ff);
       border-radius: inherit;
       transition: width 0.25s ease;
     }
@@ -2014,113 +1795,19 @@ export function getModalStyles() {
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .import-progress-meta {
-      color: var(--text-secondary);
-      margin-bottom: 6px;
+      color: var(--stripe-slate);
+      margin-bottom: 4px;
     }
 
     .import-progress-stats {
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
     }
 
-    /* 导入响应式 - 手机端 */
-    @media (max-width: 480px) {
-      .import-modal-compact {
-        max-width: 100%;
-      }
-
-      /* 智能输入区响应式 */
-      .import-textarea-smart {
-        min-height: 120px;
-        padding: 12px 14px;
-        font-size: 13px;
-        border-radius: var(--radius-md);
-      }
-
-      .import-file-btn-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-
-      .import-file-btn {
-        width: 100%;
-        text-align: center;
-      }
-
-      .import-file-hint {
-        text-align: center;
-      }
-
-      .file-info-badge {
-        padding: 8px 12px;
-        font-size: 12px;
-      }
-
-      .file-info-badge .file-icon {
-        font-size: 14px;
-      }
-
-      .file-info-badge .file-size {
-        font-size: 11px;
-      }
-
-      .import-tips {
-        flex-direction: column;
-        gap: 4px;
-        text-align: center;
-      }
-
-      .import-tip-divider {
-        display: none;
-      }
-
-      .import-stats-inline {
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: flex-end;
-      }
-
-      .import-preview-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .import-preview-list {
-        max-height: 150px;
-      }
-    }
-
-    /* 导入响应式 - 超小屏幕 */
-    @media (max-width: 360px) {
-      .import-textarea-smart {
-        min-height: 100px;
-        padding: 10px 12px;
-        font-size: 12px;
-      }
-
-      .import-file-btn {
-        padding: 8px 14px;
-        font-size: 13px;
-      }
-
-      .import-file-hint {
-        font-size: 11px;
-      }
-
-      .file-info-badge {
-        padding: 6px 10px;
-        font-size: 11px;
-        gap: 6px;
-      }
-    }
-
-    /* ==================== 二级格式选择模态框 ==================== */
-
-    /* 二级格式选择模态框 */
+    /* ========== 二级格式选择模态框 ========== */
     .sub-format-modal {
       max-width: var(--fab-modal-sm-max-width, 450px);
     }
@@ -2128,39 +1815,40 @@ export function getModalStyles() {
     .sub-format-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 16px;
+      gap: 10px;
+      margin-top: 14px;
     }
 
     .sub-format-option {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
+      gap: 14px;
+      padding: 14px;
+      background: var(--stripe-surface);
+      border: 1px solid var(--stripe-border);
+      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .sub-format-option:hover {
-      border-color: var(--border-focus);
-      background: var(--bg-hover);
-      box-shadow: var(--shadow-md);
+      border-color: var(--stripe-blurple);
+      background: var(--stripe-blurple-light);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .sub-format-icon {
       flex-shrink: 0;
-      color: var(--text-secondary);
+      color: var(--stripe-blurple);
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
     .sub-format-icon .ui-icon {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
     }
 
     .sub-format-info {
@@ -2168,60 +1856,44 @@ export function getModalStyles() {
     }
 
     .sub-format-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
+      color: var(--stripe-navy);
+      margin-bottom: 2px;
     }
 
     .sub-format-ext {
       font-size: 11px;
-      color: var(--accent-color);
+      color: var(--stripe-blurple);
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
     }
 
     .sub-format-desc {
       font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
+      color: var(--stripe-muted);
+      margin-bottom: 2px;
     }
 
     .sub-format-compat {
       font-size: 10px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
     }
 
-    /* 二级格式选择 - 移动端适配 */
-    @media (max-width: 480px) {
-      .sub-format-modal {
-        max-width: 100%;
-      }
-
-      .sub-format-option {
-        flex-direction: column;
-        text-align: center;
-        gap: 12px;
-      }
-
-      .sub-format-icon {
-        width: 40px;
-        height: 40px;
-      }
-    }
-
-    /* ==================== 设置模态框样式 ==================== */
-
+    /* ========== 设置模态框样式 (Stripe Settings Panel) ========== */
     .settings-modal-content {
       max-width: var(--fab-modal-lg-max-width, 680px);
       padding: 0;
       overflow: hidden;
+      border-radius: 16px;
     }
 
     .settings-modal-content .modal-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border-primary);
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--stripe-border);
       margin-bottom: 0;
+      background: var(--stripe-surface);
     }
 
     .settings-layout {
@@ -2233,9 +1905,9 @@ export function getModalStyles() {
     .settings-tabs {
       flex-shrink: 0;
       width: 160px;
-      background: var(--bg-secondary);
-      border-right: 1px solid var(--border-primary);
-      padding: 12px 0;
+      background: var(--stripe-canvas);
+      border-right: 1px solid var(--stripe-border);
+      padding: 10px 0;
       overflow-y: auto;
     }
 
@@ -2243,30 +1915,31 @@ export function getModalStyles() {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 12px 16px;
+      padding: 10px 16px;
       cursor: pointer;
-      color: var(--text-secondary);
-      font-size: 14px;
-      transition: all 0.2s ease;
+      color: var(--stripe-slate);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s ease;
       border-left: 3px solid transparent;
     }
 
     .settings-tab:hover {
-      background: var(--bg-tertiary, rgba(0, 0, 0, 0.05));
-      color: var(--text-primary);
+      background: var(--bg-hover);
+      color: var(--stripe-navy);
     }
 
     .settings-tab.active {
-      background: var(--bg-tertiary, rgba(0, 0, 0, 0.05));
-      color: var(--text-primary);
-      border-left-color: var(--border-focus);
+      background: var(--stripe-surface);
+      color: var(--stripe-blurple);
+      border-left-color: var(--stripe-blurple);
       font-weight: 600;
     }
 
     .settings-tab-icon {
       flex-shrink: 0;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -2282,6 +1955,7 @@ export function getModalStyles() {
       flex: 1;
       overflow-y: auto;
       padding: 20px 24px;
+      background: var(--stripe-surface);
     }
 
     .settings-panel {
@@ -2301,23 +1975,24 @@ export function getModalStyles() {
     }
 
     .settings-section-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0 0 12px 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--stripe-navy);
+      margin: 0 0 10px 0;
+      letter-spacing: 0;
     }
 
     .settings-desc {
-      font-size: 13px;
-      color: var(--text-tertiary);
-      margin: 0 0 12px 0;
+      font-size: 12.5px;
+      color: var(--stripe-muted);
+      margin: 0 0 10px 0;
       line-height: 1.5;
     }
 
     .settings-divider {
       height: 1px;
-      background: var(--border-primary);
-      margin: 20px 0;
+      background: var(--stripe-border-light);
+      margin: 18px 0;
     }
 
     .settings-form {
@@ -2328,62 +2003,65 @@ export function getModalStyles() {
 
     .settings-field label {
       display: block;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 6px;
+      color: var(--stripe-navy);
+      margin-bottom: 5px;
     }
 
     .settings-field input {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      background: var(--input-bg, var(--bg-secondary));
-      color: var(--text-primary);
-      font-size: 14px;
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 7px;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      font-size: 13.5px;
       box-sizing: border-box;
-      transition: border-color 0.2s ease;
+      transition: all 0.15s ease;
+      font-family: inherit;
     }
 
     .settings-field input:focus {
       outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px var(--ring);
+      border-color: var(--stripe-blurple);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .change-password-result {
-      padding: 10px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
       line-height: 1.5;
     }
 
     .change-password-result.error {
-      background: rgba(244, 67, 54, 0.1);
-      color: #f44336;
-      border: 1px solid rgba(244, 67, 54, 0.2);
+      background: var(--stripe-red-light);
+      color: var(--stripe-red);
+      border: 1px solid rgba(223, 27, 65, 0.2);
     }
 
     .change-password-result.success {
-      background: rgba(76, 175, 80, 0.1);
-      color: #4caf50;
-      border: 1px solid rgba(76, 175, 80, 0.2);
+      background: var(--stripe-green-light);
+      color: #059669;
+      border: 1px solid rgba(0, 217, 126, 0.2);
     }
 
     /* 同步设置卡片 */
     .sync-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-surface);
-      padding: 16px;
+      background: var(--stripe-canvas);
+      border: 1px solid var(--stripe-border);
+      border-radius: 12px;
+      padding: 14px 16px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-stripe-xs);
     }
 
     .sync-card:hover {
-      border-color: var(--border-focus);
-      box-shadow: var(--shadow-md);
+      border-color: var(--stripe-blurple);
+      box-shadow: var(--shadow-stripe-sm);
     }
 
     .sync-card-header {
@@ -2395,57 +2073,58 @@ export function getModalStyles() {
     .sync-card-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .sync-card-icon {
       flex-shrink: 0;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-secondary);
+      color: var(--stripe-blurple);
     }
 
     .sync-card-title {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--stripe-navy);
     }
 
     .sync-card-desc {
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--stripe-muted);
       margin-top: 2px;
     }
 
     .sync-status {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: var(--radius-md);
-      font-weight: 500;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
       flex-shrink: 0;
     }
 
     .sync-status.configured {
-      background: rgba(76, 175, 80, 0.1);
-      color: #4caf50;
+      background: var(--stripe-green-light);
+      color: #059669;
     }
 
     .sync-status.not-configured {
-      background: rgba(158, 158, 158, 0.1);
-      color: var(--text-tertiary);
+      background: var(--bg-hover);
+      color: var(--stripe-muted);
     }
 
     .settings-info-box {
-      margin-top: 16px;
+      margin-top: 14px;
       padding: 12px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       font-size: 12px;
-      color: var(--text-tertiary);
-      background: var(--bg-secondary);
-      line-height: 1.6;
+      color: var(--stripe-muted);
+      background: var(--stripe-canvas);
+      border: 1px solid var(--stripe-border);
+      line-height: 1.5;
     }
 
     /* 主题选项 */
@@ -2460,42 +2139,47 @@ export function getModalStyles() {
       align-items: center;
       gap: 10px;
       padding: 10px 12px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
+      background: var(--stripe-canvas);
+      border: 1px solid var(--stripe-border);
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
     .theme-option:hover {
-      border-color: var(--accent-color, #2196F3);
+      border-color: var(--stripe-blurple);
+      background: var(--bg-hover);
     }
 
     .theme-option input[type="radio"] {
-      accent-color: var(--accent-color, #2196F3);
+      accent-color: var(--stripe-blurple);
     }
 
     .theme-option-label {
-      font-size: 14px;
-      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--stripe-navy);
     }
 
     /* 设置下拉选择框 */
     .settings-select {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      background: var(--input-bg, var(--bg-secondary));
-      color: var(--text-primary);
-      font-size: 14px;
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 7px;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      font-size: 13.5px;
       cursor: pointer;
       appearance: auto;
+      font-family: inherit;
     }
 
     .settings-select:focus {
       outline: none;
-      border-color: var(--accent-color, #2196F3);
+      border-color: var(--stripe-blurple);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .settings-inline-group {
@@ -2506,41 +2190,43 @@ export function getModalStyles() {
 
     .settings-inline-group .settings-input {
       width: 80px;
-      padding: 8px 10px;
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-sm);
-      background: var(--input-bg, var(--bg-secondary));
-      color: var(--text-primary);
-      font-size: 14px;
+      height: 36px;
+      padding: 0 8px;
+      border: 1px solid var(--stripe-border);
+      border-radius: 7px;
+      background: var(--input-bg);
+      color: var(--stripe-navy);
+      font-size: 13.5px;
       text-align: center;
+      font-family: var(--font-mono);
     }
 
     .settings-inline-group .settings-input:focus {
       outline: none;
-      border-color: var(--accent-color, #2196F3);
+      border-color: var(--stripe-blurple);
+      box-shadow: 0 0 0 3px var(--stripe-blurple-ring);
     }
 
     .settings-unit {
-      font-size: 14px;
-      color: var(--text-secondary);
+      font-size: 13px;
+      color: var(--stripe-muted);
     }
 
     .settings-result {
-      font-size: 13px;
-      margin: 8px 0 0 0;
+      font-size: 12px;
+      margin: 6px 0 0 0;
       line-height: 1.5;
     }
 
     .settings-result.success {
-      color: var(--success-color, #4CAF50);
+      color: var(--stripe-green);
     }
 
     .settings-result.error {
-      color: var(--error-color, #f44336);
+      color: var(--stripe-red);
     }
 
-    /* ========== P1.1 手机端 Bottom Sheet ========== */
-    /* Modal 从屏幕底部滑入，贴底全宽展示（排除 confirm-dialog 等小对话框） */
+    /* ========== 手机端 Bottom Sheet ========== */
     @media (max-width: 640px) {
       .modal:not(.confirm-dialog-modal) {
         align-items: flex-end;
@@ -2553,7 +2239,6 @@ export function getModalStyles() {
         border-radius: 16px 16px 0 0;
         max-height: 90vh;
         margin: 0;
-        /* 覆盖桌面的 scale 动画，改为 slideUp */
         transform: translateY(100%);
         opacity: 0;
         transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease;
@@ -2564,7 +2249,6 @@ export function getModalStyles() {
         opacity: 1;
       }
 
-      /* 贴边 header / actions：长表单中始终可见 */
       .modal:not(.confirm-dialog-modal):not(#qrScanModal) .modal-content > .modal-header {
         position: sticky;
         top: 0;
@@ -2593,7 +2277,7 @@ export function getModalStyles() {
       .settings-tabs {
         width: 100%;
         border-right: none;
-        border-bottom: 1px solid var(--border-primary);
+        border-bottom: 1px solid var(--stripe-border);
         display: flex;
         padding: 0;
         overflow-x: auto;
@@ -2606,26 +2290,26 @@ export function getModalStyles() {
         flex-direction: row;
         justify-content: center;
         gap: 6px;
-        padding: 12px 8px;
+        padding: 10px 8px;
         border-left: none;
-        border-bottom: 3px solid transparent;
-        font-size: 13px;
+        border-bottom: 2.5px solid transparent;
+        font-size: 12.5px;
         min-width: 0;
       }
 
       .settings-tab.active {
         border-left-color: transparent;
-        border-bottom-color: var(--accent-color, #2196F3);
+        border-bottom-color: var(--stripe-blurple);
+        background: transparent;
       }
 
-      /* P1.4 手机端 Tab 保留图标+文字同行（旧版仅显示图标太抽象） */
       .settings-tab-text {
         display: inline;
         white-space: nowrap;
       }
 
       .settings-tab-icon {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .settings-content {
@@ -2640,14 +2324,13 @@ export function getModalStyles() {
       }
     }
 
-    /* 超窄屏（<360px）Tab 回退为仅图标，避免横向滚动 */
     @media (max-width: 359px) {
       .settings-tab-text {
         display: none;
       }
       .settings-tab-icon {
-        font-size: 20px;
+        font-size: 18px;
       }
     }
-  `;
+`;
 }

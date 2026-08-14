@@ -1,584 +1,469 @@
 /**
  * CSS 变量定义模块
- * 实现浅色模式和深色模式的主题变量
+ * 实现 Stripe Dashboard 经典设计系统的浅色模式和深色模式主题变量
  */
 export function getVariables() {
 	return `
-    /* ========== CSS 变量系统 ========== */
+    /* ========== Stripe Design System 变量系统 ========== */
 
     /* 浅色模式变量定义 */
     :root {
+      /* === 字体系统 === */
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+
       /* === 主题过渡动画 === */
-      --theme-transition-duration: 0.3s;
+      --theme-transition-duration: 0.2s;
       --theme-transition:
         background-color var(--theme-transition-duration) ease,
         color var(--theme-transition-duration) ease,
         border-color var(--theme-transition-duration) ease,
         box-shadow var(--theme-transition-duration) ease;
 
-      /* === 基础颜色 === */
-      /* 纯色 */
+      /* === Stripe 经典核心色系 (Stripe Core Palette) === */
+      --stripe-blurple: #635bff;
+      --stripe-blurple-hover: #5851ea;
+      --stripe-blurple-active: #4b45c6;
+      --stripe-blurple-light: #f0efff;
+      --stripe-blurple-ring: rgba(99, 91, 255, 0.25);
+
+      --stripe-navy: #0a2540;
+      --stripe-slate: #425466;
+      --stripe-muted: #697386;
+      --stripe-canvas: #f8f9fb;
+      --stripe-surface: #ffffff;
+      --stripe-border: #e3e8ee;
+      --stripe-border-light: #edf2f7;
+
+      --stripe-green: #00d97e;
+      --stripe-green-light: #e6f9f1;
+      --stripe-red: #df1b41;
+      --stripe-red-light: #fce8eb;
+      --stripe-cyan: #00d4ff;
+      --stripe-cyan-light: #e5faff;
+      --stripe-amber: #f59e0b;
+      --stripe-amber-light: #fef3c7;
+
+      /* === 灰度与基准色阶 === */
       --color-white: #ffffff;
       --color-black: #000000;
-
-      /* 灰度色阶 */
-      --gray-50: #f8f9fa;
+      --gray-50: #f8f9fb;
       --gray-100: #f1f3f5;
-      --gray-200: #e9ecef;
-      --gray-300: #dee2e6;
-      --gray-400: #ced4da;
-      --gray-500: #adb5bd;
-      --gray-600: #6c757d;
-      --gray-700: #495057;
-      --gray-800: #343a40;
-      --gray-900: #212529;
+      --gray-200: #e3e8ee;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #697386;
+      --gray-600: #425466;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0a2540;
 
-      /* 品牌主色 */
-      --primary-50: #e3f2fd;
-      --primary-100: #bbdefb;
-      --primary-200: #90caf9;
-      --primary-300: #64b5f6;
-      --primary-400: #42a5f5;
-      --primary-500: #2196f3;
-      --primary-600: #1e88e5;
-      --primary-700: #1976d2;
-      --primary-800: #1565c0;
-      --primary-900: #0d47a1;
-
-      /* 圆角 */
+      /* === 常用圆角尺寸 === */
+      --radius-xs: 4px;
       --radius-sm: 6px;
       --radius-md: 8px;
       --radius-lg: 12px;
+      --radius-xl: 14px;
+      --radius-2xl: 16px;
+      --radius-full: 9999px;
       --radius-surface: 12px;
 
-      /* 控件标高与尺寸 */
+      /* === 控件尺寸 === */
       --control-height-sm: 32px;
       --control-height-md: 40px;
-      --control-height-lg: 44px;
+      --control-height-lg: 46px;
 
-      /* 品牌映射 */
-      --primary: var(--primary-500);
-      --primary-rgb: 33, 150, 243;
-      --action-btn-bg: var(--primary-600);
-      --action-btn-hover: var(--primary-700);
-      --action-btn-shadow: 0 4px 12px rgba(33, 150, 243, 0.30);
-      --qr-btn-color: var(--primary-600);
-      --qr-btn-hover-bg: var(--primary-600);
-      --progress-mini-fill: #8B5CF6;
+      /* === Stripe 多层环境标高阴影 (Layered Ambient Shadows) === */
+      --shadow-stripe-xs: 0 1px 2px rgba(50, 50, 93, 0.05), 0 0 0 1px rgba(50, 50, 93, 0.06);
+      --shadow-stripe-sm: 0 2px 5px rgba(50, 50, 93, 0.08), 0 1px 1px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(50, 50, 93, 0.06);
+      --shadow-stripe-md: 0 6px 16px -2px rgba(50, 50, 93, 0.1), 0 3px 7px -3px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(50, 50, 93, 0.06);
+      --shadow-stripe-lg: 0 13px 27px -5px rgba(50, 50, 93, 0.18), 0 8px 16px -8px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(50, 50, 93, 0.06);
+      --shadow-stripe-floating: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(50, 50, 93, 0.06);
 
-      /* 功能色 */
-      --success-light: #e8f5e8;
-      --success: #4caf50;
-      --success-dark: #388e3c;
-      --success-darker: #2e7d32;
+      /* === 语义化变量映射 (浅色模式) === */
+      --primary: var(--stripe-blurple);
+      --primary-hover: var(--stripe-blurple-hover);
+      --primary-active: var(--stripe-blurple-active);
+      --primary-light: var(--stripe-blurple-light);
+      --primary-rgb: 99, 91, 255;
+      --ring: var(--stripe-blurple-ring);
 
-      --warning-light: #fff3e0;
-      --warning: #ffc107;
-      --warning-dark: #ffa000;
+      /* 背景系统 */
+      --bg-primary: var(--stripe-canvas);
+      --bg-secondary: var(--stripe-surface);
+      --bg-tertiary: #f1f4f8;
+      --bg-elevated: var(--stripe-surface);
+      --bg-overlay: rgba(10, 37, 64, 0.65);
+      --bg-hover: #f1f4f8;
+      --bg-active: #e3e8ee;
+      --bg-disabled: #f8f9fb;
 
-      --danger-light: #ffebee;
-      --danger: #f44336;
-      --danger-dark: #e74c3c;
-      --danger-darker: #dc3545;
-
-      --info-light: #e3f2fd;
-      --info: #17a2b8;
-      --info-dark: #138496;
-
-      /* === 语义化变量（浅色模式） === */
-
-      /* 背景色 */
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8f9fa;
-      --bg-tertiary: #e9ecef;
-      --bg-elevated: #ffffff;
-      --bg-overlay: rgba(0, 0, 0, 0.8);
-      --bg-hover: #f1f3f5;
-      --bg-active: #e9ecef;
-      --bg-disabled: #f8f9fa;
-
-      /* 文字色 */
-      --text-primary: #2c3e50;
-      --text-secondary: #6c757d;
-      --text-tertiary: #95a5a6;
-      --text-disabled: #adb5bd;
+      /* 文字系统 */
+      --text-primary: var(--stripe-navy);
+      --text-secondary: var(--stripe-slate);
+      --text-tertiary: var(--stripe-muted);
+      --text-disabled: #a1aab7;
       --text-inverse: #ffffff;
-      --text-link: #3498db;
-      --text-link-hover: #2980b9;
+      --text-link: var(--stripe-blurple);
+      --text-link-hover: var(--stripe-blurple-hover);
 
-      /* 边框色 */
-      --border-primary: #e9ecef;
-      --border-secondary: #dee2e6;
-      --border-tertiary: #ced4da;
-      --border-focus: #3498db;
-      --border-error: #dc3545;
-      --border-success: #4caf50;
+      /* 边框系统 */
+      --border-primary: var(--stripe-border);
+      --border-secondary: var(--stripe-border-light);
+      --border-tertiary: #cbd5e1;
+      --border-focus: var(--stripe-blurple);
+      --border-error: var(--stripe-red);
+      --border-success: var(--stripe-green);
 
-      /* 阴影 */
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
-      --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.3);
+      /* 阴影映射 */
+      --shadow-sm: var(--shadow-stripe-xs);
+      --shadow-md: var(--shadow-stripe-sm);
+      --shadow-lg: var(--shadow-stripe-md);
+      --shadow-xl: var(--shadow-stripe-lg);
 
-      /* 按钮颜色 */
-      --btn-primary-bg: #3498db;
-      --btn-primary-hover: #2980b9;
+      /* 按钮体系 */
+      --btn-primary-bg: var(--stripe-blurple);
+      --btn-primary-hover: var(--stripe-blurple-hover);
       --btn-primary-text: #ffffff;
 
-      --btn-secondary-bg: #95a5a6;
-      --btn-secondary-hover: #7f8c8d;
-      --btn-secondary-text: #ffffff;
+      --btn-secondary-bg: var(--stripe-surface);
+      --btn-secondary-hover: #f1f4f8;
+      --btn-secondary-text: var(--stripe-navy);
+      --btn-secondary-border: var(--stripe-border);
 
-      --btn-danger-bg: #e74c3c;
-      --btn-danger-hover: #c0392b;
+      --btn-danger-bg: var(--stripe-red);
+      --btn-danger-hover: #c91838;
       --btn-danger-text: #ffffff;
 
-      --btn-info-bg: #17a2b8;
-      --btn-info-hover: #138496;
-      --btn-info-text: #ffffff;
+      --btn-info-bg: var(--stripe-cyan);
+      --btn-info-hover: #00beea;
+      --btn-info-text: #0a2540;
 
       /* 表单元素 */
-      --input-bg: #f8f9fa;
-      --input-bg-focus: #ffffff;
-      --input-border: #e9ecef;
-      --input-border-focus: #3498db;
-      --input-text: #2c3e50;
-      --input-placeholder: #6c757d;
+      --input-bg: var(--stripe-surface);
+      --input-bg-focus: var(--stripe-surface);
+      --input-border: var(--stripe-border);
+      --input-border-focus: var(--stripe-blurple);
+      --input-text: var(--stripe-navy);
+      --input-placeholder: var(--stripe-muted);
 
       /* 卡片 */
-      --card-bg: #ffffff;
-      --card-border: #e9ecef;
-      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      --card-hover-border: #3498db;
-      --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --card-bg: var(--stripe-surface);
+      --card-border: var(--stripe-border);
+      --card-shadow: var(--shadow-stripe-sm);
+      --card-hover-border: rgba(99, 91, 255, 0.45);
+      --card-hover-shadow: var(--shadow-stripe-md);
 
       /* 模态框 */
-      --modal-bg: #ffffff;
-      --modal-border: #e9ecef;
-      --modal-overlay: rgba(0, 0, 0, 0.8);
-      --modal-header-border: #e9ecef;
+      --modal-bg: var(--stripe-surface);
+      --modal-border: var(--stripe-border);
+      --modal-overlay: rgba(10, 37, 64, 0.65);
+      --modal-header-border: var(--stripe-border-light);
       --fab-modal-max-width: 600px;
       --fab-modal-sm-max-width: 450px;
       --fab-modal-lg-max-width: 680px;
 
       /* 进度条 */
-      --progress-bg: #e9ecef;
-      --progress-fill: linear-gradient(90deg, #4CAF50, #2196F3);
+      --progress-bg: #edf2f7;
+      --progress-fill: linear-gradient(90deg, #635bff, #00d4ff);
 
       /* 滚动条 */
       --scrollbar-track: transparent;
-      --scrollbar-thumb: #cbd5e0;
-      --scrollbar-thumb-hover: #a0aec0;
+      --scrollbar-thumb: #cbd5e1;
+      --scrollbar-thumb-hover: #94a3b8;
 
-      /* OTP 显示 */
-      --otp-text: #2c3e50;
-      --otp-next-bg: #f8f9fa;
-      --otp-next-bg-hover: #e9ecef;
-      --otp-next-text: #6c757d;
+      /* OTP 展示 */
+      --otp-text: var(--stripe-navy);
+      --otp-code-color: var(--stripe-blurple);
+      --otp-next-bg: #f8f9fb;
+      --otp-next-bg-hover: #f1f4f8;
+      --otp-next-text: var(--stripe-muted);
 
       /* 搜索框 */
-      --search-bg: #ffffff;
-      --search-border: #e9ecef;
-      --search-border-focus: #3498db;
-      --search-icon: #6c757d;
+      --search-bg: var(--stripe-surface);
+      --search-border: var(--stripe-border);
+      --search-border-focus: var(--stripe-blurple);
+      --search-icon: var(--stripe-muted);
 
-      /* 菜单 */
-      --menu-bg: #ffffff;
-      --menu-border: #e9ecef;
-      --menu-item-hover: #f8f9fa;
-      --menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      /* 下拉菜单 */
+      --menu-bg: var(--stripe-surface);
+      --menu-border: var(--stripe-border);
+      --menu-item-hover: #f8f9fb;
+      --menu-shadow: var(--shadow-stripe-md);
 
-      /* 导入相关 */
-      --import-instructions-bg: var(--gray-50);
-      --import-instructions-border: #e9ecef;
-      --import-method-bg: #ffffff;
-      --import-method-border: #dee2e6;
-      --import-method-hover-border: #17a2b8;
-      --import-example-bg: #fff3cd;
-      --import-example-text: #856404;
-      --import-example-border: #ffeaa7;
-      --import-file-bg: var(--primary-50);
-      --import-file-border: #17a2b8;
+      /* 状态与导入导出面板 */
+      --import-instructions-bg: var(--stripe-canvas);
+      --import-instructions-border: var(--stripe-border);
+      --import-method-bg: var(--stripe-surface);
+      --import-method-border: var(--stripe-border);
+      --import-method-hover-border: var(--stripe-blurple);
+      --import-example-bg: var(--stripe-amber-light);
+      --import-example-text: #92400e;
+      --import-example-border: #fde68a;
+      --import-file-bg: var(--stripe-blurple-light);
+      --import-file-border: var(--stripe-blurple);
 
-      /* 还原配置 */
-      --restore-instructions-bg: var(--warning-light);
-      --restore-instructions-border: #ff9800;
-      --restore-warning-bg: rgba(255, 255, 255, 0.7);
-      --restore-warning-text: #d84315;
-      --restore-warning-border: rgba(216, 67, 21, 0.2);
+      --restore-instructions-bg: #fef2f2;
+      --restore-instructions-border: #fecaca;
+      --restore-warning-bg: rgba(255, 255, 255, 0.8);
+      --restore-warning-text: var(--stripe-red);
+      --restore-warning-border: rgba(223, 27, 65, 0.2);
 
-      /* 备份列表 */
-      --backup-header-bg: var(--primary-50);
-      --backup-header-border: #2196f3;
-      --backup-header-text: #1976d2;
-      --backup-select-bg: #ffffff;
-      --backup-select-border: #e3f2fd;
+      --backup-header-bg: var(--stripe-blurple-light);
+      --backup-header-border: var(--stripe-blurple);
+      --backup-header-text: var(--stripe-blurple-hover);
+      --backup-select-bg: var(--stripe-surface);
+      --backup-select-border: var(--stripe-border);
 
-      /* 备份表格 */
-      --table-bg: #ffffff;
-      --table-header-bg: var(--success);
-      --table-header-text: #ffffff;
-      --table-header-border: #388e3c;
-      --table-border: #e0e0e0;
-      --table-row-hover: var(--bg-hover);
+      --table-bg: var(--stripe-surface);
+      --table-header-bg: #f8f9fb;
+      --table-header-text: var(--stripe-slate);
+      --table-header-border: var(--stripe-border);
+      --table-border: var(--stripe-border);
+      --table-row-hover: #f8f9fb;
 
-      /* 工具 */
-      --tool-bg: #ffffff;
-      --tool-border: #e9ecef;
-      --tool-hover-bg: #f8f9fa;
-      --tool-icon-bg: var(--gray-50);
-      --tool-icon-border: #dee2e6;
+      --tool-bg: var(--stripe-surface);
+      --tool-border: var(--stripe-border);
+      --tool-hover-bg: #f8f9fb;
+      --tool-icon-bg: var(--stripe-canvas);
+      --tool-icon-border: var(--stripe-border);
 
       /* Toast 提示 */
-      --toast-bg: rgba(0, 0, 0, 0.9);
+      --toast-bg: #0a2540;
       --toast-text: #ffffff;
-      --toast-border: rgba(255, 255, 255, 0.1);
+      --toast-border: rgba(255, 255, 255, 0.12);
 
-      /* Footer */
+      /* 页脚与悬浮按钮 */
       --footer-bg: transparent;
-      --footer-border: #e9ecef;
-      --footer-text: #6c757d;
-      --footer-link: #6c757d;
-      --footer-link-hover: #3498db;
+      --footer-border: var(--stripe-border);
+      --footer-text: var(--stripe-muted);
+      --footer-link: var(--stripe-slate);
+      --footer-link-hover: var(--stripe-blurple);
 
-      /* 悬浮按钮 */
-      --float-btn-bg: #3498db;
-      --float-btn-hover: #2980b9;
+      --float-btn-bg: var(--stripe-blurple);
+      --float-btn-hover: var(--stripe-blurple-hover);
       --float-btn-text: #ffffff;
-      --float-btn-shadow: 0 8px 32px rgba(52, 152, 219, 0.3);
+      --float-btn-shadow: var(--shadow-stripe-floating);
 
-      /* shadcn-inspired semantic layer */
-      --primary-50: #f4f4f5;
-      --primary-100: #e4e4e7;
-      --primary-200: #d4d4d8;
-      --primary-300: #a1a1aa;
-      --primary-400: #71717a;
-      --primary-500: #3f3f46;
-      --primary-600: #27272a;
-      --primary-700: #18181b;
-      --primary-800: #09090b;
-      --primary-900: #000000;
-      --primary: #18181b;
-      --primary-hover: #27272a;
-      --primary-rgb: 24, 24, 27;
-      --ring: rgba(24, 24, 27, 0.12);
-      --accent: #f4f4f5;
-      --accent-foreground: #18181b;
-      --bg-primary: #fafafa;
-      --bg-secondary: #f4f4f5;
-      --bg-tertiary: #e4e4e7;
-      --bg-elevated: #ffffff;
-      --bg-hover: #f4f4f5;
-      --bg-active: #e4e4e7;
-      --text-primary: #18181b;
-      --text-secondary: #52525b;
-      --text-tertiary: #71717a;
-      --border-primary: #e4e4e7;
-      --border-secondary: #d4d4d8;
-      --border-focus: #18181b;
-      --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.04);
-      --shadow-md: 0 2px 10px rgba(24, 24, 27, 0.06);
-      --shadow-lg: 0 8px 24px rgba(24, 24, 27, 0.08);
-      --shadow-xl: 0 18px 48px rgba(24, 24, 27, 0.14);
-      --btn-primary-bg: #18181b;
-      --btn-primary-hover: #27272a;
-      --btn-secondary-bg: #f4f4f5;
-      --btn-secondary-hover: #e4e4e7;
-      --btn-secondary-text: #18181b;
-      --btn-info-bg: #0f766e;
-      --btn-info-hover: #115e59;
-      --input-bg: #ffffff;
-      --input-bg-focus: #ffffff;
-      --input-border: #e4e4e7;
-      --input-border-focus: #18181b;
-      --card-bg: #ffffff;
-      --card-border: #e4e4e7;
-      --card-shadow: var(--shadow-sm);
-      --card-hover-border: #a1a1aa;
-      --card-hover-shadow: var(--shadow-lg);
-      --modal-bg: #ffffff;
-      --modal-border: #e4e4e7;
-      --modal-overlay: rgba(9, 9, 11, 0.72);
-      --modal-header-border: #e4e4e7;
-      --search-bg: #ffffff;
-      --search-border: #e4e4e7;
-      --search-border-focus: #18181b;
-      --menu-bg: #ffffff;
-      --menu-border: #e4e4e7;
-      --menu-item-hover: #f4f4f5;
-      --menu-shadow: var(--shadow-lg);
-      --toast-bg: #18181b;
-      --toast-text: #ffffff;
-      --toast-border: rgba(255, 255, 255, 0.08);
-      --float-btn-bg: #18181b;
-      --float-btn-hover: #27272a;
-      --float-btn-shadow: 0 12px 30px rgba(24, 24, 27, 0.22);
-      --action-btn-bg: #18181b;
-      --action-btn-hover: #27272a;
-      --action-btn-shadow: 0 12px 30px rgba(24, 24, 27, 0.22);
+      --action-btn-bg: var(--stripe-blurple);
+      --action-btn-hover: var(--stripe-blurple-hover);
+      --action-btn-shadow: 0 4px 14px rgba(99, 91, 255, 0.25);
+      --qr-btn-color: var(--stripe-blurple);
+      --qr-btn-hover-bg: var(--stripe-blurple-light);
+      --progress-mini-fill: var(--stripe-blurple);
 
+      /* 功能色 */
+      --success-light: var(--stripe-green-light);
+      --success: var(--stripe-green);
+      --success-dark: #00b368;
+      --success-darker: #008f53;
+
+      --warning-light: var(--stripe-amber-light);
+      --warning: var(--stripe-amber);
+      --warning-dark: #d97706;
+
+      --danger-light: var(--stripe-red-light);
+      --danger: var(--stripe-red);
+      --danger-dark: #b91c1c;
+      --danger-darker: #991b1b;
+
+      --info-light: var(--stripe-cyan-light);
+      --info: var(--stripe-cyan);
+      --info-dark: #0099cc;
     }
 
-    /* ========== 深色模式变量覆盖 ========== */
+    /* ========== 深色模式变量覆盖 (Stripe Dark Mode) ========== */
     [data-theme="dark"] {
-      /* === 语义化变量（深色模式） === */
+      /* === Stripe 深色色调 === */
+      --stripe-navy: #f7fafc;
+      --stripe-slate: #cbd5e1;
+      --stripe-muted: #94a3b8;
+      --stripe-canvas: #090d16;
+      --stripe-surface: #111827;
+      --stripe-border: #1e293b;
+      --stripe-border-light: rgba(255, 255, 255, 0.08);
 
-      /* 功能色 - 深色模式背景需要较暗，以便与白色文字形成对比 */
-      --success-light: rgba(76, 175, 80, 0.15);
-      --warning-light: rgba(255, 193, 7, 0.15);
-      --danger-light: rgba(244, 67, 54, 0.15);
-      --info-light: rgba(23, 162, 184, 0.15);
+      --stripe-blurple-light: rgba(99, 91, 255, 0.16);
+      --stripe-blurple-ring: rgba(99, 91, 255, 0.35);
 
-      /* 背景色 */
-      --bg-primary: #1a1a1a;
-      --bg-secondary: #2d3748;
-      --bg-tertiary: #1a202c;
-      --bg-elevated: #2a2a2a;
-      --bg-overlay: rgba(0, 0, 0, 0.9);
-      --bg-hover: #374151;
-      --bg-active: #4a5568;
-      --bg-disabled: #2d3748;
+      --stripe-green-light: rgba(0, 217, 126, 0.15);
+      --stripe-red-light: rgba(223, 27, 65, 0.15);
+      --stripe-cyan-light: rgba(0, 212, 255, 0.15);
+      --stripe-amber-light: rgba(245, 158, 11, 0.15);
 
-      /* 文字色 */
-      --text-primary: #ffffff;
-      --text-secondary: #a0aec0;
-      --text-tertiary: #718096;
-      --text-disabled: #4a5568;
-      --text-inverse: #2c3e50;
-      --text-link: #63b3ed;
-      --text-link-hover: #4299e1;
+      /* === 深色模式环境阴影 === */
+      --shadow-stripe-xs: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      --shadow-stripe-sm: 0 2px 5px rgba(0, 0, 0, 0.5), 0 1px 1px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.07);
+      --shadow-stripe-md: 0 6px 16px -2px rgba(0, 0, 0, 0.6), 0 3px 7px -3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      --shadow-stripe-lg: 0 13px 27px -5px rgba(0, 0, 0, 0.7), 0 8px 16px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      --shadow-stripe-floating: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 18px 36px -18px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
 
-      /* 边框色 */
-      --border-primary: #4a5568;
-      --border-secondary: #2d3748;
-      --border-tertiary: #1a202c;
-      --border-focus: #3182ce;
-      --border-error: #f56565;
-      --border-success: #66bb6a;
+      /* === 语义化变量覆盖 === */
+      --bg-primary: var(--stripe-canvas);
+      --bg-secondary: var(--stripe-surface);
+      --bg-tertiary: #172033;
+      --bg-elevated: var(--stripe-surface);
+      --bg-overlay: rgba(0, 0, 0, 0.8);
+      --bg-hover: #1e293b;
+      --bg-active: #334155;
+      --bg-disabled: #111827;
 
-      /* 阴影 */
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-      --shadow-xl: 0 20px 60px rgba(255, 255, 255, 0.1);
+      --text-primary: var(--stripe-navy);
+      --text-secondary: var(--stripe-slate);
+      --text-tertiary: var(--stripe-muted);
+      --text-disabled: #64748b;
+      --text-inverse: #0a2540;
 
-      /* 按钮颜色 */
-      --btn-primary-bg: #3182ce;
-      --btn-primary-hover: #2c5282;
+      --border-primary: var(--stripe-border);
+      --border-secondary: var(--stripe-border-light);
+      --border-tertiary: #334155;
+      --border-focus: var(--stripe-blurple);
 
-      --btn-secondary-bg: #718096;
-      --btn-secondary-hover: #4a5568;
+      --shadow-sm: var(--shadow-stripe-xs);
+      --shadow-md: var(--shadow-stripe-sm);
+      --shadow-lg: var(--shadow-stripe-md);
+      --shadow-xl: var(--shadow-stripe-lg);
 
-      --btn-danger-bg: #f56565;
-      --btn-danger-hover: #e53e3e;
+      --btn-secondary-bg: #1e293b;
+      --btn-secondary-hover: #334155;
+      --btn-secondary-text: var(--stripe-navy);
+      --btn-secondary-border: #334155;
 
-      --btn-info-bg: #38b2ac;
-      --btn-info-hover: #2c7a7b;
+      --input-bg: #0b1120;
+      --input-bg-focus: #0b1120;
+      --input-border: #1e293b;
+      --input-border-focus: var(--stripe-blurple);
+      --input-text: var(--stripe-navy);
+      --input-placeholder: var(--stripe-muted);
 
-      /* 表单元素 */
-      --input-bg: #1a202c;
-      --input-bg-focus: #2d3748;
-      --input-border: #4a5568;
-      --input-border-focus: #3182ce;
-      --input-text: #ffffff;
-      --input-placeholder: #718096;
+      --card-bg: var(--stripe-surface);
+      --card-border: var(--stripe-border);
+      --card-shadow: var(--shadow-stripe-sm);
+      --card-hover-border: rgba(99, 91, 255, 0.55);
+      --card-hover-shadow: var(--shadow-stripe-md);
 
-      /* 卡片 */
-      --card-bg: #1a1a1a;
-      --card-border: #404040;
-      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-      --card-hover-border: #5dade2;
-      --card-hover-shadow: 0 4px 12px rgba(93, 173, 226, 0.2);
+      --modal-bg: var(--stripe-surface);
+      --modal-border: var(--stripe-border);
+      --modal-overlay: rgba(0, 0, 0, 0.85);
+      --modal-header-border: var(--stripe-border);
 
-      /* 模态框 */
-      --modal-bg: #1a1a1a;
-      --modal-border: #333333;
-      --modal-overlay: rgba(0, 0, 0, 0.9);
-      --modal-header-border: #4a5568;
+      --progress-bg: #1e293b;
+      --scrollbar-thumb: #334155;
+      --scrollbar-thumb-hover: #475569;
 
-      /* 进度条 */
-      --progress-bg: #333333;
-      --progress-fill: linear-gradient(90deg, #4CAF50, #2196F3);
+      --otp-text: var(--stripe-navy);
+      --otp-code-color: #818cf8;
+      --otp-next-bg: rgba(255, 255, 255, 0.04);
+      --otp-next-bg-hover: rgba(255, 255, 255, 0.08);
+      --otp-next-text: var(--stripe-muted);
 
-      /* 滚动条 */
-      --scrollbar-track: transparent;
-      --scrollbar-thumb: #4a5568;
-      --scrollbar-thumb-hover: #718096;
+      --search-bg: #0b1120;
+      --search-border: #1e293b;
+      --search-icon: var(--stripe-muted);
 
-      /* OTP 显示 */
-      --otp-text: #ffffff;
-      --otp-next-bg: rgba(255, 255, 255, 0.05);
-      --otp-next-bg-hover: rgba(255, 255, 255, 0.1);
-      --otp-next-text: #cccccc;
+      --menu-bg: #1e293b;
+      --menu-border: #334155;
+      --menu-item-hover: rgba(255, 255, 255, 0.06);
+      --menu-shadow: var(--shadow-stripe-lg);
 
-      /* 搜索框 */
-      --search-bg: #1a1a1a;
-      --search-border: #404040;
-      --search-border-focus: #3498db;
-      --search-icon: #888888;
+      --import-instructions-bg: #172033;
+      --import-instructions-border: #1e293b;
+      --import-method-bg: #111827;
+      --import-method-border: #1e293b;
+      --import-example-bg: rgba(245, 158, 11, 0.15);
+      --import-example-text: #fcd34d;
+      --import-example-border: rgba(245, 158, 11, 0.3);
+      --import-file-bg: rgba(99, 91, 255, 0.15);
+      --import-file-border: var(--stripe-blurple);
 
-      /* 菜单 */
-      --menu-bg: #2a2a2a;
-      --menu-border: #444444;
-      --menu-item-hover: rgba(255, 255, 255, 0.1);
-      --menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --restore-instructions-bg: rgba(223, 27, 65, 0.15);
+      --restore-instructions-border: rgba(223, 27, 65, 0.3);
+      --restore-warning-bg: rgba(0, 0, 0, 0.4);
+      --restore-warning-text: #fca5a5;
+      --restore-warning-border: rgba(223, 27, 65, 0.3);
 
-      /* 导入相关 */
-      --import-instructions-bg: #2d3748;
-      --import-instructions-border: #4a5568;
-      --import-method-bg: #1a202c;
-      --import-method-border: #4a5568;
-      --import-method-hover-border: #63b3ed;
-      --import-example-bg: #744210;
-      --import-example-text: #fbd38d;
-      --import-example-border: #ed8936;
-      --import-file-bg: #1e3a5f;
-      --import-file-border: #2196f3;
+      --backup-header-bg: rgba(99, 91, 255, 0.2);
+      --backup-header-border: var(--stripe-blurple);
+      --backup-header-text: #a5b4fc;
+      --backup-select-bg: #111827;
+      --backup-select-border: #1e293b;
 
-      /* 还原配置 */
-      --restore-instructions-bg: #3a2a1a;
-      --restore-instructions-border: #ff9800;
-      --restore-warning-bg: rgba(0, 0, 0, 0.3);
-      --restore-warning-text: #ffab91;
-      --restore-warning-border: rgba(255, 87, 34, 0.3);
+      --table-bg: #111827;
+      --table-header-bg: #172033;
+      --table-header-text: var(--stripe-slate);
+      --table-header-border: #1e293b;
+      --table-border: #1e293b;
+      --table-row-hover: #172033;
 
-      /* 备份列表 */
-      --backup-header-bg: #1e3a5f;
-      --backup-header-border: #2196f3;
-      --backup-header-text: #42a5f5;
-      --backup-select-bg: #1a1a1a;
-      --backup-select-border: #2d4a6f;
+      --tool-bg: #111827;
+      --tool-border: #1e293b;
+      --tool-hover-bg: #172033;
+      --tool-icon-bg: #172033;
+      --tool-icon-border: #1e293b;
 
-      /* 备份表格 */
-      --table-bg: #1a1a1a;
-      --table-header-bg: #1b5e20;
-      --table-header-text: #ffffff;
-      --table-header-border: #2e7d32;
-      --table-border: #333333;
-      --table-row-hover: var(--bg-hover);
+      --toast-bg: #1e293b;
+      --toast-text: #f7fafc;
+      --toast-border: rgba(255, 255, 255, 0.12);
 
-      /* 工具 */
-      --tool-bg: #2d3748;
-      --tool-border: #4a5568;
-      --tool-hover-bg: #4a5568;
-      --tool-icon-bg: #4a5568;
-      --tool-icon-border: #4a5568;
+      --footer-border: #1e293b;
+      --footer-text: var(--stripe-muted);
+      --footer-link: var(--stripe-slate);
+      --footer-link-hover: #818cf8;
 
-      /* Toast 提示 */
-      --toast-bg: rgba(255, 255, 255, 0.95);
-      --toast-text: #2c3e50;
-      --toast-border: rgba(0, 0, 0, 0.1);
+      --float-btn-bg: var(--stripe-blurple);
+      --float-btn-hover: var(--stripe-blurple-hover);
+      --float-btn-text: #ffffff;
+      --float-btn-shadow: var(--shadow-stripe-floating);
 
-      /* Footer */
-      --footer-bg: transparent;
-      --footer-border: #2d3748;
-      --footer-text: #4a5568;
-      --footer-link: #718096;
-      --footer-link-hover: #63b3ed;
+      --action-btn-bg: var(--stripe-blurple);
+      --action-btn-hover: var(--stripe-blurple-hover);
+      --action-btn-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
+      --qr-btn-color: #818cf8;
+      --qr-btn-hover-bg: rgba(99, 91, 255, 0.2);
 
-      /* 悬浮按钮 */
-      --float-btn-bg: #3182ce;
-      --float-btn-hover: #2c5282;
-      --float-btn-shadow: 0 8px 32px rgba(49, 130, 206, 0.4);
-
-      /* shadcn-inspired semantic layer */
-      --primary: #fafafa;
-      --primary-hover: #e4e4e7;
-      --primary-rgb: 250, 250, 250;
-      --ring: rgba(250, 250, 250, 0.14);
-      --accent: #27272a;
-      --accent-foreground: #fafafa;
-      --bg-primary: #09090b;
-      --bg-secondary: #18181b;
-      --bg-tertiary: #27272a;
-      --bg-elevated: #18181b;
-      --bg-hover: #27272a;
-      --bg-active: #3f3f46;
-      --text-primary: #fafafa;
-      --text-secondary: #d4d4d8;
-      --text-tertiary: #a1a1aa;
-      --border-primary: #27272a;
-      --border-secondary: #3f3f46;
-      --border-focus: #fafafa;
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-      --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.42);
-      --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.48);
-      --shadow-xl: 0 18px 56px rgba(0, 0, 0, 0.6);
-      --btn-primary-bg: #fafafa;
-      --btn-primary-hover: #e4e4e7;
-      --btn-primary-text: #09090b;
-      --btn-secondary-bg: #27272a;
-      --btn-secondary-hover: #3f3f46;
-      --btn-secondary-text: #fafafa;
-      --btn-info-bg: #14b8a6;
-      --btn-info-hover: #0d9488;
-      --input-bg: #09090b;
-      --input-bg-focus: #09090b;
-      --input-border: #27272a;
-      --input-border-focus: #fafafa;
-      --card-bg: #18181b;
-      --card-border: #27272a;
-      --card-hover-border: #52525b;
-      --card-hover-shadow: var(--shadow-lg);
-      --modal-bg: #18181b;
-      --modal-border: #27272a;
-      --modal-overlay: rgba(0, 0, 0, 0.78);
-      --modal-header-border: #27272a;
-      --search-bg: #18181b;
-      --search-border: #27272a;
-      --search-border-focus: #fafafa;
-      --menu-bg: #18181b;
-      --menu-border: #27272a;
-      --menu-item-hover: #27272a;
-      --menu-shadow: var(--shadow-lg);
-      --toast-bg: #fafafa;
-      --toast-text: #09090b;
-      --toast-border: rgba(9, 9, 11, 0.1);
-      --float-btn-bg: #fafafa;
-      --float-btn-hover: #e4e4e7;
-      --float-btn-text: #09090b;
-      --float-btn-shadow: 0 12px 30px rgba(250, 250, 250, 0.16);
-      --action-btn-bg: #fafafa;
-      --action-btn-hover: #e4e4e7;
-      --action-btn-shadow: 0 12px 30px rgba(250, 250, 250, 0.16);
-
+      --success-light: rgba(0, 217, 126, 0.15);
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --danger-light: rgba(223, 27, 65, 0.15);
+      --info-light: rgba(0, 212, 255, 0.15);
     }
 
-    /* ========== 媒体查询回退（JavaScript 禁用时） ========== */
+    /* ========== 媒体查询回退 ========== */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        /* 背景色 */
-        --bg-primary: #1a1a1a;
-        --bg-secondary: #2d3748;
-        --bg-tertiary: #1a202c;
-        --bg-elevated: #2a2a2a;
-        --bg-hover: #374151;
+        --stripe-navy: #f7fafc;
+        --stripe-slate: #cbd5e1;
+        --stripe-muted: #94a3b8;
+        --stripe-canvas: #090d16;
+        --stripe-surface: #111827;
+        --stripe-border: #1e293b;
+        --stripe-border-light: rgba(255, 255, 255, 0.08);
 
-        /* 文字色 */
-        --text-primary: #ffffff;
-        --text-secondary: #a0aec0;
-        --text-tertiary: #718096;
+        --bg-primary: #090d16;
+        --bg-secondary: #111827;
+        --bg-tertiary: #172033;
+        --bg-elevated: #111827;
+        --bg-hover: #1e293b;
 
-        /* 边框色 */
-        --border-primary: #4a5568;
-        --border-secondary: #2d3748;
+        --text-primary: #f7fafc;
+        --text-secondary: #cbd5e1;
+        --text-tertiary: #94a3b8;
 
-        /* 卡片 */
-        --card-bg: #1a1a1a;
-        --card-border: #404040;
+        --border-primary: #1e293b;
+        --border-secondary: rgba(255, 255, 255, 0.08);
 
-        /* 输入框 */
-        --input-bg: #1a202c;
-        --input-border: #4a5568;
-        --input-text: #ffffff;
+        --card-bg: #111827;
+        --card-border: #1e293b;
 
-        /* 模态框 */
-        --modal-bg: #1a1a1a;
-        --modal-border: #333333;
+        --input-bg: #0b1120;
+        --input-border: #1e293b;
+        --input-text: #f7fafc;
+
+        --modal-bg: #111827;
+        --modal-border: #1e293b;
       }
     }
 
-    /* ========== 主题过渡动画 ========== */
+    /* ========== 主题过渡平滑设定 ========== */
     html.theme-transition,
     html.theme-transition *,
     html.theme-transition *::before,
@@ -587,7 +472,7 @@ export function getVariables() {
       transition-delay: 0s !important;
     }
 
-    /* 应用过渡到主要元素 */
+    /* 应用过渡到主要界面元素 */
     body,
     .card,
     .secret-card,
@@ -603,7 +488,7 @@ export function getVariables() {
       transition: var(--theme-transition);
     }
 
-    /* 禁用过渡的情况（减少动画偏好） */
+    /* 禁用过渡的情况（减弱动态效果设置） */
     @media (prefers-reduced-motion: reduce) {
       html.theme-transition,
       html.theme-transition *,

@@ -30,6 +30,7 @@ describe('settings page copy', () => {
 		expect(html).toContain('id="secretCount"');
 		expect(html).toContain('id="secretCountValue"');
 		expect(html).toContain('个账号');
+		expect(html).not.toMatch(/id="secretCount"[^>]*display:\s*none/);
 	});
 
 	it('renders a provider filter row without adding tags to cards', async () => {
@@ -79,6 +80,7 @@ describe('settings page copy', () => {
 		expect(html).toContain('class="otp-next-container"');
 		expect(html).toContain('class="otp-next-code"');
 		expect(html).not.toContain('class="otp-next-label"');
+		expect(html).not.toContain('<span>下期:</span>');
 	});
 
 	it('renders creation time and a duplicate account filter', async () => {
@@ -88,7 +90,7 @@ describe('settings page copy', () => {
 		expect(html).toContain('class="secret-created-at"');
 		expect(html).toContain('创建时间 ');
 		expect(html).not.toContain('创建时间未知');
-		expect(html).toContain("createdAtText ? '<p class=\"secret-created-at\"");
+		expect(html).toContain('createdAtText ? \'<p class="secret-created-at"');
 		expect(html).toContain('duplicate-account-filter');
 		expect(html).toContain("renderIcon('copy', 'ui-icon')");
 	});
