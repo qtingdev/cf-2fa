@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 
-const ICONIFY_API = 'https://api.iconify.design/simple-icons.json';
+const ICONIFY_API = 'https://api.iconify.design';
 const SIMPLE_ICONS_METADATA = 'https://cdn.jsdelivr.net/npm/simple-icons@15.0.0/data/simple-icons.json';
 
 const ICON_SPECS = [
@@ -99,6 +99,53 @@ const ICON_SPECS = [
 	{ id: 'bytedance', aliases: ['byte dance', '字节跳动'] },
 ];
 
+const COLORED_ICON_OVERRIDES = {
+	google: 'logos:google-icon',
+	googlecloud: 'logos:google-cloud',
+	gmail: 'logos:google-gmail',
+	microsoft: 'logos:microsoft-icon',
+	microsoftazure: 'logos:microsoft-azure',
+	meta: 'logos:meta-icon',
+	facebook: 'logos:facebook',
+	messenger: 'logos:messenger',
+	instagram: 'logos:instagram-icon',
+	linkedin: 'logos:linkedin-icon',
+	reddit: 'logos:reddit-icon',
+	tiktok: 'logos:tiktok-icon',
+	discord: 'logos:discord-icon',
+	slack: 'logos:slack-icon',
+	telegram: 'logos:telegram',
+	whatsapp: 'logos:whatsapp-icon',
+	signal: 'logos:signal',
+	zoom: 'logos:zoom-icon',
+	gitlab: 'logos:gitlab-icon',
+	bitbucket: 'logos:bitbucket',
+	npm: 'logos:npm-icon',
+	docker: 'logos:docker-icon',
+	kubernetes: 'logos:kubernetes',
+	jenkins: 'logos:jenkins',
+	firebase: 'logos:firebase-icon',
+	supabase: 'logos:supabase-icon',
+	netlify: 'logos:netlify-icon',
+	heroku: 'logos:heroku-icon',
+	cloudflare: 'logos:cloudflare-icon',
+	digitalocean: 'logos:digital-ocean-icon',
+	vultr: 'logos:vultr-icon',
+	salesforce: 'logos:salesforce',
+	atlassian: 'logos:atlassian',
+	jira: 'logos:jira',
+	trello: 'logos:trello',
+	figma: 'logos:figma',
+	adobe: 'logos:adobe-icon',
+	huggingface: 'logos:hugging-face-icon',
+	paypal: 'logos:paypal',
+	netflix: 'logos:netflix-icon',
+	spotify: 'logos:spotify-icon',
+	youtube: 'logos:youtube-icon',
+	twitch: 'logos:twitch',
+	shopify: 'logos:shopify',
+};
+
 const MANUAL_COLORS = {
 	microsoft: '00A4EF',
 	microsoftazure: '0078D4',
@@ -168,35 +215,85 @@ function chunk(values, size) {
 	return chunks;
 }
 
-async function loadIconBodies(iconIds) {
-	const iconSets = await Promise.all(chunk(iconIds, 40).map((ids) => fetchJson(`${ICONIFY_API}?icons=${ids.join(',')}`)));
-	const bodies = Object.assign({}, ...iconSets.map((iconSet) => iconSet.icons || {}));
-	const missing = iconIds.filter((iconId) => !bodies[iconId]?.body);
+function parseIconSource(source) {
+	const separatorIndex = source.indexOf(':');
+	if (separatorIndex <= 0 || separatorIndex === source.length - 1) {
+		throw new Error(`Invalid Iconify source: ${source}`);
+	}
+
+	return {
+		prefix: source.slice(0, separatorIndex),
+		name: source.slice(separatorIndex + 1),
+	};
+}
+
+async function loadIconDefinitions(sources) {
+	const sourcesByPrefix = new Map();
+	for (const source of sources) {
+		const { prefix, name } = parseIconSource(source);
+		const names = sourcesByPrefix.get(prefix) || [];
+		names.push(name);
+		sourcesByPrefix.set(prefix, names);
+	}
+
+	const loadedDefinitions = new Map();
+	await Promise.all(
+		[...sourcesByPrefix.entries()].flatMap(([prefix, names]) =>
+			chunk(names, 40).map(async (nameChunk) => {
+				const iconSet = await fetchJson(`${ICONIFY_API}/${prefix}.json?icons=${nameChunk.join(',')}`);
+				for (const name of nameChunk) {
+					const icon = iconSet.icons?.[name];
+					if (!icon?.body) {
+						continue;
+					}
+
+					if (icon.left || icon.top || icon.rotate || icon.hFlip || icon.vFlip) {
+						throw new Error(`Unsupported Iconify transform: ${prefix}:${name}`);
+					}
+
+					loadedDefinitions.set(`${prefix}:${name}`, {
+						body: icon.body,
+						width: icon.width || iconSet.width || 16,
+						height: icon.height || iconSet.height || 16,
+					});
+				}
+			}),
+		),
+	);
+
+	const missing = sources.filter((source) => !loadedDefinitions.has(source));
 
 	if (missing.length > 0) {
 		throw new Error(`Iconify is missing icons: ${missing.join(', ')}`);
 	}
 
-	return bodies;
+	return loadedDefinitions;
 }
 
 async function main() {
 	const iconIds = ICON_SPECS.map((spec) => spec.id);
-	const [iconBodies, metadata] = await Promise.all([loadIconBodies(iconIds), fetchJson(SIMPLE_ICONS_METADATA)]);
+	const iconSources = ICON_SPECS.map((spec) => COLORED_ICON_OVERRIDES[spec.id] || `simple-icons:${spec.id}`);
+	const [loadedIcons, metadata] = await Promise.all([loadIconDefinitions(iconSources), fetchJson(SIMPLE_ICONS_METADATA)]);
 	const metadataColors = new Map(metadata.map((icon) => [metadataSlug(icon.title), icon.hex]));
 	const definitions = {};
 	const aliases = {};
 
 	for (const spec of ICON_SPECS) {
-		const color = MANUAL_COLORS[spec.id] || metadataColors.get(spec.id);
-		if (!color) {
+		const source = COLORED_ICON_OVERRIDES[spec.id] || `simple-icons:${spec.id}`;
+		const icon = loadedIcons.get(source);
+		const usesCurrentColor = icon.body.includes('currentColor');
+		const color = usesCurrentColor ? MANUAL_COLORS[spec.id] || metadataColors.get(spec.id) : null;
+		if (usesCurrentColor && !color) {
 			throw new Error(`Simple Icons metadata is missing a color for: ${spec.id}`);
 		}
 
 		definitions[spec.id] = {
-			body: iconBodies[spec.id].body,
-			color: `#${color.toUpperCase()}`,
-			adaptive: ADAPTIVE_ICONS.has(spec.id),
+			body: icon.body,
+			width: icon.width,
+			height: icon.height,
+			color: color ? `#${color.toUpperCase()}` : null,
+			adaptive: usesCurrentColor && ADAPTIVE_ICONS.has(spec.id),
+			source,
 		};
 
 		for (const alias of [spec.id, ...spec.aliases]) {
@@ -208,11 +305,12 @@ async function main() {
 		}
 	}
 
-	const output = `/**\n * Generated by scripts/generate-service-icons.mjs.\n * SVG paths: Simple Icons via Iconify (CC0-1.0).\n * Do not edit this file manually; run npm run icons:update.\n */\n\nexport const SERVICE_ICON_DEFINITIONS = Object.freeze(${JSON.stringify(definitions, null, 2)});\n\nexport const SERVICE_ICON_ALIASES = Object.freeze(${JSON.stringify(aliases, null, 2)});\n`;
+	const output = `/**\n * Generated by scripts/generate-service-icons.mjs.\n * SVG paths: Iconify Logos and Simple Icons collections.\n * Do not edit this file manually; run npm run icons:update.\n */\n\nexport const SERVICE_ICON_DEFINITIONS = Object.freeze(${JSON.stringify(definitions, null, 2)});\n\nexport const SERVICE_ICON_ALIASES = Object.freeze(${JSON.stringify(aliases, null, 2)});\n`;
 	const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 	const outputPath = resolve(scriptDirectory, '../src/ui/config/serviceIcons.js');
+	const prettierConfig = (await prettier.resolveConfig(outputPath)) || {};
 
-	const formattedOutput = await prettier.format(output, { filepath: outputPath });
+	const formattedOutput = await prettier.format(output, { ...prettierConfig, filepath: outputPath });
 
 	await writeFile(outputPath, formattedOutput, 'utf8');
 	console.log(`Generated ${iconIds.length} service icons and ${Object.keys(aliases).length} aliases.`);

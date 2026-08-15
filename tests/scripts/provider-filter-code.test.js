@@ -73,11 +73,20 @@ describe('provider filtering runtime code', () => {
 		const api = createProviderFilterApi([]);
 		let wheelHandler;
 		let listenerOptions;
+		const animationFrames = [];
 		const container = {
 			dataset: {},
 			scrollWidth: 600,
 			clientWidth: 240,
 			scrollLeft: 0,
+			ownerDocument: {
+				defaultView: {
+					requestAnimationFrame: (callback) => {
+						animationFrames.push(callback);
+						return animationFrames.length;
+					},
+				},
+			},
 			addEventListener: (_type, handler, options) => {
 				wheelHandler = handler;
 				listenerOptions = options;
@@ -90,13 +99,23 @@ describe('provider filtering runtime code', () => {
 
 		const preventDefault = vi.fn();
 		wheelHandler({ deltaX: 0, deltaY: 80, deltaMode: 0, preventDefault });
-		expect(container.scrollLeft).toBe(80);
+		expect(container.scrollLeft).toBe(0);
+		expect(animationFrames).toHaveLength(1);
 		expect(preventDefault).toHaveBeenCalledOnce();
 
-		container.scrollLeft = 360;
+		let frameCount = 0;
+		while (animationFrames.length > 0 && frameCount < 100) {
+			animationFrames.shift()();
+			frameCount += 1;
+		}
+
+		expect(container.scrollLeft).toBe(80);
+		expect(frameCount).toBeGreaterThan(1);
+
+		container.scrollLeft = 359.8;
 		preventDefault.mockClear();
 		wheelHandler({ deltaX: 0, deltaY: 80, deltaMode: 0, preventDefault });
-		expect(container.scrollLeft).toBe(360);
+		expect(container.scrollLeft).toBe(359.8);
 		expect(preventDefault).not.toHaveBeenCalled();
 	});
 });

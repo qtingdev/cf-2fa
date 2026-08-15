@@ -115,13 +115,14 @@ describe('settings page copy', () => {
 		expect(providerFiltersStyle).toContain('overflow-x: auto;');
 		expect(providerFiltersStyle).toContain('overflow-y: hidden;');
 		expect(providerFiltersStyle).toContain('-webkit-overflow-scrolling: touch;');
-		expect(providerFiltersStyle).toContain('scrollbar-width: thin;');
-		expect(providerFiltersStyle).toContain('padding-bottom: 4px;');
+		expect(providerFiltersStyle).toContain('scrollbar-width: none;');
+		expect(providerFiltersStyle).toContain('-ms-overflow-style: none;');
 		expect(providerOptionStyle).toContain('white-space: nowrap;');
 		expect(providerOptionStyle).toContain('flex: 0 0 auto;');
-		expect(baseStyles).toContain('.provider-filters::-webkit-scrollbar-thumb');
-		expect(baseStyles).toContain('@media (hover: none), (pointer: coarse)');
+		expect(baseStyles).toContain('.provider-filters::-webkit-scrollbar');
+		expect(baseStyles).not.toContain('.provider-filters::-webkit-scrollbar-thumb');
 		expect(getSearchCode()).toContain("container.addEventListener('wheel'");
+		expect(getSearchCode()).toContain('requestFrame(animateScroll)');
 		expect(getSearchCode()).toContain('{ passive: false }');
 	});
 
@@ -196,6 +197,7 @@ describe('settings page copy', () => {
 		const serviceIconStyle = componentStyles.match(/\.service-icon \{([^}]*)\}/)?.[1] || '';
 		const serviceBrandIconStyle = componentStyles.match(/\n    \.service-brand-icon \{([^}]*)\}/)?.[1] || '';
 		const tableIconStyle = componentStyles.match(/\.service-icon\.table-service-avatar \.service-brand-icon \{([^}]*)\}/)?.[1] || '';
+		const faviconStyle = componentStyles.match(/\.service-favicon \{([^}]*)\}/)?.[1] || '';
 		const fallbackStyle = componentStyles.match(/\.service-avatar-fallback \{([^}]*)\}/)?.[1] || '';
 
 		expect(serviceIconStyle).toContain('background: transparent;');
@@ -207,6 +209,8 @@ describe('settings page copy', () => {
 		expect(serviceBrandIconStyle).toContain('height: 40px;');
 		expect(tableIconStyle).toContain('width: 32px;');
 		expect(tableIconStyle).toContain('height: 32px;');
+		expect(faviconStyle).toContain('position: absolute;');
+		expect(faviconStyle).toContain('object-fit: contain;');
 		expect(fallbackStyle).toContain('background: var(--stripe-blurple);');
 		expect(fallbackStyle).toContain('color: #ffffff;');
 	});

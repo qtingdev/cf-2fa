@@ -381,6 +381,7 @@ export function getComponentStyles() {
       background: transparent;
       border: none;
       box-shadow: none;
+      position: relative;
       overflow: hidden;
       user-select: none;
     }
@@ -394,6 +395,17 @@ export function getComponentStyles() {
 
     .service-brand-icon-adaptive {
       color: var(--stripe-navy);
+    }
+
+    .service-favicon {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: inherit;
     }
 
     .service-avatar-fallback {

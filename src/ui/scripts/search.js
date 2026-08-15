@@ -308,6 +308,28 @@ export function getSearchCode() {
       }
 
       container.dataset.horizontalWheelBound = 'true';
+      const view = container.ownerDocument?.defaultView || globalThis;
+      const requestFrame = typeof view.requestAnimationFrame === 'function'
+        ? callback => view.requestAnimationFrame(callback)
+        : callback => setTimeout(callback, 16);
+      const prefersReducedMotion = typeof view.matchMedia === 'function' &&
+        view.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let targetScrollLeft = container.scrollLeft;
+      let animationFrame = null;
+
+      const animateScroll = () => {
+        const distance = targetScrollLeft - container.scrollLeft;
+
+        if (Math.abs(distance) < 0.5) {
+          container.scrollLeft = targetScrollLeft;
+          animationFrame = null;
+          return;
+        }
+
+        container.scrollLeft += distance * 0.24;
+        animationFrame = requestFrame(animateScroll);
+      };
+
       container.addEventListener('wheel', event => {
         if (container.scrollWidth <= container.clientWidth || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
           return;
@@ -320,14 +342,31 @@ export function getSearchCode() {
             : 1;
         const delta = event.deltaY * deltaMultiplier;
         const maxScrollLeft = container.scrollWidth - container.clientWidth;
-        const nextScrollLeft = Math.max(0, Math.min(maxScrollLeft, container.scrollLeft + delta));
+        if (animationFrame === null) {
+          targetScrollLeft = container.scrollLeft;
+        }
 
-        if (nextScrollLeft === container.scrollLeft) {
+        const nextScrollLeft = Math.max(0, Math.min(maxScrollLeft, targetScrollLeft + delta));
+
+        if (Math.abs(nextScrollLeft - targetScrollLeft) < 0.5) {
+          targetScrollLeft = nextScrollLeft;
+          if (animationFrame !== null && Math.abs(container.scrollLeft - targetScrollLeft) >= 0.5) {
+            event.preventDefault();
+          }
           return;
         }
 
-        container.scrollLeft = nextScrollLeft;
+        targetScrollLeft = nextScrollLeft;
         event.preventDefault();
+
+        if (prefersReducedMotion) {
+          container.scrollLeft = targetScrollLeft;
+          return;
+        }
+
+        if (animationFrame === null) {
+          animationFrame = requestFrame(animateScroll);
+        }
       }, { passive: false });
     }
 

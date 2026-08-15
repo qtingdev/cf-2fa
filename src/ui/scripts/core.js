@@ -5,6 +5,63 @@
 
 import { SERVICE_ICON_ALIASES, SERVICE_ICON_DEFINITIONS } from '../config/serviceIcons.js';
 
+const SERVICE_FAVICON_DOMAINS = Object.freeze({
+	airbnb: 'airbnb.com',
+	'battle net': 'battle.net',
+	booking: 'booking.com',
+	expedia: 'expedia.com',
+	expressvpn: 'expressvpn.com',
+	'go daddy': 'godaddy.com',
+	godaddy: 'godaddy.com',
+	hotels: 'hotels.com',
+	'ibm cloud': 'ibm.com',
+	ibmcloud: 'ibm.com',
+	lyft: 'lyft.com',
+	mailchimp: 'mailchimp.com',
+	mastodon: 'mastodon.social',
+	maven: 'maven.apache.org',
+	monday: 'monday.com',
+	mongodb: 'mongodb.com',
+	nordvpn: 'nordvpn.com',
+	origin: 'ea.com',
+	pinterest: 'pinterest.com',
+	porkbun: 'porkbun.com',
+	postgresql: 'postgresql.org',
+	rubygems: 'rubygems.org',
+	sendgrid: 'sendgrid.com',
+	snapchat: 'snapchat.com',
+	soundcloud: 'soundcloud.com',
+	sourceforge: 'sourceforge.net',
+	tripadvisor: 'tripadvisor.com',
+	'truth social': 'truthsocial.com',
+	truthsocial: 'truthsocial.com',
+	tumblr: 'tumblr.com',
+	uber: 'uber.com',
+	v2ex: 'v2ex.com',
+	yelp: 'yelp.com',
+});
+
+const GENERIC_ACCOUNT_DOMAINS = Object.freeze([
+	'126.com',
+	'163.com',
+	'example.com',
+	'example.net',
+	'example.org',
+	'foxmail.com',
+	'gmail.com',
+	'googlemail.com',
+	'hotmail.com',
+	'icloud.com',
+	'live.com',
+	'me.com',
+	'msn.com',
+	'outlook.com',
+	'proton.me',
+	'protonmail.com',
+	'qq.com',
+	'yahoo.com',
+]);
+
 /**
  * 获取 Core 相关代码
  * @returns {string} Core JavaScript 代码
@@ -12,10 +69,14 @@ import { SERVICE_ICON_ALIASES, SERVICE_ICON_DEFINITIONS } from '../config/servic
 export function getCoreCode() {
 	const serviceIconDefinitionsJSON = JSON.stringify(SERVICE_ICON_DEFINITIONS, null, 2);
 	const serviceIconAliasesJSON = JSON.stringify(SERVICE_ICON_ALIASES, null, 2);
+	const serviceFaviconDomainsJSON = JSON.stringify(SERVICE_FAVICON_DOMAINS, null, 2);
+	const genericAccountDomainsJSON = JSON.stringify(GENERIC_ACCOUNT_DOMAINS, null, 2);
 
 	return `    // ========== 本地供应商 SVG 图标配置 ==========
     const SERVICE_ICON_DEFINITIONS = ${serviceIconDefinitionsJSON};
     const SERVICE_ICON_ALIASES = ${serviceIconAliasesJSON};
+    const SERVICE_FAVICON_DOMAINS = ${serviceFaviconDomainsJSON};
+    const GENERIC_ACCOUNT_DOMAINS = new Set(${genericAccountDomainsJSON});
 
     // ========== 供应商图标匹配逻辑 ==========
 
@@ -80,6 +141,62 @@ export function getCoreCode() {
       }
 
       return null;
+    }
+
+    function normalizeFaviconDomain(value) {
+      let candidate = String(value || '').trim().toLocaleLowerCase('en-US');
+      if (!candidate) return '';
+
+      try {
+        if (/^[a-z][a-z0-9+.-]*:\\/\\//i.test(candidate)) {
+          candidate = new URL(candidate).hostname;
+        } else {
+          candidate = candidate.replace(/^\\/\\//, '').split(/[/?#]/, 1)[0].split(':', 1)[0];
+        }
+      } catch (error) {
+        return '';
+      }
+
+      candidate = candidate.replace(/^www\\./, '').replace(/\\.$/, '');
+      const domainPattern = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+(?:[a-z]{2,63}|xn--[a-z0-9-]{2,59})$/i;
+      return domainPattern.test(candidate) ? candidate : '';
+    }
+
+    function getAccountFaviconDomain(accountName) {
+      const account = String(accountName || '').trim();
+      const separatorIndex = account.lastIndexOf('@');
+      if (separatorIndex < 0 || separatorIndex === account.length - 1) {
+        return '';
+      }
+
+      const domain = normalizeFaviconDomain(account.slice(separatorIndex + 1));
+      return domain && !GENERIC_ACCOUNT_DOMAINS.has(domain) ? domain : '';
+    }
+
+    function getServiceFaviconDomain(serviceName, accountName) {
+      const directDomain = normalizeFaviconDomain(serviceName);
+      if (directDomain) {
+        return directDomain;
+      }
+
+      const normalizedName = splitServiceWords(serviceName).join(' ');
+      const mappedDomain = SERVICE_FAVICON_DOMAINS[normalizedName];
+      if (mappedDomain) {
+        return mappedDomain;
+      }
+
+      const accountDomain = getAccountFaviconDomain(accountName);
+      if (accountDomain) {
+        return accountDomain;
+      }
+
+      const blockedNames = ['2fa', 'test', 'totp', 'unknown', 'unknown provider', '未命名', '未收录供应商', '测试服务'];
+      const guessedLabel = normalizedName.replace(/\\s+/g, '');
+      return !blockedNames.includes(normalizedName) &&
+        /^[a-z0-9][a-z0-9-]{1,61}$/.test(guessedLabel) &&
+        /[a-z]/.test(guessedLabel)
+        ? guessedLabel + '.com'
+        : '';
     }
 
     // ========== 原有函数 ==========
@@ -218,18 +335,25 @@ export function getCoreCode() {
         pad(date.getMinutes());
     }
 
-    function createServiceAvatar(providerName, serviceIcon, extraClass) {
+    function createServiceAvatar(providerName, serviceIcon, extraClass, accountName) {
       const className = 'service-icon service-avatar' + (extraClass ? ' ' + extraClass : '');
       const fallback = escapeHTML(String(providerName || '?').trim().charAt(0).toUpperCase() || '?');
+      const fallbackIcon = '<span class="service-avatar-fallback" aria-hidden="true">' + fallback + '</span>';
       const iconClass = serviceIcon && serviceIcon.adaptive
         ? 'service-brand-icon service-brand-icon-adaptive'
         : 'service-brand-icon';
-      const iconStyle = serviceIcon && !serviceIcon.adaptive
+      const iconStyle = serviceIcon && !serviceIcon.adaptive && serviceIcon.color
         ? ' style="color: ' + escapeAttribute(serviceIcon.color) + ';"'
         : '';
+      const iconWidth = serviceIcon && Number.isFinite(Number(serviceIcon.width)) ? Number(serviceIcon.width) : 24;
+      const iconHeight = serviceIcon && Number.isFinite(Number(serviceIcon.height)) ? Number(serviceIcon.height) : 24;
+      const faviconDomain = serviceIcon ? '' : getServiceFaviconDomain(providerName, accountName);
+      const favicon = faviconDomain
+        ? '<img class="service-favicon" src="/api/favicon/' + encodeURIComponent(faviconDomain) + '" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.remove();">'
+        : '';
       const icon = serviceIcon
-        ? '<svg class="' + iconClass + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"' + iconStyle + '>' + serviceIcon.body + '</svg>'
-        : '<span class="service-avatar-fallback" aria-hidden="true">' + fallback + '</span>';
+        ? '<svg class="' + iconClass + '" viewBox="0 0 ' + iconWidth + ' ' + iconHeight + '" aria-hidden="true" focusable="false"' + iconStyle + '>' + serviceIcon.body + '</svg>'
+        : fallbackIcon + favicon;
 
       return '<div class="' + className + '">' +
         icon +
@@ -278,7 +402,7 @@ export function getCoreCode() {
         '<div class="card-main-content">' +
           '<div class="card-header card-top-row">' +
             '<div class="secret-info service-brand-box">' +
-              createServiceAvatar(providerName, serviceIcon, '') +
+              createServiceAvatar(providerName, serviceIcon, '', displayAccount) +
               '<div class="secret-text service-text">' +
                 '<div class="service-name-row">' +
                   '<h3>' + safeServiceName + '</h3>' +
@@ -354,7 +478,7 @@ export function getCoreCode() {
       return '<tr class="' + rowClass + '" data-secret-id="' + secretId + '" ondragover="handleSecretDragOver(event, &quot;' + secretId + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secretId + '&quot;)" ondragend="handleSecretDragEnd(event)">' +
         '<td>' +
           '<div class="table-service-cell">' +
-            createServiceAvatar(providerName, serviceIcon, 'table-service-avatar') +
+            createServiceAvatar(providerName, serviceIcon, 'table-service-avatar', displayAccount) +
             '<div class="table-service-text">' +
               '<div class="table-service-name">' + escapeHTML(providerName) + '</div>' +
               (displayAccount ? '<div class="table-service-account" title="' + escapeAttribute(displayAccount) + '">' + escapeHTML(displayAccount) + '</div>' : '') +
