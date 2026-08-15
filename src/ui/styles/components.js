@@ -480,8 +480,8 @@ export function getComponentStyles() {
     .card-menu {
       position: relative;
       cursor: pointer;
-      width: 32px;
-      height: 32px;
+      /*width: 32px;
+      height: 32px;*/
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -526,8 +526,8 @@ export function getComponentStyles() {
       color: var(--stripe-muted);
       line-height: 1;
       user-select: none;
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
