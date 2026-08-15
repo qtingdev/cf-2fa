@@ -400,9 +400,14 @@ export function getBaseStyles() {
       gap: 6px;
       flex-wrap: nowrap;
       flex: 1;
+      max-width: 100%;
       min-width: 0;
       overflow-x: auto;
+      overflow-y: hidden;
       overscroll-behavior-inline: contain;
+      scroll-behavior: smooth;
+      scroll-padding-inline: 2px;
+      -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
 
@@ -428,6 +433,7 @@ export function getBaseStyles() {
       line-height: 1.4;
       user-select: none;
       white-space: nowrap;
+      flex: 0 0 auto;
     }
 
     .chip-btn:hover, .provider-filter-option:hover {

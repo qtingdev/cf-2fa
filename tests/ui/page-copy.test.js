@@ -98,14 +98,26 @@ describe('settings page copy', () => {
 	it('renders a provider filter row without adding tags to cards', async () => {
 		const response = await createMainPage({ lazyLoad: false });
 		const html = await response.text();
+		const baseStyles = getBaseStyles();
 		const accountCountIndex = html.indexOf('id="metricSecretCount"');
 		const providerFiltersIndex = html.indexOf('id="providerFilters"');
+		const providerFiltersStyle =
+			baseStyles.match(/\.classic-filter-chips, \.provider-filters \{([^}]*)\}/)?.[1] || '';
+		const providerOptionStyle =
+			baseStyles.match(/\.chip-btn, \.provider-filter-option \{([^}]*)\}/)?.[1] || '';
 
 		expect(html).toContain('id="providerFilters"');
 		expect(html).toContain('按提供商筛选');
 		expect(html).toContain('provider-filter-option');
 		expect(html).not.toContain('provider-filter-button');
 		expect(providerFiltersIndex).toBeGreaterThan(accountCountIndex);
+		expect(providerFiltersStyle).toContain('flex-wrap: nowrap;');
+		expect(providerFiltersStyle).toContain('max-width: 100%;');
+		expect(providerFiltersStyle).toContain('overflow-x: auto;');
+		expect(providerFiltersStyle).toContain('overflow-y: hidden;');
+		expect(providerFiltersStyle).toContain('-webkit-overflow-scrolling: touch;');
+		expect(providerOptionStyle).toContain('white-space: nowrap;');
+		expect(providerOptionStyle).toContain('flex: 0 0 auto;');
 	});
 
 	it('uses compact grid cards and the classic prototype table for list view', async () => {
