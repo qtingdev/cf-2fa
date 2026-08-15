@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { icon } from '../../src/ui/icons.js';
 import { createMainPage } from '../../src/ui/page.js';
+import { getSearchCode } from '../../src/ui/scripts/search.js';
 import { getBaseStyles } from '../../src/ui/styles/base.js';
 import { getComponentStyles } from '../../src/ui/styles/components.js';
 import { getResponsiveStyles } from '../../src/ui/styles/responsive.js';
@@ -101,10 +102,8 @@ describe('settings page copy', () => {
 		const baseStyles = getBaseStyles();
 		const accountCountIndex = html.indexOf('id="metricSecretCount"');
 		const providerFiltersIndex = html.indexOf('id="providerFilters"');
-		const providerFiltersStyle =
-			baseStyles.match(/\.classic-filter-chips, \.provider-filters \{([^}]*)\}/)?.[1] || '';
-		const providerOptionStyle =
-			baseStyles.match(/\.chip-btn, \.provider-filter-option \{([^}]*)\}/)?.[1] || '';
+		const providerFiltersStyle = baseStyles.match(/\.classic-filter-chips, \.provider-filters \{([^}]*)\}/)?.[1] || '';
+		const providerOptionStyle = baseStyles.match(/\.chip-btn, \.provider-filter-option \{([^}]*)\}/)?.[1] || '';
 
 		expect(html).toContain('id="providerFilters"');
 		expect(html).toContain('按提供商筛选');
@@ -116,8 +115,14 @@ describe('settings page copy', () => {
 		expect(providerFiltersStyle).toContain('overflow-x: auto;');
 		expect(providerFiltersStyle).toContain('overflow-y: hidden;');
 		expect(providerFiltersStyle).toContain('-webkit-overflow-scrolling: touch;');
+		expect(providerFiltersStyle).toContain('scrollbar-width: thin;');
+		expect(providerFiltersStyle).toContain('padding-bottom: 4px;');
 		expect(providerOptionStyle).toContain('white-space: nowrap;');
 		expect(providerOptionStyle).toContain('flex: 0 0 auto;');
+		expect(baseStyles).toContain('.provider-filters::-webkit-scrollbar-thumb');
+		expect(baseStyles).toContain('@media (hover: none), (pointer: coarse)');
+		expect(getSearchCode()).toContain("container.addEventListener('wheel'");
+		expect(getSearchCode()).toContain('{ passive: false }');
 	});
 
 	it('uses compact grid cards and the classic prototype table for list view', async () => {
@@ -186,16 +191,24 @@ describe('settings page copy', () => {
 		expect(html).toContain('class="otp-next-label">下一期</span>');
 	});
 
-	it('uses transparent full-size service icons', () => {
+	it('uses transparent 40px grid icons, 32px list icons, and Stripe fallback avatars', () => {
 		const componentStyles = getComponentStyles();
 		const serviceIconStyle = componentStyles.match(/\.service-icon \{([^}]*)\}/)?.[1] || '';
-		const serviceImageStyle = componentStyles.match(/\.service-icon img \{([^}]*)\}/)?.[1] || '';
+		const serviceBrandIconStyle = componentStyles.match(/\n    \.service-brand-icon \{([^}]*)\}/)?.[1] || '';
+		const tableIconStyle = componentStyles.match(/\.service-icon\.table-service-avatar \.service-brand-icon \{([^}]*)\}/)?.[1] || '';
+		const fallbackStyle = componentStyles.match(/\.service-avatar-fallback \{([^}]*)\}/)?.[1] || '';
 
 		expect(serviceIconStyle).toContain('background: transparent;');
 		expect(serviceIconStyle).toContain('border: none;');
 		expect(serviceIconStyle).toContain('box-shadow: none;');
-		expect(serviceImageStyle).toContain('width: 100%;');
-		expect(serviceImageStyle).toContain('height: 100%;');
+		expect(serviceIconStyle).toContain('width: 40px;');
+		expect(serviceIconStyle).toContain('height: 40px;');
+		expect(serviceBrandIconStyle).toContain('width: 40px;');
+		expect(serviceBrandIconStyle).toContain('height: 40px;');
+		expect(tableIconStyle).toContain('width: 32px;');
+		expect(tableIconStyle).toContain('height: 32px;');
+		expect(fallbackStyle).toContain('background: var(--stripe-blurple);');
+		expect(fallbackStyle).toContain('color: #ffffff;');
 	});
 
 	it('matches the prototype toolbar and toast dimensions', async () => {

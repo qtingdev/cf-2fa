@@ -302,11 +302,42 @@ export function getSearchCode() {
       return button;
     }
 
+    function initProviderFilterHorizontalScroll(container) {
+      if (!container || container.dataset.horizontalWheelBound === 'true') {
+        return;
+      }
+
+      container.dataset.horizontalWheelBound = 'true';
+      container.addEventListener('wheel', event => {
+        if (container.scrollWidth <= container.clientWidth || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
+          return;
+        }
+
+        const deltaMultiplier = event.deltaMode === 1
+          ? 16
+          : event.deltaMode === 2
+            ? container.clientWidth
+            : 1;
+        const delta = event.deltaY * deltaMultiplier;
+        const maxScrollLeft = container.scrollWidth - container.clientWidth;
+        const nextScrollLeft = Math.max(0, Math.min(maxScrollLeft, container.scrollLeft + delta));
+
+        if (nextScrollLeft === container.scrollLeft) {
+          return;
+        }
+
+        container.scrollLeft = nextScrollLeft;
+        event.preventDefault();
+      }, { passive: false });
+    }
+
     function renderProviderFilters() {
       const container = document.getElementById('providerFilters');
       if (!container) {
         return;
       }
+
+      initProviderFilterHorizontalScroll(container);
 
       const providerOptions = getProviderOptions();
       if (providerOptions.length === 0) {

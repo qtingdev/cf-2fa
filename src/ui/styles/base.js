@@ -408,12 +408,37 @@ export function getBaseStyles() {
       scroll-behavior: smooth;
       scroll-padding-inline: 2px;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      scrollbar-width: thin;
+      scrollbar-color: var(--stripe-muted) transparent;
+      padding-bottom: 4px;
     }
 
     .classic-filter-chips::-webkit-scrollbar,
     .provider-filters::-webkit-scrollbar {
-      display: none;
+      height: 6px;
+    }
+
+    .classic-filter-chips::-webkit-scrollbar-track,
+    .provider-filters::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .classic-filter-chips::-webkit-scrollbar-thumb,
+    .provider-filters::-webkit-scrollbar-thumb {
+      background: var(--stripe-muted);
+      border-radius: 999px;
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .classic-filter-chips, .provider-filters {
+        scrollbar-width: none;
+        padding-bottom: 0;
+      }
+
+      .classic-filter-chips::-webkit-scrollbar,
+      .provider-filters::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     .chip-btn, .provider-filter-option {

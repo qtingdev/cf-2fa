@@ -5,6 +5,7 @@
   "private": true,
   "description": "2FA - OTP Generator using Cloudflare Workers",
   "scripts": {
+    "icons:update": "node scripts/generate-service-icons.mjs",
     "deploy": "node scripts/deploy.js",
     "deploy:git": "node scripts/deploy.js --git",
     "deploy:package": "node scripts/deploy.js --package",

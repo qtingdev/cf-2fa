@@ -7,9 +7,16 @@ function createProviderFilterApi(initialSecrets) {
 	// eslint-disable-next-line no-new-func
 	const factory = new Function(
 		'initialSecrets',
-      `${getStateCode()}${getSearchCode()}
+		`${getStateCode()}${getSearchCode()}
       secrets = initialSecrets;
-      return { getSecretProviderName, getProviderOptions, getSecretsMatchingFilters, getDuplicateAccountKeys, isDuplicateAccountSecret };`,
+      return {
+        getSecretProviderName,
+        getProviderOptions,
+        getSecretsMatchingFilters,
+        getDuplicateAccountKeys,
+        isDuplicateAccountSecret,
+        initProviderFilterHorizontalScroll
+      };`,
 	);
 
 	return factory(initialSecrets);
@@ -56,9 +63,40 @@ describe('provider filtering runtime code', () => {
 		]);
 
 		expect(api.getDuplicateAccountKeys()).toHaveLength(1);
-		expect(api.getSecretsMatchingFilters('', '', true).map(secret => secret.id)).toEqual(['1', '2']);
-		expect(api.getSecretsMatchingFilters('', 'GOOGLE', true).map(secret => secret.id)).toEqual(['1', '2']);
-		expect(api.getSecretsMatchingFilters('alice', '', true).map(secret => secret.id)).toEqual(['1', '2']);
+		expect(api.getSecretsMatchingFilters('', '', true).map((secret) => secret.id)).toEqual(['1', '2']);
+		expect(api.getSecretsMatchingFilters('', 'GOOGLE', true).map((secret) => secret.id)).toEqual(['1', '2']);
+		expect(api.getSecretsMatchingFilters('alice', '', true).map((secret) => secret.id)).toEqual(['1', '2']);
 		expect(api.isDuplicateAccountSecret({ id: '3', name: 'OpenAI', account: 'alice@example.com' })).toBe(false);
+	});
+
+	it('converts a desktop vertical wheel gesture into horizontal filter scrolling', () => {
+		const api = createProviderFilterApi([]);
+		let wheelHandler;
+		let listenerOptions;
+		const container = {
+			dataset: {},
+			scrollWidth: 600,
+			clientWidth: 240,
+			scrollLeft: 0,
+			addEventListener: (_type, handler, options) => {
+				wheelHandler = handler;
+				listenerOptions = options;
+			},
+		};
+
+		api.initProviderFilterHorizontalScroll(container);
+		expect(container.dataset.horizontalWheelBound).toBe('true');
+		expect(listenerOptions).toEqual({ passive: false });
+
+		const preventDefault = vi.fn();
+		wheelHandler({ deltaX: 0, deltaY: 80, deltaMode: 0, preventDefault });
+		expect(container.scrollLeft).toBe(80);
+		expect(preventDefault).toHaveBeenCalledOnce();
+
+		container.scrollLeft = 360;
+		preventDefault.mockClear();
+		wheelHandler({ deltaX: 0, deltaY: 80, deltaMode: 0, preventDefault });
+		expect(container.scrollLeft).toBe(360);
+		expect(preventDefault).not.toHaveBeenCalled();
 	});
 });

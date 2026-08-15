@@ -3,31 +3,34 @@
  * 包含密钥管理、OTP生成、二维码、备份等所有核心功能
  */
 
-import { SERVICE_LOGOS } from '../config/serviceLogos.js';
+import { SERVICE_ICON_ALIASES, SERVICE_ICON_DEFINITIONS } from '../config/serviceIcons.js';
 
 /**
  * 获取 Core 相关代码
  * @returns {string} Core JavaScript 代码
  */
 export function getCoreCode() {
-	// 将 SERVICE_LOGOS 配置序列化为客户端代码
-	const serviceLogosJSON = JSON.stringify(SERVICE_LOGOS, null, 2);
+	const serviceIconDefinitionsJSON = JSON.stringify(SERVICE_ICON_DEFINITIONS, null, 2);
+	const serviceIconAliasesJSON = JSON.stringify(SERVICE_ICON_ALIASES, null, 2);
 
-	return `    // ========== Service Logos 配置 ==========
-    // 服务名称到域名的映射数据（从 serviceLogos.js 导入）
-    const SERVICE_LOGOS = ${serviceLogosJSON};
+	return `    // ========== 本地供应商 SVG 图标配置 ==========
+    const SERVICE_ICON_DEFINITIONS = ${serviceIconDefinitionsJSON};
+    const SERVICE_ICON_ALIASES = ${serviceIconAliasesJSON};
 
-    // ========== Service Logo 处理逻辑（唯一实现） ==========
-    // 注意：逻辑只在客户端实现，服务器端的 serviceLogos.js 只是纯数据配置
+    // ========== 供应商图标匹配逻辑 ==========
 
     /**
      * 将服务名拆分为单词数组（处理空格、连字符、点号等分隔符）
      * @param {string} text - 文本
      * @returns {string[]} 单词数组
      */
-    function splitWords(text) {
-      // 将连字符放在字符类最后，避免被解析为范围运算符
-      return text.toLowerCase().trim().split(/[\\\\s._-]+/).filter(Boolean);
+    function splitServiceWords(text) {
+      return String(text || '')
+        .normalize('NFKC')
+        .toLocaleLowerCase('en-US')
+        .trim()
+        .split(/[\\s._:/+()-]+/)
+        .filter(Boolean);
     }
 
     /**
@@ -53,34 +56,29 @@ export function getCoreCode() {
       return false;
     }
 
-    /**
-     * 根据服务名称获取对应的 logo URL
-     * @param {string} serviceName - 服务名称
-     * @returns {string|null} Logo URL 或 null
-     */
-    function getServiceLogo(serviceName) {
+    const SERVICE_ICON_MATCHERS = Object.entries(SERVICE_ICON_ALIASES)
+      .map(([alias, iconId]) => ({ alias, iconId, words: splitServiceWords(alias) }))
+      .filter(matcher => matcher.words.length > 0)
+      .sort((left, right) =>
+        right.words.length - left.words.length || right.alias.length - left.alias.length
+      );
+
+    function getServiceIcon(serviceName) {
       if (!serviceName) return null;
 
-      const normalizedName = serviceName.toLowerCase().trim();
-
-      // 1. 精确匹配（最快）
-      if (SERVICE_LOGOS[normalizedName]) {
-        return \`/api/favicon/\${SERVICE_LOGOS[normalizedName]}\`;
+      const serviceWords = splitServiceWords(serviceName);
+      const normalizedName = serviceWords.join(' ');
+      const exactIconId = SERVICE_ICON_ALIASES[normalizedName];
+      if (exactIconId) {
+        return SERVICE_ICON_DEFINITIONS[exactIconId] || null;
       }
 
-      // 2. 单词序列匹配（处理 "Google Drive Backup" 匹配 "google drive" 等场景）
-      const serviceWords = splitWords(serviceName);
-
-      for (const [key, domain] of Object.entries(SERVICE_LOGOS)) {
-        const keyWords = splitWords(key);
-
-        // 检查 key 的单词是否作为连续子序列出现在服务名中
-        if (isWordSequenceMatch(serviceWords, keyWords)) {
-          return \`/api/favicon/\${domain}\`;
+      for (const matcher of SERVICE_ICON_MATCHERS) {
+        if (isWordSequenceMatch(serviceWords, matcher.words)) {
+          return SERVICE_ICON_DEFINITIONS[matcher.iconId] || null;
         }
       }
 
-      // 3. 未找到匹配，返回 null（将显示首字母图标）
       return null;
     }
 
@@ -220,17 +218,21 @@ export function getCoreCode() {
         pad(date.getMinutes());
     }
 
-    function createServiceAvatar(providerName, logoUrl, extraClass) {
+    function createServiceAvatar(providerName, serviceIcon, extraClass) {
       const className = 'service-icon service-avatar' + (extraClass ? ' ' + extraClass : '');
-      const fallback = escapeHTML(providerName.charAt(0).toUpperCase());
-      const fallbackStyle = logoUrl ? ' style="display: none;"' : '';
-      const image = logoUrl
-        ? '<img src="' + logoUrl + '" alt="' + escapeAttribute(providerName) + '" onerror="this.style.display=&quot;none&quot;; this.nextElementSibling.style.display=&quot;inline-flex&quot;;">'
+      const fallback = escapeHTML(String(providerName || '?').trim().charAt(0).toUpperCase() || '?');
+      const iconClass = serviceIcon && serviceIcon.adaptive
+        ? 'service-brand-icon service-brand-icon-adaptive'
+        : 'service-brand-icon';
+      const iconStyle = serviceIcon && !serviceIcon.adaptive
+        ? ' style="color: ' + escapeAttribute(serviceIcon.color) + ';"'
         : '';
+      const icon = serviceIcon
+        ? '<svg class="' + iconClass + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"' + iconStyle + '>' + serviceIcon.body + '</svg>'
+        : '<span class="service-avatar-fallback" aria-hidden="true">' + fallback + '</span>';
 
       return '<div class="' + className + '">' +
-        image +
-        '<span class="service-avatar-fallback"' + fallbackStyle + '>' + fallback + '</span>' +
+        icon +
       '</div>';
     }
 
@@ -258,7 +260,7 @@ export function getCoreCode() {
     // 创建密钥卡片 (方案一：Stripe Dashboard 经典控制台风格)
     function createSecretCard(secret) {
       const providerName = getSecretProviderName(secret) || '未命名';
-      const logoUrl = getServiceLogo(providerName);
+      const serviceIcon = getServiceIcon(providerName);
       const isHOTP = secret.type && secret.type.toUpperCase() === 'HOTP';
       const displayAccount = getDisplayAccount(secret);
       const safeServiceName = escapeHTML(providerName);
@@ -276,7 +278,7 @@ export function getCoreCode() {
         '<div class="card-main-content">' +
           '<div class="card-header card-top-row">' +
             '<div class="secret-info service-brand-box">' +
-              createServiceAvatar(providerName, logoUrl, '') +
+              createServiceAvatar(providerName, serviceIcon, '') +
               '<div class="secret-text service-text">' +
                 '<div class="service-name-row">' +
                   '<h3>' + safeServiceName + '</h3>' +
@@ -330,7 +332,7 @@ export function getCoreCode() {
 
     function createSecretTableRow(secret) {
       const providerName = getSecretProviderName(secret) || '未命名';
-      const logoUrl = getServiceLogo(providerName);
+      const serviceIcon = getServiceIcon(providerName);
       const isHOTP = secret.type && secret.type.toUpperCase() === 'HOTP';
       const displayAccount = getDisplayAccount(secret);
       const createdAtText = formatSecretCreatedAt(secret.createdAt);
@@ -352,7 +354,7 @@ export function getCoreCode() {
       return '<tr class="' + rowClass + '" data-secret-id="' + secretId + '" ondragover="handleSecretDragOver(event, &quot;' + secretId + '&quot;)" ondragleave="handleSecretDragLeave(event)" ondrop="handleSecretDrop(event, &quot;' + secretId + '&quot;)" ondragend="handleSecretDragEnd(event)">' +
         '<td>' +
           '<div class="table-service-cell">' +
-            createServiceAvatar(providerName, logoUrl, 'table-service-avatar') +
+            createServiceAvatar(providerName, serviceIcon, 'table-service-avatar') +
             '<div class="table-service-text">' +
               '<div class="table-service-name">' + escapeHTML(providerName) + '</div>' +
               (displayAccount ? '<div class="table-service-account" title="' + escapeAttribute(displayAccount) + '">' + escapeHTML(displayAccount) + '</div>' : '') +

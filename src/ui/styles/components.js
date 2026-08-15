@@ -173,6 +173,11 @@ export function getComponentStyles() {
       font-size: 12px;
     }
 
+    .service-icon.table-service-avatar .service-brand-icon {
+      width: 32px;
+      height: 32px;
+    }
+
     .table-service-text {
       min-width: 0;
     }
@@ -380,12 +385,15 @@ export function getComponentStyles() {
       user-select: none;
     }
 
-    .service-icon img {
+    .service-brand-icon {
       display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: inherit;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+    }
+
+    .service-brand-icon-adaptive {
+      color: var(--stripe-navy);
     }
 
     .service-avatar-fallback {
@@ -394,7 +402,9 @@ export function getComponentStyles() {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--stripe-blurple);
+      border-radius: inherit;
+      background: var(--stripe-blurple);
+      color: #ffffff;
     }
 
     .secret-text {
